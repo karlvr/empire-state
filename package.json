@@ -6,7 +6,9 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "tsc --build tsconfig.prod.json",
-		"test": "jest"
+		"test": "jest",
+		"test-watch": "jest --watch",
+		"watch": "tsc --watch"
 	},
 	"keywords": [
 		"immer",

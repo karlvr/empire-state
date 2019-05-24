@@ -75,7 +75,7 @@ class ChangelingImpl<T> implements Changeling<T> {
 	public changeable<K extends keyof T>(name?: K): Changeable<T[K]>
 	public changeable<K extends keyof T>(name?: K): Changeable<any> {
 		if (name !== undefined) {
-			let onChange = this.propOnChange(name)
+			const onChange = this.propOnChange(name)
 			let value = this.value[name]
 
 			const getter = this.getters[name as string]

@@ -11,14 +11,10 @@ interface ChangeableComponent<T> {
 	props: Changeable<T>
 }
 
-export interface ChangeableState<T> {
-	value: T
-}
-
 /** Interface for component with the changeable value in the state */
 interface ChangeableComponentWithState<T> {
-	setState: (func: (state: ChangeableState<T>) => ChangeableState<T>) => void
-	state: ChangeableState<T>
+	setState: (func: (state: T) => T) => void
+	state: T
 }
 
 export interface Changeling<T> {
@@ -33,10 +29,17 @@ export function forComponentProps<T>(component: ChangeableComponent<T>): Changel
 
 export function forComponentState<T>(component: ChangeableComponentWithState<T>): Changeling<T> {
 	return new ChangelingImpl(() => ({
-		onChange: (newValue: T) => component.setState(produce((draft) => {
-			draft.value = newValue
+		onChange: (newValue: T) => component.setState(() => newValue),
+		value: component.state,
+	}))
+}
+
+export function forComponentStateProperty<T, K extends keyof T>(component: ChangeableComponentWithState<T>, property: K): Changeling<T[K]> {
+	return new ChangelingImpl(() => ({
+		onChange: (newValue: T[K]) => component.setState(produce((draft) => {
+			draft[property] = newValue
 		})),
-		value: component.state.value,
+		value: component.state[property],
 	}))
 }
 

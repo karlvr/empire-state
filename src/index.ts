@@ -1,2 +1,2 @@
-export { Changeable, ChangeableState, Changeling, forComponentProps, forComponentState, withFuncs } from './changeling'
+export { Changeable, Changeling, forComponentProps, forComponentState, forComponentStateProperty, withFuncs } from './changeling'
 export { wrapComponent, ChangelingInput as Input, ChangelingTextArea as TextArea } from './changeling-react'

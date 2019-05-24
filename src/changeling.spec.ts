@@ -1,4 +1,4 @@
-import { forComponentProps, withFuncs } from './changeling'
+import { forComponentProps, withFuncs, forComponentState, forComponentStateProperty } from './changeling'
 
 interface TestInterface {
 	a: string
@@ -18,6 +18,16 @@ function fakeComponentProps<T>(initial: T) {
 	return comp
 }
 
+function fakeComponentState<T>(initial: T) {
+	const comp = {
+		state: initial,
+		setState: (func: (state: T) => T) => {
+			comp.state = func(comp.state)
+		}
+	}
+	return comp
+}
+
 describe('changeling', () => {
 	it('can work with component props', () => {
 		const initial: TestInterface = {
@@ -31,6 +41,21 @@ describe('changeling', () => {
 		const changeling = forComponentProps(comp)
 		changeling.changeable('b').onChange(77)
 		expect(comp.props.value.b).toBe(77)
+	})
+
+	it('can work with component state', () => {
+		const initial: TestInterface = {
+			a: 'Hello',
+			b: 5,
+			c: true,
+		}
+
+		const comp = fakeComponentState(initial)
+		expect(comp.state.b).toBe(5)
+
+		const changeling = forComponentState(comp)
+		changeling.changeable('b').onChange(88)
+		expect(comp.state.b).toBe(88)
 	})
 
 	it('can work with functions', () => {

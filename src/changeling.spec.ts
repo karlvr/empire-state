@@ -226,4 +226,88 @@ describe('changeling', () => {
 		expect(initial.nested.givenName).toBe('Jorge') // It is immutable
 		expect(comp.state.nested.givenName).toBe('Daniel')
 	})
+
+	it('can handle undefined', () => {
+		interface TestInterface {
+			name?: string
+		}
+
+		const initial: TestInterface = {}
+		const comp = fakeComponentState(initial)
+		const changeling = forComponentState(comp)
+		const changeable = changeling.changeable('name')
+
+		expect(comp.state.name).toBeUndefined()
+		changeable.onChange('Fred')
+		expect(comp.state.name).toBe('Fred')
+	})
+
+	it('can handle nested undefined', () => {
+		interface TestInterface {
+			details?: TestNestedInterface
+		}
+
+		interface TestNestedInterface {
+			name?: string
+		}
+
+		const initial: TestInterface = {}
+		const comp = fakeComponentState(initial)
+		const changeling = forComponentState(comp)
+		const changeable = changeling.changeable('details')
+
+		expect(comp.state.details).toBeUndefined()
+		changeable.onChange({
+			name: 'Fred',
+		})
+		expect(comp.state.details).not.toBeUndefined()
+		expect(comp.state.details!.name).toBe('Fred')
+	})
+
+	it('can handle nested undefined and nested changelings', () => {
+		interface TestInterface {
+			details?: TestNestedInterface
+		}
+
+		interface TestNestedInterface {
+			name?: string
+		}
+
+		const initial: TestInterface = {}
+		const comp = fakeComponentState(initial)
+		const changeling = forComponentState(comp)
+		const changeling2 = changeling.changeling('details')
+		const changeable = changeling2.changeable('name')
+
+		expect(comp.state.details).toBeUndefined()
+		changeable.onChange('Fred')
+		expect(comp.state.details).not.toBeUndefined()
+		expect(comp.state.details!.name).toBe('Fred')
+	})
+
+	it('can work with deeply nested changelings', () => {
+		interface TestInterface {
+			root?: TestInterface2
+		}
+
+		interface TestInterface2 {
+			nextLevel?: TestInterface3
+		}
+
+		interface TestInterface3 {
+			pot: string
+		}
+
+		const initial: TestInterface = {}
+		
+		const comp = fakeComponentState(initial)
+		const changeling = forComponentState(comp)
+		const changeling2 = changeling.changeling('root')
+		const changeling3 = changeling2.changeling('nextLevel')
+		const changeling4 = changeling3.changeling('pot')
+		const changeable = changeling4.changeable()
+		changeable.onChange('gold')
+
+		expect(comp.state.root!.nextLevel!.pot).toBe('gold')
+	})
 })

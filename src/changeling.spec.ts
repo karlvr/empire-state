@@ -99,4 +99,46 @@ describe('changeling', () => {
 		expect(changeableA.onChange).toBe(changeableA2.onChange)
 		expect(changeableA.onChange).not.toBe(changeableB.onChange)
 	})
+
+	it('can map values using a getter', () => {
+		let value: TestInterface = {
+			a: 'Hello',
+			b: 3,
+			c: true,
+		}
+
+		const changeling = withFuncs(
+			() => value,
+			(newValue: TestInterface) => {
+				value = newValue
+			},
+		)
+		changeling.getter('a', (value) => value + '!')
+
+		expect(changeling.changeable('a').value).toBe('Hello!')
+		changeling.changeable('a').onChange('World')
+		expect(value.a).toBe('World')
+		expect(changeling.changeable('a').value).toBe('World!')
+	})
+
+	it('can map values using a setter', () => {
+		let value: TestInterface = {
+			a: 'Hello',
+			b: 3,
+			c: true,
+		}
+
+		const changeling = withFuncs(
+			() => value,
+			(newValue: TestInterface) => {
+				value = newValue
+			},
+		)
+		changeling.setter('a', (value) => value + '!')
+
+		expect(changeling.changeable('a').value).toBe('Hello')
+		changeling.changeable('a').onChange('World')
+		expect(value.a).toBe('World!')
+		expect(changeling.changeable('a').value).toBe('World!')
+	})
 })

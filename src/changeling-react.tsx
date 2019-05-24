@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Changeable, Changeling, forFuncs } from './changeling'
+import { Changeable, Changeling } from './changeling'
 
 export function wrapComponent<R, P extends Changeable<R>>(Component: React.ComponentType<Changeable<R> & P>) {
 	return <T, K extends Match<T, R>>(props: Subtract<P, Changeable<R>> & { changeling: Changeling<T>, name: K }) => {
 		const { changeling, name, ...rest } = props
-		const changeable = changeling.prop(name)
+		const changeable = changeling.changeable(name)
 		return (
 			<Component value={changeable.value} onChange={changeable.onChange} {...rest as any} />
 		)
@@ -28,14 +28,14 @@ export class ChangelingInput<T, K extends keyof T> extends React.Component<Chang
 
 	public render() {
 		const { changeling, prop, ...rest } = this.props
-		const value = changeling.prop(prop).value
+		const value = changeling.changeable(prop).value
 		return (
 			<input value={value !== undefined && value !== null ? `${value}` : ''} onChange={this.onChange} {...rest} />
 		)
 	}
 
 	private onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		this.props.changeling.prop(this.props.prop).onChange(this.convertValue(evt.target.value))
+		this.props.changeling.changeable(this.props.prop).onChange(this.convertValue(evt.target.value))
 	}
 
 	private convertValue = (value: string): T[K] => {
@@ -58,14 +58,14 @@ export class ChangelingTextArea<T, K extends keyof T> extends React.Component<Ch
 
 	public render() {
 		const { changeling, prop, ...rest } = this.props
-		const value = changeling.prop(prop).value
+		const value = changeling.changeable(prop).value
 		return (
 			<textarea value={value !== undefined && value !== null ? `${value}` : ''} onChange={this.onChange} {...rest} />
 		)
 	}
 
 	private onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-		this.props.changeling.prop(this.props.prop).onChange(this.convertValue(evt.target.value))
+		this.props.changeling.changeable(this.props.prop).onChange(this.convertValue(evt.target.value))
 	}
 
 	private convertValue = (value: string): T[K] => {

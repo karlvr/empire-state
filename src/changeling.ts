@@ -22,7 +22,7 @@ interface ChangeableComponentWithState<T> {
 }
 
 export interface Changeling<T> {
-	prop<K extends keyof T>(name: K): Changeable<T[K]>
+	changeable<K extends keyof T>(name: K): Changeable<T[K]>
 }
 
 export function forComponentProps<T>(component: ChangeableComponent<T>): Changeling<T> {
@@ -57,7 +57,7 @@ class ChangelingImpl<T> implements Changeling<T> {
 		this.locator = locator
 	}
 
-	public prop<K extends keyof T>(name: K): Changeable<T[K]> {
+	public changeable<K extends keyof T>(name: K): Changeable<T[K]> {
 		return {
 			onChange: this.subOnChange(name),
 			value: this.value()[name],

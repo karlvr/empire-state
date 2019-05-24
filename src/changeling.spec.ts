@@ -58,6 +58,25 @@ describe('changeling', () => {
 		expect(comp.state.b).toBe(88)
 	})
 
+	it('can work with property of component state', () => {
+		const initial: TestInterface = {
+			a: 'Hello',
+			b: 5,
+			c: true,
+		}
+
+		const comp = fakeComponentState(initial)
+		expect(comp.state.b).toBe(5)
+
+		const changeling = forComponentStateProperty(comp, 'b')
+		const changeable = changeling.changeable()
+		changeable.onChange(88)
+		expect(comp.state.b).toBe(88)
+		expect(changeable.value).toBe(5) // Changeable is immutable
+
+		expect(changeling.changeable().value).toBe(88) // Changeling is mutable
+	})
+
 	it('can work with functions', () => {
 		let value: TestInterface = {
 			a: 'Hello',

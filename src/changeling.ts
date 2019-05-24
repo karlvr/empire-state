@@ -18,7 +18,8 @@ interface ChangeableComponentWithState<T> {
 }
 
 export interface Changeling<T> {
-	changeable<K extends keyof T>(name: K): Changeable<T[K]>
+	changeable(): Changeable<T>
+	changeable<K extends keyof T>(name?: K): Changeable<T[K]>
 	getter<K extends keyof T>(name: K, func: (value: T[K]) => T[K]): void
 	setter<K extends keyof T>(name: K, func: (value: T[K]) => T[K]): void
 }
@@ -70,18 +71,27 @@ class ChangelingImpl<T> implements Changeling<T> {
 		this.locator = locator
 	}
 
-	public changeable<K extends keyof T>(name: K): Changeable<T[K]> {
-		let onChange = this.propOnChange(name)
-		let value = this.value()[name]
+	public changeable(): Changeable<T>
+	public changeable<K extends keyof T>(name?: K): Changeable<T[K]>
+	public changeable<K extends keyof T>(name?: K): Changeable<any> {
+		if (name !== undefined) {
+			let onChange = this.propOnChange(name)
+			let value = this.value[name]
 
-		const getter = this.getters[name as string]
-		if (getter) {
-			value = getter(value) as T[K]
-		}
+			const getter = this.getters[name as string]
+			if (getter) {
+				value = getter(value) as T[K]
+			}
 
-		return {
-			onChange,
-			value,
+			return {
+				onChange,
+				value,
+			}
+		} else {
+			return {
+				onChange: (newValue: T) => this.onChange(newValue),
+				value: this.value,
+			}
 		}
 	}
 
@@ -94,12 +104,12 @@ class ChangelingImpl<T> implements Changeling<T> {
 		delete this.onChanges[name as string]
 	}
 
-	private value(): T {
+	private get value(): T {
 		return this.locator().value
 	}
 
-	private onChange(): ((value: T) => void) {
-		return this.locator().onChange
+	private onChange(value: T) {
+		return this.locator().onChange(value)
 	}
 
 	private propOnChange<K extends keyof T>(name: K): ((value: T[K]) => void) {
@@ -109,13 +119,12 @@ class ChangelingImpl<T> implements Changeling<T> {
 		}
 
 		let func = (subValue: T[K]): void => {
-			const value = this.value()
+			const value = this.value
 			const newValue = produce(value, (draft) => {
 				draft[name] = subValue as any
 			})
 
-			const onChange = this.onChange()
-			onChange(newValue)
+			this.onChange(newValue)
 		}
 
 		const setter = this.setters[name as string]

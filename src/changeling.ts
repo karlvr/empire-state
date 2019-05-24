@@ -38,7 +38,7 @@ export function forComponentState<T>(component: ChangeableComponentWithState<T>)
 	}))
 }
 
-export function forFuncs<T>(value: () => T, onChange: (newValue: T) => void): Changeling<T> {
+export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Changeling<T> {
 	return new ChangelingImpl(() => ({
 		onChange,
 		value: value(),

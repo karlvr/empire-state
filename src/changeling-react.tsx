@@ -48,6 +48,60 @@ export class ChangelingInput<T, K extends keyof T> extends React.Component<Chang
 
 }
 
+interface ChangelingLazyInputProps<T, K extends keyof T> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'defaultValue' | 'onBlur'> {
+	changeling: Changeling<T>
+	convert?: (value: string) => T[K] | undefined
+	changeable: K
+	display?: (value: T[K]) => string
+}
+
+export class ChangelingLazyInput<T, K extends keyof T> extends React.Component<ChangelingLazyInputProps<T, K>> {
+
+	public render() {
+		const { changeling, changeable, ...rest } = this.props
+
+		const value = changeling.changeable(changeable).value
+		const displayValue = this.displayValue(value)
+		return (
+			<input key={displayValue} defaultValue={displayValue} onBlur={this.onBlur} {...rest} />
+		)
+	}
+
+	private onBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+		const { changeling, changeable } = this.props
+
+		const c = changeling.changeable(changeable)
+		const value = this.convertValue(evt.target.value)
+		if (value !== undefined) {
+			c.onChange(value)
+		} else {
+			evt.target.value = this.displayValue(c.value)
+			evt.target.select()
+		}
+	}
+
+	private displayValue = (value: T[K]): string => {
+		if (this.props.display) {
+			return this.props.display(value)
+		}
+
+		if (value !== undefined && value !== null) {
+			return `${value}`
+		} else {
+			return ''
+		}
+	}
+
+	private convertValue = (value: string): T[K] | undefined => {
+		if (this.props.convert) {
+			return this.props.convert(value)
+		} else {
+			return value as any
+		}
+	}
+
+}
+
 interface ChangelingTextAreaProps<T, K extends keyof T> extends Omit<React.InputHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'> {
 	changeling: Changeling<T>
 	convert?: (value: string) => T[K]

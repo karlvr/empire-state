@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Changeable, Changeling } from './changeling'
+import { Changeable, Changeling, ChangeableProperties, ChangeablePropertiesHolder } from './changeling'
 
 export function wrapComponent<R, P extends Changeable<R>>(Component: React.ComponentType<Changeable<R> & P>) {
-	return <T, K extends Match<T, R>>(props: Subtract<P, Changeable<R>> & { changeling: Changeling<T>, changeable: K }) => {
+	return <T, K extends CompatibleProperties<T, R>>(props: Subtract<P, Changeable<R>> & { changeling: Changeling<T>, changeable: K }) => {
 		const { changeling, changeable, ...rest } = props
 		const c = changeling.changeable(changeable)
 		return (
@@ -11,20 +11,21 @@ export function wrapComponent<R, P extends Changeable<R>>(Component: React.Compo
 	}
 }
 
-type Match<T, R> = {
-	[P in keyof T]: T[P] extends R ? P : never
-}[keyof T]
+/** Returns the properties in T that are assignable to type R */
+type CompatibleProperties<T, R> = {
+	[P in ChangeableProperties<T>]: ChangeablePropertiesHolder<T>[P] extends R ? P : never
+}[ChangeableProperties<T>]
 
 type Subtract<T extends T1, T1 extends object> = Pick<T, Exclude<keyof T, keyof T1>>
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 
-interface ChangelingInputProps<T, K extends keyof T> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
+interface ChangelingInputProps<T, K extends ChangeableProperties<T>> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
 	changeling: Changeling<T>
-	convert?: (value: string) => T[K]
+	convert?: (value: string) => ChangeablePropertiesHolder<T>[K]
 	changeable: K
 }
 
-export class ChangelingInput<T, K extends keyof T> extends React.Component<ChangelingInputProps<T, K>> {
+export class ChangelingInput<T, K extends ChangeableProperties<T>> extends React.Component<ChangelingInputProps<T, K>> {
 
 	public render() {
 		const { changeling, changeable, ...rest } = this.props
@@ -38,7 +39,7 @@ export class ChangelingInput<T, K extends keyof T> extends React.Component<Chang
 		this.props.changeling.changeable(this.props.changeable).onChange(this.convertValue(evt.target.value))
 	}
 
-	private convertValue = (value: string): T[K] => {
+	private convertValue = (value: string): ChangeablePropertiesHolder<T>[K] => {
 		if (this.props.convert) {
 			return this.props.convert(value)
 		} else {
@@ -48,14 +49,14 @@ export class ChangelingInput<T, K extends keyof T> extends React.Component<Chang
 
 }
 
-interface ChangelingLazyInputProps<T, K extends keyof T> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'defaultValue' | 'onBlur'> {
+interface ChangelingLazyInputProps<T, K extends ChangeableProperties<T>> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'defaultValue' | 'onBlur'> {
 	changeling: Changeling<T>
-	convert?: (value: string) => T[K] | undefined
+	convert?: (value: string) => ChangeablePropertiesHolder<T>[K] | undefined
 	changeable: K
-	display?: (value: T[K]) => string
+	display?: (value: ChangeablePropertiesHolder<T>[K]) => string
 }
 
-export class ChangelingLazyInput<T, K extends keyof T> extends React.Component<ChangelingLazyInputProps<T, K>> {
+export class ChangelingLazyInput<T, K extends ChangeableProperties<T>> extends React.Component<ChangelingLazyInputProps<T, K>> {
 
 	public render() {
 		const { changeling, changeable, ...rest } = this.props
@@ -80,7 +81,7 @@ export class ChangelingLazyInput<T, K extends keyof T> extends React.Component<C
 		}
 	}
 
-	private displayValue = (value: T[K]): string => {
+	private displayValue = (value: ChangeablePropertiesHolder<T>[K]): string => {
 		if (this.props.display) {
 			return this.props.display(value)
 		}
@@ -92,7 +93,7 @@ export class ChangelingLazyInput<T, K extends keyof T> extends React.Component<C
 		}
 	}
 
-	private convertValue = (value: string): T[K] | undefined => {
+	private convertValue = (value: string): ChangeablePropertiesHolder<T>[K] | undefined => {
 		if (this.props.convert) {
 			return this.props.convert(value)
 		} else {
@@ -102,13 +103,13 @@ export class ChangelingLazyInput<T, K extends keyof T> extends React.Component<C
 
 }
 
-interface ChangelingTextAreaProps<T, K extends keyof T> extends Omit<React.InputHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'> {
+interface ChangelingTextAreaProps<T, K extends ChangeableProperties<T>> extends Omit<React.InputHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'> {
 	changeling: Changeling<T>
-	convert?: (value: string) => T[K]
+	convert?: (value: string) => ChangeablePropertiesHolder<T>[K]
 	changeable: K
 }
 
-export class ChangelingTextArea<T, K extends keyof T> extends React.Component<ChangelingTextAreaProps<T, K>> {
+export class ChangelingTextArea<T, K extends ChangeableProperties<T>> extends React.Component<ChangelingTextAreaProps<T, K>> {
 
 	public render() {
 		const { changeling, changeable, ...rest } = this.props
@@ -122,7 +123,7 @@ export class ChangelingTextArea<T, K extends keyof T> extends React.Component<Ch
 		this.props.changeling.changeable(this.props.changeable).onChange(this.convertValue(evt.target.value))
 	}
 
-	private convertValue = (value: string): T[K] => {
+	private convertValue = (value: string): ChangeablePropertiesHolder<T>[K] => {
 		if (this.props.convert) {
 			return this.props.convert(value)
 		} else {

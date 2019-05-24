@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"description": "Immutable component change helper",
 	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "tsc",
 		"test": "jest"

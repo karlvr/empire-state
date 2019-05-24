@@ -7,7 +7,7 @@ export interface Changeable<T> {
 }
 
 /** Interface for component containing changeable props */
-interface ChangeableComponent<T> {
+interface ChangeableComponentWithProps<T> {
 	props: Changeable<T>
 }
 
@@ -24,18 +24,18 @@ export interface Changeling<T> {
 	setter<K extends keyof T>(name: K, func: (value: T[K]) => T[K]): void
 }
 
-export function forComponentProps<T>(component: ChangeableComponent<T>): Changeling<T> {
+export function forComponentProps<T>(component: ChangeableComponentWithProps<T>): Changeling<T> {
 	return new ChangelingImpl(() => component.props)
 }
 
-export function forComponentState<T>(component: ChangeableComponentWithState<T>): Changeling<T> {
+export function forComponentState<T>(component: ChangeableComponentWithState<NonNullable<T>>): Changeling<NonNullable<T>> {
 	return new ChangelingImpl(() => ({
-		onChange: (newValue: T) => component.setState(() => newValue),
+		onChange: (newValue: NonNullable<T>) => component.setState(() => newValue),
 		value: component.state,
 	}))
 }
 
-export function forComponentStateProperty<T, K extends keyof T>(component: ChangeableComponentWithState<T>, property: K): Changeling<T[K]> {
+export function forComponentStateProperty<T, K extends keyof T>(component: ChangeableComponentWithState<NonNullable<T>>, property: K): Changeling<NonNullable<T>[K]> {
 	return new ChangelingImpl(() => ({
 		onChange: (newValue: T[K]) => component.setState(produce((draft) => {
 			draft[property] = newValue

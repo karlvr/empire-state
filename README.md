@@ -4,36 +4,79 @@ A small library to help manage changing state without a lot of boilerplate.
 
 Changeling makes use of [Immer](https://github.com/immerjs/immer) to create immutable state updates.
 
-## What this replaces
+## Without Changeling
 
-This is how we usually manage form state in React components:
+This is how we usually manage form state in React components, while maintaining typesafety with
+TypeScript:
 
 ```typescript
-interface MyFormContents {
-	name: string
+interface MyFormState {
+	name?: string
 	age?: number
-	address: string
+	address?: string
 }
 
-interface MyFormState {
-	value: MyFormContents
-}
+const INITIAL_STATE: MyFormState = {}
 
 class MyForm extends React.Component<{}, MyFormState> {
+
+	public state = INITIAL_STATE
 
 	public render() {
 		return (
 			<div>
+				<h1>Existing</h1>
 				<div>
-					<label>Name</label>
+					<label>Name:</label>
+					<input type="text" value={this.state.name || ''} onChange={this.onChangeName} />
 				</div>
+				<div>
+					<label>Age:</label>
+					<input type="number" defaultValue={this.state.age !== undefined ? `${this.state.age}` : ''} onBlur={this.onChangeAge} />
+				</div>
+				<div>
+					<label>Address:</label>
+					<input type="text" value={this.state.address || ''} onChange={this.onChangeAddress} />
+				</div>
+				<h2>Output</h2>
+				<div>Name: {this.state.name}</div>
+				<div>Age: {this.state.age}</div>
+				<div>Address: {this.state.address}</div>
 			</div>
 		)
 	}
+
+	private onChangeName = (evt: React.ChangeEvent<HTMLInputElement>) => {
+		this.setState({
+			name: evt.target.value,
+		})
+	}
+
+	private onChangeAge = (evt: React.FocusEvent<HTMLInputElement>) => {
+		const age = parseInt(evt.target.value, 10)
+		if (isNaN(age)) {
+			evt.target.value = this.state.age !== undefined ? `${this.state.age}` : ''
+			evt.target.select()
+		} else {
+			this.setState({
+				age,
+			})
+		}
+	}
+
+	private onChangeAddress = (evt: React.ChangeEvent<HTMLInputElement>) => {
+		this.setState({
+			address: evt.target.value,
+		})
+	}
+
 }
 ```
 
-## How it looks with Changeling
+And we could be using [Immer](https://github.com/immerjs/immer) so we have immutable state,
+but that's more boiler-plate.
+
+## With Changeling
 
 ## Component state example
 

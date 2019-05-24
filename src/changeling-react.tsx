@@ -16,47 +16,64 @@ type Match<T, R> = {
 }[keyof T]
 
 type Subtract<T extends T1, T1 extends object> = Pick<T, Exclude<keyof T, keyof T1>>
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 
-type ElementAttributes = React.InputHTMLAttributes<HTMLInputElement>
-
-interface ChangelingInputProps<T, K extends keyof T> extends ElementAttributes {
+interface ChangelingInputProps<T, K extends keyof T> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
 	changeling: Changeling<T>
-	changelingProperty: K
+	convert?: (value: string) => T[K]
+	prop: K
 }
+
 export class ChangelingInput<T, K extends keyof T> extends React.Component<ChangelingInputProps<T, K>> {
 
 	public render() {
-		const { changeling, changelingProperty, ...rest } = this.props
-		const value = changeling.prop(changelingProperty).value
+		const { changeling, prop, ...rest } = this.props
+		const value = changeling.prop(prop).value
 		return (
-			<input value={`${value}` || ''} onChange={this.onChange} {...rest} />
+			<input value={value !== undefined && value !== null ? `${value}` : ''} onChange={this.onChange} {...rest} />
 		)
 	}
 
 	private onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		this.props.changeling.prop(this.props.changelingProperty).onChange(this.convertValue(evt.target.value))
+		this.props.changeling.prop(this.props.prop).onChange(this.convertValue(evt.target.value))
 	}
 
 	private convertValue = (value: string): T[K] => {
-		return value as any
+		if (this.props.convert) {
+			return this.props.convert(value)
+		} else {
+			return value as any
+		}
 	}
+
 }
 
-// interface TTT {
-// 	blah: string
-// }
-// let cc: TTT = {
-// 	blah: 'what',
-// }
-// const c = forFuncs(
-// 	() => cc, 
-// 	(newValue: TTT) => {
-// 		cc = newValue
-// 		return
-// 	}
-// )
+interface ChangelingTextAreaProps<T, K extends keyof T> extends Omit<React.InputHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'> {
+	changeling: Changeling<T>
+	convert?: (value: string) => T[K]
+	prop: K
+}
 
+export class ChangelingTextArea<T, K extends keyof T> extends React.Component<ChangelingTextAreaProps<T, K>> {
 
-// (
-// 	<ChangelingInput changeling={} changelingProperty="" />
-// )
+	public render() {
+		const { changeling, prop, ...rest } = this.props
+		const value = changeling.prop(prop).value
+		return (
+			<textarea value={value !== undefined && value !== null ? `${value}` : ''} onChange={this.onChange} {...rest} />
+		)
+	}
+
+	private onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+		this.props.changeling.prop(this.props.prop).onChange(this.convertValue(evt.target.value))
+	}
+
+	private convertValue = (value: string): T[K] => {
+		if (this.props.convert) {
+			return this.props.convert(value)
+		} else {
+			return value as any
+		}
+	}
+
+}

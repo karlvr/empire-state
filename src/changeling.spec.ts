@@ -1,4 +1,4 @@
-import { forComponent, forFuncs } from './changeling'
+import { forComponentProps, withFuncs } from './changeling'
 
 interface TestInterface {
 	a: string
@@ -18,7 +18,7 @@ function fakeComponent<T>(initial: T) {
 	return comp
 }
 
-describe('changedman', () => {
+describe('changeling', () => {
 	it('can work with components', () => {
 		const initial: TestInterface = {
 			a: 'Hello',
@@ -28,8 +28,8 @@ describe('changedman', () => {
 
 		const comp = fakeComponent(initial)
 
-		const changedMan = forComponent(comp)
-		changedMan.prop('b').onChange(77)
+		const changeling = forComponentProps(comp)
+		changeling.changeable('b').onChange(77)
 		expect(comp.props.value.b).toBe(77)
 	})
 
@@ -40,13 +40,13 @@ describe('changedman', () => {
 			c: true,
 		}
 
-		const changedMan = forFuncs(
+		const changeling = withFuncs(
 			() => value,
 			(newValue: TestInterface) => {
 				value = newValue
 			},
 		)
-		changedMan.prop('b').onChange(77)
+		changeling.changeable('b').onChange(77)
 		expect(value.b).toBe(77)
 	})
 
@@ -59,8 +59,8 @@ describe('changedman', () => {
 
 		const comp = fakeComponent(initial)
 
-		const changedMan = forComponent(comp)
-		const changeable = changedMan.prop('a')
+		const changeling = forComponentProps(comp)
+		const changeable = changeling.changeable('a')
 
 		/* Confirm initial value */
 		expect(changeable.value).toBe('Hello')
@@ -77,7 +77,7 @@ describe('changedman', () => {
 		/* The value in our component is changed, as our root onChange function changes it */
 		expect(comp.props.value.a).toBe('World')
 
-		const changeableB = changedMan.prop('b')
+		const changeableB = changeling.changeable('b')
 		changeableB.onChange(5)
 		expect(initial.b).toBe(3)
 		expect(comp.props.value.b).toBe(5)
@@ -92,10 +92,10 @@ describe('changedman', () => {
 		}
 
 		const comp = fakeComponent(initial)
-		const changedMan = forComponent(comp)
-		const changeableA = changedMan.prop('a')
-		const changeableA2 = changedMan.prop('a')
-		const changeableB = changedMan.prop('b')
+		const changeling = forComponentProps(comp)
+		const changeableA = changeling.changeable('a')
+		const changeableA2 = changeling.changeable('a')
+		const changeableB = changeling.changeable('b')
 		expect(changeableA.onChange).toBe(changeableA2.onChange)
 		expect(changeableA.onChange).not.toBe(changeableB.onChange)
 	})

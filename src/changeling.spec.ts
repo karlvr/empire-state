@@ -1,11 +1,5 @@
 import { forComponentProps, withFuncs, forComponentState, forComponentStateProperty } from './changeling'
 
-interface TestInterface {
-	a: string
-	b: number
-	c: boolean
-}
-
 function fakeComponentProps<T>(initial: T) {
 	const comp = {
 		props: {
@@ -30,10 +24,12 @@ function fakeComponentState<T>(initial: T) {
 
 describe('changeling', () => {
 	it('can work with component props', () => {
+		interface TestInterface {
+			b: number
+		}
+
 		const initial: TestInterface = {
-			a: 'Hello',
 			b: 3,
-			c: true,
 		}
 
 		const comp = fakeComponentProps(initial)
@@ -44,10 +40,12 @@ describe('changeling', () => {
 	})
 
 	it('can work with component state', () => {
+		interface TestInterface {
+			b: number
+		}
+
 		const initial: TestInterface = {
-			a: 'Hello',
 			b: 5,
-			c: true,
 		}
 
 		const comp = fakeComponentState(initial)
@@ -59,10 +57,12 @@ describe('changeling', () => {
 	})
 
 	it('can work with property of component state', () => {
+		interface TestInterface {
+			b: number
+		}
+
 		const initial: TestInterface = {
-			a: 'Hello',
 			b: 5,
-			c: true,
 		}
 
 		const comp = fakeComponentState(initial)
@@ -78,10 +78,12 @@ describe('changeling', () => {
 	})
 
 	it('can work with functions', () => {
+		interface TestInterface {
+			b: number
+		}
+
 		let value: TestInterface = {
-			a: 'Hello',
 			b: 3,
-			c: true,
 		}
 
 		const changeling = withFuncs(
@@ -95,10 +97,14 @@ describe('changeling', () => {
 	})
 
 	it('can perform immutable changes on component props', () => {
+		interface TestInterface {
+			a: string
+			b: number
+		}
+		
 		const initial: TestInterface = {
 			a: 'Hello',
 			b: 3,
-			c: true,
 		}
 
 		const comp = fakeComponentProps(initial)
@@ -129,10 +135,14 @@ describe('changeling', () => {
 	})
 
 	it('can return changeable without making lots of onChange functions', () => {
+		interface TestInterface {
+			a: string
+			b: number
+		}
+		
 		const initial: TestInterface = {
 			a: 'Donkey',
 			b: 7,
-			c: false,
 		}
 
 		const comp = fakeComponentProps(initial)
@@ -145,10 +155,12 @@ describe('changeling', () => {
 	})
 
 	it('can map values using a getter', () => {
+		interface TestInterface {
+			a: string
+		}
+		
 		let value: TestInterface = {
 			a: 'Hello',
-			b: 3,
-			c: true,
 		}
 
 		const changeling = withFuncs(
@@ -166,10 +178,12 @@ describe('changeling', () => {
 	})
 
 	it('can map values using a setter', () => {
+		interface TestInterface {
+			a: string
+		}
+
 		let value: TestInterface = {
 			a: 'Hello',
-			b: 3,
-			c: true,
 		}
 
 		const changeling = withFuncs(

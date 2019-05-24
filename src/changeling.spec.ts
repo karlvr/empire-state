@@ -199,4 +199,31 @@ describe('changeling', () => {
 		expect(value.a).toBe('World!')
 		expect(changeling.changeable('a').value).toBe('World!')
 	})
+
+	it('can work with nested changelings', () => {
+		interface TestInterface {
+			nested: NestedTestInterface
+		}
+
+		interface NestedTestInterface {
+			givenName: string
+		}
+
+		const initial: TestInterface = {
+			nested: {
+				givenName: 'Jorge',
+			}
+		}
+
+		const comp = fakeComponentState(initial)
+		const changeling = forComponentState(comp)
+		const changeling2 = changeling.changeling('nested')
+		const changeable = changeling2.changeable('givenName')
+
+		expect(changeable.value).toBe('Jorge')
+		changeable.onChange('Daniel')
+		expect(changeable.value).toBe('Jorge') // It is immutable
+		expect(initial.nested.givenName).toBe('Jorge') // It is immutable
+		expect(comp.state.nested.givenName).toBe('Daniel')
+	})
 })

@@ -20,6 +20,7 @@ interface ChangeableComponentWithState<T> {
 export interface Changeling<T> {
 	changeable(): Changeable<T>
 	changeable<K extends keyof T>(name?: K): Changeable<T[K]>
+	changeling<K extends keyof T>(name: K): Changeling<T[K]>
 	getter<K extends keyof T>(name: K, func: (value: T[K]) => T[K]): void
 	setter<K extends keyof T>(name: K, func: (value: T[K]) => T[K]): void
 }
@@ -73,7 +74,7 @@ class ChangelingImpl<T> implements Changeling<T> {
 
 	public changeable(): Changeable<T>
 	public changeable<K extends keyof T>(name?: K): Changeable<T[K]>
-	public changeable<K extends keyof T>(name?: K): Changeable<any> {
+	public changeable<K extends keyof T>(name?: K): Changeable<T> | Changeable<T[K]> {
 		if (name !== undefined) {
 			const onChange = this.propOnChange(name)
 			let value = this.value[name]
@@ -102,6 +103,10 @@ class ChangelingImpl<T> implements Changeling<T> {
 	public setter<K extends keyof T>(name: K, func: (value: T[K]) => T[K]) {
 		this.setters[name as string] = func
 		delete this.onChanges[name as string]
+	}
+
+	public changeling<K extends keyof T>(name: K): Changeling<T[K]> {
+		return new ChangelingImpl(() => this.changeable(name))
 	}
 
 	private get value(): T {

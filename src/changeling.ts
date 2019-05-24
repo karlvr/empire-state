@@ -2,8 +2,8 @@ import { produce } from 'immer'
 
 /** Interface for component props */
 export interface Changeable<T> {
-	onChange: (value: T) => void
-	value: T
+	readonly onChange: (value: T) => void
+	readonly value: T
 }
 
 /** Interface for component containing changeable props */

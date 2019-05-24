@@ -6,7 +6,7 @@ interface TestInterface {
 	c: boolean
 }
 
-function fakeComponent<T>(initial: T) {
+function fakeComponentProps<T>(initial: T) {
 	const comp = {
 		props: {
 			onChange: (newValue: T) => {
@@ -19,14 +19,14 @@ function fakeComponent<T>(initial: T) {
 }
 
 describe('changeling', () => {
-	it('can work with components', () => {
+	it('can work with component props', () => {
 		const initial: TestInterface = {
 			a: 'Hello',
 			b: 3,
 			c: true,
 		}
 
-		const comp = fakeComponent(initial)
+		const comp = fakeComponentProps(initial)
 
 		const changeling = forComponentProps(comp)
 		changeling.changeable('b').onChange(77)
@@ -50,14 +50,14 @@ describe('changeling', () => {
 		expect(value.b).toBe(77)
 	})
 
-	it('can perform immutable changes', () => {
+	it('can perform immutable changes on component props', () => {
 		const initial: TestInterface = {
 			a: 'Hello',
 			b: 3,
 			c: true,
 		}
 
-		const comp = fakeComponent(initial)
+		const comp = fakeComponentProps(initial)
 
 		const changeling = forComponentProps(comp)
 		const changeable = changeling.changeable('a')
@@ -91,7 +91,7 @@ describe('changeling', () => {
 			c: false,
 		}
 
-		const comp = fakeComponent(initial)
+		const comp = fakeComponentProps(initial)
 		const changeling = forComponentProps(comp)
 		const changeableA = changeling.changeable('a')
 		const changeableA2 = changeling.changeable('a')

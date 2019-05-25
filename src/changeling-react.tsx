@@ -69,6 +69,8 @@ export class LazyInput<T, K extends KEY<T>> extends React.Component<LazyInputPro
 		const value = this.convertValue(evt.target.value)
 		if (value !== undefined) {
 			snapshot.onChange(value)
+		} else if (evt.target.value === '') {
+			snapshot.onChange(undefined as any as PROPERTY<T, K>)
 		} else {
 			evt.target.value = this.displayValue(snapshot.value)
 			evt.target.select()

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Snapshot, Controller } from './changeling'
 import { Omit, Subtract, CompatibleKeys } from './utilities';
-import { KEY, PROPERTY } from './types';
+import { KEY, PROPERTY, KEYABLE } from './types';
 
 export function wrapComponent<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {
-	return <T, K extends CompatibleKeys<T, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>, prop: K }) => {
+	return <T, K extends CompatibleKeys<KEYABLE<T>, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>, prop: K }) => {
 		const { controller, prop, ...rest } = props
 		const c = controller.snapshot(prop as any as KEY<T>)
 		return (

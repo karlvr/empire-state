@@ -266,3 +266,49 @@ class MyForm extends React.Component<{}, MyFormState> {
 Now when the `MyTextField` component wants to change its value, it calls the `onChange` function in its
 props, which invokes the Changeling, which calls `setState` on the `MyForm` component to update the form
 state.
+
+## API
+
+### Creating
+
+```typescript
+/** From a component's props */
+function forComponentProps<T>(component: React.Component<T>): Changeling<T>
+
+/** From a component's state */
+function forComponentState<T>(component: React.Component<any, T>): Changeling<T>
+
+/** From a property in a component's state */
+function forComponentStateProperty<T, K extends keyof T>(component: React.Component<any, T>, property: K): Changeling<T[K]>
+
+/** Custom Changeling with your own functions to return the current value, and to accept changes. */
+function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Changeling<T>
+```
+
+### Interfaces
+
+```typescript
+/** The controller */
+interface Changeling<T> {
+	/** Returns a Changeable for this Changeling */
+	changeable(): Changeable<T>
+
+	/** Returns a Changeable for the named property of this Changeling */
+	changeable(name: string): Changeable<T[K]>
+
+	/** Returns a new Changling for the named property of this Changeling */
+	changeling(name: string): Changeling<T[K]>
+
+	/** Set a function to post-process values obtained from this Changeling for the named property */
+	getter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]): void
+
+	/** Set a function to pre-process changed values in this Changeling for the named property */
+	setter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]): void
+}
+
+/** A snapshot of a value, and a function to change it. */
+interface Changeable<T> {
+	readonly onChange: (value: T) => void
+	readonly value: T
+}
+```

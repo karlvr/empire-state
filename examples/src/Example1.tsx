@@ -8,7 +8,7 @@ import * as React from 'react'
 interface MyFormState {
 	name?: string
 	age?: number
-	address?: string,
+	address?: string
 }
 
 const INITIAL_STATE: MyFormState = {}

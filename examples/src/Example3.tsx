@@ -9,7 +9,7 @@ interface MyFormState {
 	myStuff?: {
 		name?: string
 		age?: number
-		address?: string,
+		address?: string
 	}
 }
 

@@ -1,5 +1,6 @@
 import { produce } from 'immer'
 import { KEY, PROPERTY, KEYABLE } from './types';
+import { FunctionKeys } from './utilities';
 
 /** Interface for component props */
 export interface Changeable<T> {
@@ -10,6 +11,10 @@ export interface Changeable<T> {
 /** Interface for component containing changeable props */
 interface ChangeableComponentWithProps<T> {
 	props: Changeable<T>
+}
+
+interface ChangeableComponentWithPropsGeneral<T> {
+	props: T
 }
 
 /** Interface for component with the changeable value in the state */
@@ -26,24 +31,58 @@ export interface Changeling<T> {
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 }
 
-export function forComponentProps<T>(component: ChangeableComponentWithProps<T>): Changeling<T> {
-	return new ChangelingImpl(() => component.props)
+/**
+ * Create a Changeling for a React component's props containing a `value` and `onChange` prop like `Changeable`.
+ * @param component A React component
+ */
+export function forComponentProps<T, K extends KEY<T>>(component: ChangeableComponentWithProps<T>): Changeling<T>
+
+/**
+ * Create a Changeling for a named property in a React component's state. You must provide the name of the
+ * property containing the value and the property containing the change handling function.
+ * @param component A React component
+ * @param valueProperty The name of the property containing the `value`.
+ * @param onChangeProperty The name of the property containing the `onChange` function.
+ */
+export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>>(component: ChangeableComponentWithPropsGeneral<T>, valueProperty: K, onChangeProperty: L): Changeling<PROPERTY<T, K>>
+export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>>(component: ChangeableComponentWithPropsGeneral<T>, valueProperty?: K, onChangeProperty?: L): Changeling<PROPERTY<T, K>> | Changeling<T> {
+	if (onChangeProperty === undefined || valueProperty === undefined) {
+		return new ChangelingImpl(() => component.props as any as Changeable<T>)
+	} else {
+		return new ChangelingImpl(() => ({
+			onChange: (newValue: T) => ((component.props as any)[onChangeProperty] as any as (newValue: T) => void)(newValue),
+			value: (component.props as any)[valueProperty] as T,
+		}))
+	}
 }
 
-export function forComponentState<T>(component: ChangeableComponentWithState<T>): Changeling<T> {
-	return new ChangelingImpl(() => ({
-		onChange: (newValue: T) => component.setState(() => newValue),
-		value: component.state,
-	}))
-}
+/**
+ * Create a Changeling for a React component's state.
+ * @param component A React component
+ */
+export function forComponentState<T>(component: ChangeableComponentWithState<T>): Changeling<T>
 
-export function forComponentStateProperty<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property: K): Changeling<PROPERTY<T, K>> {
-	return new ChangelingImpl(() => ({
-		onChange: (newValue: PROPERTY<T, K>) => component.setState(produce((draft) => {
-			draft[property] = newValue
-		})),
-		value: (component.state as KEYABLE<T>)[property],
-	}))
+/**
+ * Create a Changeling for a named property in a React component's state.
+ * @param component A React component
+ * @param property A property name within the component's state
+ */
+export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property: K): Changeling<PROPERTY<T, K>>
+
+export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property?: K): Changeling<PROPERTY<T, K>> | Changeling<T> {
+	if (property === undefined) {
+		return new ChangelingImpl(() => ({
+			onChange: (newValue: T) => component.setState(() => newValue),
+			value: component.state,
+		}))
+	} else {
+		return new ChangelingImpl(() => ({
+			onChange: (newValue: PROPERTY<T, K>) => component.setState(produce((draft) => {
+				draft[property] = newValue
+			})),
+			value: (component.state as KEYABLE<T>)[property],
+		}))
+	}
 }
 
 export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Changeling<T> {

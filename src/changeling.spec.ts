@@ -1,4 +1,4 @@
-import { forComponentProps, withFuncs, forComponentState, forComponentStateProperty } from './changeling'
+import { forComponentProps, withFuncs, forComponentState } from './changeling'
 
 function fakeComponentProps<T>(initial: T) {
 	const comp = {
@@ -39,6 +39,22 @@ describe('changeling', () => {
 		expect(comp.props.value.b).toBe(77)
 	})
 
+	it('can work with named component props', () => {
+		interface TestInterface {
+			b: number
+		}
+
+		const initial: TestInterface = {
+			b: 3,
+		}
+
+		const comp = fakeComponentProps(initial)
+
+		const changeling = forComponentProps(comp, 'value', 'onChange')
+		changeling.changeable('b').onChange(77)
+		expect(comp.props.value.b).toBe(77)
+	})
+
 	it('can work with component state', () => {
 		interface TestInterface {
 			b: number
@@ -56,7 +72,7 @@ describe('changeling', () => {
 		expect(comp.state.b).toBe(88)
 	})
 
-	it('can work with property of component state', () => {
+	it('can work with a property of component state', () => {
 		interface TestInterface {
 			b: number
 		}
@@ -68,7 +84,7 @@ describe('changeling', () => {
 		const comp = fakeComponentState(initial)
 		expect(comp.state.b).toBe(5)
 
-		const changeling = forComponentStateProperty(comp, 'b')
+		const changeling = forComponentState(comp, 'b')
 		const changeable = changeling.changeable()
 		changeable.onChange(88)
 		expect(comp.state.b).toBe(88)

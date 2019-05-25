@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Changeable, Changeling } from './changeling'
-import { Omit, Subtract } from './utilities';
+import { Omit, Subtract, CompatibleKeys } from './utilities';
 import { KEY, PROPERTY } from './types';
 
 export function wrapComponent<R, P extends Changeable<R>>(Component: React.ComponentType<Changeable<R> & P>) {
-	return <T, K extends CompatibleProperties<T, R>>(props: Subtract<P, Changeable<R>> & { changeling: Changeling<T>, changeable: K }) => {
+	return <T, K extends CompatibleKeys<T, R>>(props: Subtract<P, Changeable<R>> & { changeling: Changeling<T>, changeable: K }) => {
 		const { changeling, changeable, ...rest } = props
 		const c = changeling.changeable(changeable as any as KEY<T>)
 		return (
@@ -13,10 +13,6 @@ export function wrapComponent<R, P extends Changeable<R>>(Component: React.Compo
 	}
 }
 
-/** Returns the properties in T that are assignable to type R */
-type CompatibleProperties<T, R> = {
-	[P in KEY<T>]: PROPERTY<T, P> extends R ? P : never
-}[KEY<T>]
 
 interface ChangelingInputProps<T, K extends KEY<T>> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
 	changeling: Changeling<T>

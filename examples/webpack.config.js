@@ -10,7 +10,7 @@ module.exports = {
 	output: {
 		filename: './index.js',
 	},
-	mode: 'production',
+	mode: 'development',
 	plugins: [
 		new CopyWebpackPlugin([
 			{

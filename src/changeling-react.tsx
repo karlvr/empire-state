@@ -65,12 +65,12 @@ export class LazyInput<T, K extends KEY<T>> extends React.Component<LazyInputPro
 	private onBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
 		const { controller, prop } = this.props
 
-		const c = controller.snapshot(prop)
+		const snapshot = controller.snapshot(prop)
 		const value = this.convertValue(evt.target.value)
 		if (value !== undefined) {
-			c.onChange(value)
+			snapshot.onChange(value)
 		} else {
-			evt.target.value = this.displayValue(c.value)
+			evt.target.value = this.displayValue(snapshot.value)
 			evt.target.select()
 		}
 	}

@@ -4,7 +4,7 @@ import { Changeable, Changeling, ChangeableProperties, ChangeablePropertiesHolde
 export function wrapComponent<R, P extends Changeable<R>>(Component: React.ComponentType<Changeable<R> & P>) {
 	return <T, K extends CompatibleProperties<T, R>>(props: Subtract<P, Changeable<R>> & { changeling: Changeling<T>, changeable: K }) => {
 		const { changeling, changeable, ...rest } = props
-		const c = changeling.changeable(changeable)
+		const c = changeling.changeable(changeable as any as ChangeableProperties<T>)
 		return (
 			<Component value={c.value} onChange={c.onChange} {...rest as any} />
 		)

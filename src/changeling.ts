@@ -31,7 +31,7 @@ export type ChangeableProperties<T> = CP<T>
 
 export interface Changeling<T> {
 	changeable(): Changeable<T>
-	changeable<K extends CP<T>>(name?: K): Changeable<CPH<T>[K]>
+	changeable<K extends CP<T>>(name: K): Changeable<CPH<T>[K]>
 	changeling<K extends CP<T>>(name: K): Changeling<CPH<T>[K]>
 	getter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]): void
 	setter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]): void

@@ -22,7 +22,7 @@ interface InputProps<T, K extends KEY<T>> extends Omit<React.InputHTMLAttributes
 export class Input<T, K extends KEY<T>> extends React.Component<InputProps<T, K>> {
 
 	public render() {
-		const { controller, prop, ...rest } = this.props
+		const { controller, prop, convert, ...rest } = this.props
 		const value = controller.snapshot(prop).value
 		return (
 			<input value={value !== undefined && value !== null ? `${value}` : ''} onChange={this.onChange} {...rest} />
@@ -53,7 +53,7 @@ interface LazyInputProps<T, K extends KEY<T>> extends Omit<React.InputHTMLAttrib
 export class LazyInput<T, K extends KEY<T>> extends React.Component<LazyInputProps<T, K>> {
 
 	public render() {
-		const { controller, prop, ...rest } = this.props
+		const { controller, prop, convert, display, ...rest } = this.props
 
 		const value = controller.snapshot(prop).value
 		const displayValue = this.displayValue(value)
@@ -108,7 +108,7 @@ interface TextAreaProps<T, K extends KEY<T>> extends Omit<React.InputHTMLAttribu
 export class TextArea<T, K extends KEY<T>> extends React.Component<TextAreaProps<T, K>> {
 
 	public render() {
-		const { controller, prop, ...rest } = this.props
+		const { controller, prop, convert, ...rest } = this.props
 		const value = controller.snapshot(prop).value
 		return (
 			<textarea value={value !== undefined && value !== null ? `${value}` : ''} onChange={this.onChange} {...rest} />

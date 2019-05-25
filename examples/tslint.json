@@ -1,0 +1,26 @@
+{
+  "extends": ["tslint:recommended", "tslint-react"],
+  "rules": {
+    "interface-name": false,
+    "indent": {
+      "options": "tabs"
+    },
+    "jsx-no-multiline-js": false,
+    "max-classes-per-file": false,
+    "max-line-length": {
+      "options": {
+        "limit": 240
+      }
+    },
+    "object-literal-sort-keys": false,
+    "quotemark": false,
+    "semicolon": false
+  },
+  "linterOptions": {
+    "exclude": [
+      "config/**/*.js",
+      "node_modules/**/*.ts",
+      "coverage/lcov-report/*.js"
+    ]
+  }
+}

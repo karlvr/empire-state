@@ -1,4 +1,5 @@
 import { produce } from 'immer'
+import { KEY, PROPERTY, KEYABLE } from './types';
 
 /** Interface for component props */
 export interface Changeable<T> {
@@ -17,43 +18,31 @@ interface ChangeableComponentWithState<T> {
 	state: T
 }
 
-type CPH<T> = NonNullable<T>
-
-/** Converts a properties container type to a usable type */
-export type ChangeablePropertiesHolder<T> = CPH<T>
-
-type CP<T> = {
-	[K in keyof CPH<T>]: CPH<T>[K] extends Function ? never : K
-}[keyof CPH<T>]
-
-/** The properties of T that are changeable by Changeling */
-export type ChangeableProperties<T> = CP<T>
-
 export interface Changeling<T> {
 	changeable(): Changeable<T>
-	changeable<K extends CP<T>>(name: K): Changeable<CPH<T>[K]>
-	changeling<K extends CP<T>>(name: K): Changeling<CPH<T>[K]>
-	getter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]): void
-	setter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]): void
+	changeable<K extends KEY<T>>(name: K): Changeable<PROPERTY<T, K>>
+	changeling<K extends KEY<T>>(name: K): Changeling<PROPERTY<T, K>>
+	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
+	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 }
 
 export function forComponentProps<T>(component: ChangeableComponentWithProps<T>): Changeling<T> {
 	return new ChangelingImpl(() => component.props)
 }
 
-export function forComponentState<T>(component: ChangeableComponentWithState<CPH<T>>): Changeling<CPH<T>> {
+export function forComponentState<T>(component: ChangeableComponentWithState<T>): Changeling<T> {
 	return new ChangelingImpl(() => ({
-		onChange: (newValue: CPH<T>) => component.setState(() => newValue),
+		onChange: (newValue: T) => component.setState(() => newValue),
 		value: component.state,
 	}))
 }
 
-export function forComponentStateProperty<T, K extends keyof T>(component: ChangeableComponentWithState<CPH<T>>, property: K): Changeling<CPH<T>[K]> {
+export function forComponentStateProperty<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property: K): Changeling<PROPERTY<T, K>> {
 	return new ChangelingImpl(() => ({
-		onChange: (newValue: T[K]) => component.setState(produce((draft) => {
+		onChange: (newValue: PROPERTY<T, K>) => component.setState(produce((draft) => {
 			draft[property] = newValue
 		})),
-		value: component.state[property],
+		value: (component.state as KEYABLE<T>)[property],
 	}))
 }
 
@@ -73,11 +62,11 @@ class ChangelingImpl<T> implements Changeling<T> {
 	} = {}
 	
 	private getters: {
-		[name: string]: (value: any) => CPH<T>[keyof CPH<T>],
+		[name: string]: (value: any) => PROPERTY<T, KEY<T>>,
 	} = {}
 	
 	private setters: {
-		[name: string]: (value: any) => CPH<T>[keyof CPH<T>],
+		[name: string]: (value: any) => PROPERTY<T, KEY<T>>,
 	} = {}
 
 	public constructor(locator: () => Changeable<T>) {
@@ -85,8 +74,8 @@ class ChangelingImpl<T> implements Changeling<T> {
 	}
 
 	public changeable(): Changeable<T>
-	public changeable<K extends CP<T>>(name?: K): Changeable<CPH<T>[K]>
-	public changeable<K extends CP<T>>(name?: K): Changeable<T> | Changeable<CPH<T>[K]> {
+	public changeable<K extends KEY<T>>(name?: K): Changeable<PROPERTY<T, K>>
+	public changeable<K extends KEY<T>>(name?: K): Changeable<T> | Changeable<PROPERTY<T, K>> {
 		if (name !== undefined) {
 			const onChange: any = this.propOnChange(name as any as keyof T)
 			let value: any = this.value !== undefined ? this.value[name as any as keyof T] : undefined
@@ -98,7 +87,7 @@ class ChangelingImpl<T> implements Changeling<T> {
 
 			return {
 				onChange,
-				value: value as CPH<T>[K],
+				value: value as PROPERTY<T, K>,
 			}
 		} else {
 			return {
@@ -108,16 +97,16 @@ class ChangelingImpl<T> implements Changeling<T> {
 		}
 	}
 
-	public getter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]) {
+	public getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>) {
 		this.getters[name as string] = func
 	}
 
-	public setter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]) {
+	public setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>) {
 		this.setters[name as string] = func
 		delete this.onChanges[name as string]
 	}
 
-	public changeling<K extends CP<T>>(name: K): Changeling<CPH<T>[K]> {
+	public changeling<K extends KEY<T>>(name: K): Changeling<PROPERTY<T, K>> {
 		return new ChangelingImpl(() => this.changeable(name as any) as any)
 	}
 
@@ -130,9 +119,9 @@ class ChangelingImpl<T> implements Changeling<T> {
 	}
 
 	private propOnChange<K extends keyof T>(name: K): ((value: T[K]) => void) {
-		const result = this.onChanges[name as string]
-		if (result) {
-			return result
+		const PROPERTY = this.onChanges[name as string]
+		if (PROPERTY) {
+			return PROPERTY
 		}
 
 		let func = (subValue: T[K]): void => {
@@ -152,7 +141,7 @@ class ChangelingImpl<T> implements Changeling<T> {
 		if (setter) {
 			const existingNewFunc = func
 			const newFunc = (subValue: T[K]): void => {
-				const subValue2 = setter(subValue) as CPH<T>[K]
+				const subValue2 = setter(subValue) as PROPERTY<T, K>
 				existingNewFunc(subValue2)
 			}
 			func = newFunc

@@ -83,7 +83,7 @@ but that's more boiler-plate.
 Using the function `forComponentState` we create a `Changeling` that reads and updates
 the component's state.
 
-In the component we use changeling's `Input` component to create a normal `<input>` element,
+In the component we use Changeling's `Input` component to create a normal `<input>` element,
 but bound to the value of one of the `Changeling`'s properties, and reporting changes back 
 to the `Changeling`.
 
@@ -92,14 +92,10 @@ The `Input` component supports all of the regular `<input>` properties.
 ```typescript
 import { forComponentState, Input } from 'changeling'
 
-interface MyFormContents {
+interface MyFormState {
 	name: string
 	age?: number
 	address: string
-}
-
-interface MyFormState {
-	value: MyFormContents
 }
 
 class MyForm extends React.Component<{}, MyFormState> {
@@ -108,27 +104,25 @@ class MyForm extends React.Component<{}, MyFormState> {
 	 * Initialise the component state when the component is created.
 	 */
 	public state: MyFormState = {
-		value: {
-			name: '',
-			address: '',
-		},
+		name: '',
+		address: '',
 	}
 
 	/**
 	 * Create a Changeling to manage the state.
 	 */
-	private changeling = forComponentState(this)
+	private controller = forComponentState(this)
 
 	public render() {
 		return (
 			<div>
 				<div>
 					<label>Name:</label>
-					<Input changeling={this.changeling} changeable="name" />
+					<Input controller={this.controller} prop="name" />
 				</div>
 				<div>
 					<label>Address:</label>
-					<Input changeling={this.changeling} changeable="address" />
+					<Input controller={this.controller} prop="address" />
 				</div>
 			</div>
 		)
@@ -136,34 +130,20 @@ class MyForm extends React.Component<{}, MyFormState> {
 }
 ```
 
-Changeling's `fromComponentState` returns a `Changeling` that gets and sets the `value` property in 
+Changeling's `fromComponentState` returns a `Controller` that gets and sets the properties in 
 the component's state.
 
-The `<Input>` component specifies the `Changeling` instance via the `changeling` prop, and which property
-inside the `Changeling`'s object value via the `changeable` prop.
-
-To make this pattern even terser, Changeling exports an interface `ChangeableState` which you can use
-to define `MyFormState` like this:
-
-```typescript
-interface MyFormState extends ChangeableState<MyFormContents> {}
-```
-
-You can of course add your own properties to this interface. Or, if you don't have any additional properties
-to add, do away with `MyFormState` entirely, and simply write:
-
-```typescript
-class MyForm extends React.Component<{}, ChangeableState<MyFormContents>> {
-```
+The `<Input>` component specifies the `Controller` instance via the `controller` prop, and which property
+inside the controller via the `prop` prop.
 
 ## Component props example
 
 Not all components manage their own state. Many components only use props to receive state and to
 report changes.
 
-In this example the component is a part of a form, reporting changes back to the parent component via
-the `onChange` function in its props. Changeling uses the `value` and `onChange` properties from the props
-to handle this automatically for you.
+In this next example the component is a part of a form, reporting changes back to its parent component via
+the `onChange` function in its props. The controller uses the `value` and `onChange` properties from the props
+to handle this automatically for you, or you can specify the name of the value and change function properties.
 
 ```typescript
 interface MyFormSectionContents {
@@ -178,15 +158,15 @@ interface MyFormSectionProps {
 
 class MyFormSection extends React.Component<MyFormSectionProps> {
 
-	private changeling = forComponentProps(this)
+	private controller = forComponentProps(this)
 
 	public render() {
 		return (
 			<div>
 				<div>
 					<label>Full name:</label>
-					<Input changeling={this.changeling} changeable="givenName" placeholder="Given name" />
-					<Input changeling={this.changeling} changeable="familyName" placeholder="Family name" />
+					<Input controller={this.controller} prop="givenName" placeholder="Given name" />
+					<Input controller={this.controller} prop="familyName" placeholder="Family name" />
 				</div>
 			</div>
 		)
@@ -195,22 +175,22 @@ class MyFormSection extends React.Component<MyFormSectionProps> {
 }
 ```
 
-Changeling also exports an interface to describe this combination of `value` and `onChange`, so
+Changeling exports an interface to describe this combination of `value` and `onChange`, so
 you could rewrite `MyFormSectionProps` as:
 
 ```typescript
-import { Changeable } from 'changeling'
+import { Snapshot } from 'changeling'
 
-interface MyFormSectionProps extends Changeable<MyFormSectionContents> {}
+interface MyFormSectionProps extends Snapshot<MyFormSectionContents> {}
 ```
 
-### Custom editing components
+### Custom components
 
 In the examples above we've used Changeling's `<Input>` component replacement for the standard `<input>`
-element. You can also create your own components that interact with Changeling:
+element. You can also create your own components that interact with the controller:
 
 ```typescript
-interface MyTextFieldProps extends Changeable<string> {}
+interface MyTextFieldProps extends Snapshot<string> {}
 
 class MyTextField extends React.Component<MyTextFieldProps> {
 
@@ -231,9 +211,9 @@ class MyTextField extends React.Component<MyTextFieldProps> {
 export default wrapComponent(MyTextField)
 ```
 
-Note that the last line use's Changeling's [HOC](https://reactjs.org/docs/higher-order-components.html) to
-wrap `MyTextField`, which accepts props `value` and `onChange`, to instead export a component that accepts
-props `changeling` and `changeable`.
+The last line above uses Changeling's [HOC](https://reactjs.org/docs/higher-order-components.html) to
+wrap `MyTextField`, which accepts props `value` and `onChange`, to create a component that instead accepts
+props `controller` and `prop`.
 
 It can then be used like `<Input>` in the examples above, as in:
 
@@ -249,11 +229,11 @@ class MyForm extends React.Component<{}, MyFormState> {
 			<div>
 				<div>
 					<label>Name:</label>
-					<MyTextField changeling={this.changeling} changeable="name" />
+					<MyTextField controller={this.controller} prop="name" />
 				</div>
 				<div>
 					<label>Address:</label>
-					<MyTextField changeling={this.changeling} changeable="address" />
+					<MyTextField controller={this.controller} prop="address" />
 				</div>
 			</div>
 		)
@@ -264,7 +244,7 @@ class MyForm extends React.Component<{}, MyFormState> {
 ```
 
 Now when the `MyTextField` component wants to change its value, it calls the `onChange` function in its
-props, which invokes the Changeling, which calls `setState` on the `MyForm` component to update the form
+props, which invokes the controller, which calls `setState` on the `MyForm` component to update the form
 state.
 
 ## API
@@ -273,42 +253,47 @@ state.
 
 ```typescript
 /** From a component's props */
-function forComponentProps<T>(component: React.Component<T>): Changeling<T>
+function forComponentProps<T>(component: React.Component<T>): Controller<T>
 
 /** From a component's state */
-function forComponentState<T>(component: React.Component<any, T>): Changeling<T>
+function forComponentState<T>(component: React.Component<any, T>): Controller<T>
 
-/** From a property in a component's state */
-function forComponentStateProperty<T, K extends keyof T>(component: React.Component<any, T>, property: K): Changeling<T[K]>
+/** From a named property in a component's state */
+function forComponentStateProperty<T, K extends keyof T>(component: React.Component<any, T>, property: K): Controller<T[K]>
 
 /** Custom Changeling with your own functions to return the current value, and to accept changes. */
-function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Changeling<T>
+function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Controller<T>
 ```
 
 ### Interfaces
 
 ```typescript
-/** The controller */
-interface Changeling<T> {
-	/** Returns a Changeable for this Changeling */
-	changeable(): Changeable<T>
+/**
+ * A controller for the value of type T from some source.
+ * 
+ * The type `V` in function definitions below is used to indicate the type of a given named property in `T`.
+ */
+interface Controller<T> {
 
-	/** Returns a Changeable for the named property of this Changeling */
-	changeable(name: string): Changeable<T[K]>
+	/** Returns a new sub-controller for the named property of this controller */
+	controller(name: string): Controller<V>
 
-	/** Returns a new Changling for the named property of this Changeling */
-	changeling(name: string): Changeling<T[K]>
+	/** Returns a Snapshot of the controller's value */
+	snapshot(): Snapshot<T>
 
-	/** Set a function to post-process values obtained from this Changeling for the named property */
-	getter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]): void
+	/** Returns a Snapshot of the named property of this Changeling */
+	snapshot(name: string): Snapshot<V>
 
-	/** Set a function to pre-process changed values in this Changeling for the named property */
-	setter<K extends CP<T>>(name: K, func: (value: CPH<T>[K]) => CPH<T>[K]): void
+	/** Set a function to process values read for the named property */
+	getter(name: string, func: (value: V) => V): void
+
+	/** Set a function to process changed values for the named property */
+	setter(name: string, func: (value: V) => V): void
 }
 
-/** A snapshot of a value, and a function to change it. */
-interface Changeable<T> {
-	readonly onChange: (value: T) => void
+/** A snapshot of a value, and the function to change it. */
+interface Snapshot<T> {
 	readonly value: T
+	readonly onChange: (newValue: T) => void
 }
 ```

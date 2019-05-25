@@ -3,14 +3,14 @@ import { KEY, PROPERTY, KEYABLE } from './types';
 import { FunctionKeys } from './utilities';
 
 /** Interface for component props */
-export interface Changeable<T> {
+export interface Snapshot<T> {
 	readonly onChange: (value: T) => void
 	readonly value: T
 }
 
 /** Interface for component containing changeable props */
 interface ChangeableComponentWithProps<T> {
-	props: Changeable<T>
+	props: Snapshot<T>
 }
 
 interface ChangeableComponentWithPropsGeneral<T> {
@@ -23,10 +23,12 @@ interface ChangeableComponentWithState<T> {
 	state: T
 }
 
-export interface Changeling<T> {
-	changeable(): Changeable<T>
-	changeable<K extends KEY<T>>(name: K): Changeable<PROPERTY<T, K>>
-	changeling<K extends KEY<T>>(name: K): Changeling<PROPERTY<T, K>>
+export interface Controller<T> {
+	controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
+
+	snapshot(): Snapshot<T>
+	snapshot<K extends KEY<T>>(name: K): Snapshot<PROPERTY<T, K>>
+	
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 }
@@ -35,7 +37,7 @@ export interface Changeling<T> {
  * Create a Changeling for a React component's props containing a `value` and `onChange` prop like `Changeable`.
  * @param component A React component
  */
-export function forComponentProps<T, K extends KEY<T>>(component: ChangeableComponentWithProps<T>): Changeling<T>
+export function forComponentProps<T, K extends KEY<T>>(component: ChangeableComponentWithProps<T>): Controller<T>
 
 /**
  * Create a Changeling for a named property in a React component's state. You must provide the name of the
@@ -44,10 +46,10 @@ export function forComponentProps<T, K extends KEY<T>>(component: ChangeableComp
  * @param valueProperty The name of the property containing the `value`.
  * @param onChangeProperty The name of the property containing the `onChange` function.
  */
-export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>>(component: ChangeableComponentWithPropsGeneral<T>, valueProperty: K, onChangeProperty: L): Changeling<PROPERTY<T, K>>
-export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>>(component: ChangeableComponentWithPropsGeneral<T>, valueProperty?: K, onChangeProperty?: L): Changeling<PROPERTY<T, K>> | Changeling<T> {
+export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>>(component: ChangeableComponentWithPropsGeneral<T>, valueProperty: K, onChangeProperty: L): Controller<PROPERTY<T, K>>
+export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>>(component: ChangeableComponentWithPropsGeneral<T>, valueProperty?: K, onChangeProperty?: L): Controller<PROPERTY<T, K>> | Controller<T> {
 	if (onChangeProperty === undefined || valueProperty === undefined) {
-		return new ChangelingImpl(() => component.props as any as Changeable<T>)
+		return new ChangelingImpl(() => component.props as any as Snapshot<T>)
 	} else {
 		return new ChangelingImpl(() => ({
 			onChange: (newValue: T) => ((component.props as any)[onChangeProperty] as any as (newValue: T) => void)(newValue),
@@ -60,16 +62,16 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
  * Create a Changeling for a React component's state.
  * @param component A React component
  */
-export function forComponentState<T>(component: ChangeableComponentWithState<T>): Changeling<T>
+export function forComponentState<T>(component: ChangeableComponentWithState<T>): Controller<T>
 
 /**
  * Create a Changeling for a named property in a React component's state.
  * @param component A React component
  * @param property A property name within the component's state
  */
-export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property: K): Changeling<PROPERTY<T, K>>
+export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property: K): Controller<PROPERTY<T, K>>
 
-export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property?: K): Changeling<PROPERTY<T, K>> | Changeling<T> {
+export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property?: K): Controller<PROPERTY<T, K>> | Controller<T> {
 	if (property === undefined) {
 		return new ChangelingImpl(() => ({
 			onChange: (newValue: T) => component.setState(() => newValue),
@@ -85,16 +87,16 @@ export function forComponentState<T, K extends KEY<T>>(component: ChangeableComp
 	}
 }
 
-export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Changeling<T> {
+export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Controller<T> {
 	return new ChangelingImpl(() => ({
 		onChange,
 		value: value(),
 	}))
 }
 
-class ChangelingImpl<T> implements Changeling<T> {
+class ChangelingImpl<T> implements Controller<T> {
 
-	private locator: () => Changeable<T>
+	private locator: () => Snapshot<T>
 
 	private onChanges: {
 		[name: string]: (value: any) => void,
@@ -108,13 +110,13 @@ class ChangelingImpl<T> implements Changeling<T> {
 		[name: string]: (value: any) => PROPERTY<T, KEY<T>>,
 	} = {}
 
-	public constructor(locator: () => Changeable<T>) {
+	public constructor(locator: () => Snapshot<T>) {
 		this.locator = locator
 	}
 
-	public changeable(): Changeable<T>
-	public changeable<K extends KEY<T>>(name?: K): Changeable<PROPERTY<T, K>>
-	public changeable<K extends KEY<T>>(name?: K): Changeable<T> | Changeable<PROPERTY<T, K>> {
+	public snapshot(): Snapshot<T>
+	public snapshot<K extends KEY<T>>(name?: K): Snapshot<PROPERTY<T, K>>
+	public snapshot<K extends KEY<T>>(name?: K): Snapshot<T> | Snapshot<PROPERTY<T, K>> {
 		if (name !== undefined) {
 			const onChange: any = this.propOnChange(name as any as keyof T)
 			let value: any = this.value !== undefined ? this.value[name as any as keyof T] : undefined
@@ -145,8 +147,8 @@ class ChangelingImpl<T> implements Changeling<T> {
 		delete this.onChanges[name as string]
 	}
 
-	public changeling<K extends KEY<T>>(name: K): Changeling<PROPERTY<T, K>> {
-		return new ChangelingImpl(() => this.changeable(name as any) as any)
+	public controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>> {
+		return new ChangelingImpl(() => this.snapshot(name as any) as any)
 	}
 
 	private get value(): T {

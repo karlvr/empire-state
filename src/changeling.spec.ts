@@ -22,7 +22,7 @@ function fakeComponentState<T>(initial: T) {
 	return comp
 }
 
-describe('changeling', () => {
+describe('controller', () => {
 	it('can work with component props', () => {
 		interface TestInterface {
 			b: number
@@ -34,8 +34,8 @@ describe('changeling', () => {
 
 		const comp = fakeComponentProps(initial)
 
-		const changeling = forComponentProps(comp)
-		changeling.changeable('b').onChange(77)
+		const controller = forComponentProps(comp)
+		controller.snapshot('b').onChange(77)
 		expect(comp.props.value.b).toBe(77)
 	})
 
@@ -50,8 +50,8 @@ describe('changeling', () => {
 
 		const comp = fakeComponentProps(initial)
 
-		const changeling = forComponentProps(comp, 'value', 'onChange')
-		changeling.changeable('b').onChange(77)
+		const controller = forComponentProps(comp, 'value', 'onChange')
+		controller.snapshot('b').onChange(77)
 		expect(comp.props.value.b).toBe(77)
 	})
 
@@ -67,8 +67,8 @@ describe('changeling', () => {
 		const comp = fakeComponentState(initial)
 		expect(comp.state.b).toBe(5)
 
-		const changeling = forComponentState(comp)
-		changeling.changeable('b').onChange(88)
+		const controller = forComponentState(comp)
+		controller.snapshot('b').onChange(88)
 		expect(comp.state.b).toBe(88)
 	})
 
@@ -84,13 +84,13 @@ describe('changeling', () => {
 		const comp = fakeComponentState(initial)
 		expect(comp.state.b).toBe(5)
 
-		const changeling = forComponentState(comp, 'b')
-		const changeable = changeling.changeable()
+		const controller = forComponentState(comp, 'b')
+		const changeable = controller.snapshot()
 		changeable.onChange(88)
 		expect(comp.state.b).toBe(88)
 		expect(changeable.value).toBe(5) // Changeable is immutable
 
-		expect(changeling.changeable().value).toBe(88) // Changeling is mutable
+		expect(controller.snapshot().value).toBe(88) // Changeling is mutable
 	})
 
 	it('can work with functions', () => {
@@ -102,13 +102,13 @@ describe('changeling', () => {
 			b: 3,
 		}
 
-		const changeling = withFuncs(
+		const controller = withFuncs(
 			() => value,
 			(newValue: TestInterface) => {
 				value = newValue
 			},
 		)
-		changeling.changeable('b').onChange(77)
+		controller.snapshot('b').onChange(77)
 		expect(value.b).toBe(77)
 	})
 
@@ -125,8 +125,8 @@ describe('changeling', () => {
 
 		const comp = fakeComponentProps(initial)
 
-		const changeling = forComponentProps(comp)
-		const changeable = changeling.changeable('a')
+		const controller = forComponentProps(comp)
+		const changeable = controller.snapshot('a')
 
 		/* Confirm initial value */
 		expect(changeable.value).toBe('Hello')
@@ -143,7 +143,7 @@ describe('changeling', () => {
 		/* The value in our component is changed, as our root onChange function changes it */
 		expect(comp.props.value.a).toBe('World')
 
-		const changeableB = changeling.changeable('b')
+		const changeableB = controller.snapshot('b')
 		changeableB.onChange(5)
 		expect(initial.b).toBe(3)
 		expect(comp.props.value.b).toBe(5)
@@ -162,10 +162,10 @@ describe('changeling', () => {
 		}
 
 		const comp = fakeComponentProps(initial)
-		const changeling = forComponentProps(comp)
-		const changeableA = changeling.changeable('a')
-		const changeableA2 = changeling.changeable('a')
-		const changeableB = changeling.changeable('b')
+		const controller = forComponentProps(comp)
+		const changeableA = controller.snapshot('a')
+		const changeableA2 = controller.snapshot('a')
+		const changeableB = controller.snapshot('b')
 		expect(changeableA.onChange).toBe(changeableA2.onChange)
 		expect(changeableA.onChange).not.toBe(changeableB.onChange)
 	})
@@ -179,18 +179,18 @@ describe('changeling', () => {
 			a: 'Hello',
 		}
 
-		const changeling = withFuncs(
+		const controller = withFuncs(
 			() => value,
 			(newValue: TestInterface) => {
 				value = newValue
 			},
 		)
-		changeling.getter('a', (value) => value + '!')
+		controller.getter('a', (value) => value + '!')
 
-		expect(changeling.changeable('a').value).toBe('Hello!')
-		changeling.changeable('a').onChange('World')
+		expect(controller.snapshot('a').value).toBe('Hello!')
+		controller.snapshot('a').onChange('World')
 		expect(value.a).toBe('World')
-		expect(changeling.changeable('a').value).toBe('World!')
+		expect(controller.snapshot('a').value).toBe('World!')
 	})
 
 	it('can map values using a setter', () => {
@@ -202,21 +202,21 @@ describe('changeling', () => {
 			a: 'Hello',
 		}
 
-		const changeling = withFuncs(
+		const controller = withFuncs(
 			() => value,
 			(newValue: TestInterface) => {
 				value = newValue
 			},
 		)
-		changeling.setter('a', (value) => value + '!')
+		controller.setter('a', (value) => value + '!')
 
-		expect(changeling.changeable('a').value).toBe('Hello')
-		changeling.changeable('a').onChange('World')
+		expect(controller.snapshot('a').value).toBe('Hello')
+		controller.snapshot('a').onChange('World')
 		expect(value.a).toBe('World!')
-		expect(changeling.changeable('a').value).toBe('World!')
+		expect(controller.snapshot('a').value).toBe('World!')
 	})
 
-	it('can work with nested changelings', () => {
+	it('can work with nested controllers', () => {
 		interface TestInterface {
 			nested: NestedTestInterface
 		}
@@ -232,9 +232,9 @@ describe('changeling', () => {
 		}
 
 		const comp = fakeComponentState(initial)
-		const changeling = forComponentState(comp)
-		const changeling2 = changeling.changeling('nested')
-		const changeable = changeling2.changeable('givenName')
+		const controller = forComponentState(comp)
+		const controller2 = controller.controller('nested')
+		const changeable = controller2.snapshot('givenName')
 
 		expect(changeable.value).toBe('Jorge')
 		changeable.onChange('Daniel')
@@ -250,8 +250,8 @@ describe('changeling', () => {
 
 		const initial: TestInterface = {}
 		const comp = fakeComponentState(initial)
-		const changeling = forComponentState(comp)
-		const changeable = changeling.changeable('name')
+		const controller = forComponentState(comp)
+		const changeable = controller.snapshot('name')
 
 		expect(comp.state.name).toBeUndefined()
 		changeable.onChange('Fred')
@@ -269,8 +269,8 @@ describe('changeling', () => {
 
 		const initial: TestInterface = {}
 		const comp = fakeComponentState(initial)
-		const changeling = forComponentState(comp)
-		const changeable = changeling.changeable('details')
+		const controller = forComponentState(comp)
+		const changeable = controller.snapshot('details')
 
 		expect(comp.state.details).toBeUndefined()
 		changeable.onChange({
@@ -280,7 +280,7 @@ describe('changeling', () => {
 		expect(comp.state.details!.name).toBe('Fred')
 	})
 
-	it('can handle nested undefined and nested changelings', () => {
+	it('can handle nested undefined and nested controllers', () => {
 		interface TestInterface {
 			details?: TestNestedInterface
 		}
@@ -291,9 +291,9 @@ describe('changeling', () => {
 
 		const initial: TestInterface = {}
 		const comp = fakeComponentState(initial)
-		const changeling = forComponentState(comp)
-		const changeling2 = changeling.changeling('details')
-		const changeable = changeling2.changeable('name')
+		const controller = forComponentState(comp)
+		const controller2 = controller.controller('details')
+		const changeable = controller2.snapshot('name')
 
 		expect(comp.state.details).toBeUndefined()
 		changeable.onChange('Fred')
@@ -301,7 +301,7 @@ describe('changeling', () => {
 		expect(comp.state.details!.name).toBe('Fred')
 	})
 
-	it('can work with deeply nested changelings', () => {
+	it('can work with deeply nested controllers', () => {
 		interface TestInterface {
 			root?: TestInterface2
 		}
@@ -317,11 +317,11 @@ describe('changeling', () => {
 		const initial: TestInterface = {}
 		
 		const comp = fakeComponentState(initial)
-		const changeling = forComponentState(comp)
-		const changeling2 = changeling.changeling('root')
-		const changeling3 = changeling2.changeling('nextLevel')
-		const changeling4 = changeling3.changeling('pot')
-		const changeable = changeling4.changeable()
+		const controller = forComponentState(comp)
+		const controller2 = controller.controller('root')
+		const controller3 = controller2.controller('nextLevel')
+		const controller4 = controller3.controller('pot')
+		const changeable = controller4.snapshot()
 		changeable.onChange('gold')
 
 		expect(comp.state.root!.nextLevel!.pot).toBe('gold')

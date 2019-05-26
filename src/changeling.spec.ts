@@ -1,4 +1,4 @@
-import { forComponentProps, withFuncs, forComponentState } from './changeling'
+import { forComponentProps, withFuncs, forComponentState, withMutable } from './changeling'
 
 function fakeComponentProps<T>(initial: T) {
 	const comp = {
@@ -325,5 +325,19 @@ describe('controller', () => {
 		changeable.onChange('gold')
 
 		expect(comp.state.root!.nextLevel!.pot).toBe('gold')
+	}),
+
+	it('can work with mutable root', () => {
+		interface TestInterface {
+			name: string
+		}
+		const value: TestInterface = {
+			name: 'Original',
+		}
+
+		const controller = withMutable(value)
+		controller.snapshot('name').onChange('Modified')
+		
+		expect(value.name).toBe('Modified')
 	})
 })

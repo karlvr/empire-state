@@ -94,6 +94,25 @@ export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): C
 	}))
 }
 
+export function withMutable<T extends object>(value: T) {
+	return new ChangelingImpl(() => ({
+		onChange: (newValue: T) => {
+			for (let i in value) {
+				if (value.hasOwnProperty(i)) {
+					delete value[i]
+				}
+			}
+
+			for (let i in newValue) {
+				if (newValue.hasOwnProperty(i)) {
+					value[i] = newValue[i]
+				}
+			}
+		},
+		value,
+	}))
+}
+
 class ChangelingImpl<T> implements Controller<T> {
 
 	private locator: () => Snapshot<T>

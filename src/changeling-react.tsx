@@ -101,7 +101,6 @@ export class LazyInput<T, K extends KEY<T>> extends React.Component<LazyInputPro
 
 interface CheckableInputProps<T, K extends KEY<T>> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'checked' | 'onChange' | 'value'> {
 	controller: Controller<T>
-	convert?: (value: string) => PROPERTY<T, K>
 	prop: K
 	value?: KEYABLE<T>[K]
 }
@@ -109,7 +108,7 @@ interface CheckableInputProps<T, K extends KEY<T>> extends Omit<React.InputHTMLA
 export class CheckableInput<T, K extends KEY<T>> extends React.Component<CheckableInputProps<T, K>> {
 
 	public render() {
-		const { controller, prop, value, convert, ...rest } = this.props
+		const { controller, prop, value, ...rest } = this.props
 		const selectedValue = controller.snapshot(prop).value
 		return (
 			<input checked={value === selectedValue as any} onChange={this.onChange} value={value !== undefined && value !== null ? `${value}` : ''} {...rest} />
@@ -118,17 +117,9 @@ export class CheckableInput<T, K extends KEY<T>> extends React.Component<Checkab
 
 	private onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
 		if (evt.target.checked) {
-			this.props.controller.snapshot(this.props.prop).onChange(this.convertValue(evt.target.value))
+			this.props.controller.snapshot(this.props.prop).onChange(this.props.value as KEYABLE<T>[K])
 		} else {
-			this.props.controller.snapshot(this.props.prop).onChange(this.convertValue(''))
-		}
-	}
-
-	private convertValue = (value: string): PROPERTY<T, K> => {
-		if (this.props.convert) {
-			return this.props.convert(value)
-		} else {
-			return value as any
+			this.props.controller.snapshot(this.props.prop).onChange(undefined as any)
 		}
 	}
 

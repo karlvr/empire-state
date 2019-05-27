@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Snapshot, Controller } from './changeling'
 import { Omit, Subtract, CompatibleKeys } from './utilities';
-import { KEY, KEYABLE, ANDTHIS, ANDTHISPROPERTY } from './types';
+import { KEY, KEYABLE, ANDTHIS, PROPERTYORTHIS } from './types';
 
 export function wrapComponent<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {
 	return <T, K extends CompatibleKeys<KEYABLE<ANDTHIS<T>>, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>, prop: K }) => {
@@ -16,8 +16,8 @@ export function wrapComponent<R, P extends Snapshot<R>>(Component: React.Compone
 interface WrapComponentConvertType<T, K extends KEY<T> | 'this', R> {
 	controller: Controller<T>
 	prop: K
-	convert: (value: R) => ANDTHISPROPERTY<T, K>
-	display?: (value: ANDTHISPROPERTY<T, K> | undefined) => R
+	convert: (value: R) => PROPERTYORTHIS<T, K>
+	display?: (value: PROPERTYORTHIS<T, K> | undefined) => R
 }
 
 function wrapComponentConvert<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {

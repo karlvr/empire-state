@@ -10,6 +10,6 @@ export type PROPERTY<T, K extends keyof KEYABLE<T>> = KEYABLE<T>[K]
 export type ANDTHIS<T> = T & { this: T }
 
 /** Like PROPERTY<T, K> but includes support for the magic `this` property that refers to the type T itself */
-export type ANDTHISPROPERTY<T, K extends KEY<T> | 'this'> = 
+export type PROPERTYORTHIS<T, K extends KEY<T> | 'this'> = 
 	K extends 'this' ? T 
 	: PROPERTY<T, Exclude<K, 'this'>>

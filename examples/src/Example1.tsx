@@ -33,7 +33,7 @@ export default class Example1 extends React.Component<{}, MyFormState> {
 				</div> */}
 				<div>
 					<label>Address:</label>
-					<Input.TextArea type="text" controller={this.controller} prop="address" />
+					<Input.TextArea controller={this.controller} prop="address" />
 				</div>
 				<h2>Summary</h2>
 				<div>Name: {this.state.name}</div>

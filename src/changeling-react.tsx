@@ -3,6 +3,33 @@ import { Snapshot, Controller, withMutable } from './changeling'
 import { Omit, Subtract, CompatibleKeys } from './utilities';
 import { KEY, KEYABLE, ANDTHIS, PROPERTYORTHIS } from './types';
 
+/**
+ * Fake interface for React.InputHTMLAttributes<HTMLInputElement> that defines all of the properties that we exclude using Omit etc.
+ * Because if we use React.InputHTMLAttributes<HTMLInputElement> TypeScript includes all of the known properties in the output declaration
+ * file as it collapses the successive Omit types that we apply. This causes a problem when a consuming project uses an older version of React.
+ * 
+ * So we use a script (`fix-types.js`) to look for the sentinel properties, and then to see which of the expected containing properties
+ * are missing, and to reconstruct the appropriate type signature.
+ * 
+ * If any exclusions are added in this class they must be added here.
+ */
+interface XYZZY1 {
+	xyzzy1?: string
+	value?: any
+	checked?: any
+	defaultValue?: any
+	onChange?: any
+	onBlur?: any
+	yzzyx1?: string
+}
+
+interface XYZZY2 {
+	xyzzy2?: string
+	value?: any
+	onChange?: any
+	yzzyx2?: string
+}
+
 export function wrapComponent<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {
 	return <T, K extends CompatibleKeys<KEYABLE<ANDTHIS<T>>, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>, prop: K }) => {
 		const { controller, prop, ...rest } = props
@@ -48,7 +75,7 @@ export function convertComponent<R, S, P extends Snapshot<R>>(Component: React.C
 	}
 }
 
-interface BaseInputProps<T> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>, Snapshot<T> {
+interface BaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange'>, Snapshot<T> {
 	convert?: (value: string) => T
 }
 
@@ -92,7 +119,7 @@ const NumberInput = convertComponent(
 	(value) => value !== undefined ? `${value}` : '',
 )
 
-interface CheckableInputProps<T> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'checked' | 'onChange' | 'value'>, Snapshot<T> {
+interface CheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'onChange' | 'value'>, Snapshot<T> {
 	checkedValue: T
 	uncheckedValue?: T
 }
@@ -116,7 +143,7 @@ class CheckableInput<T> extends React.Component<CheckableInputProps<T>> {
 
 }
 
-interface LazyBaseInputProps<T> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'defaultValue' | 'onBlur' | 'convert' | 'display'>, Snapshot<T> {
+interface LazyBaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange' | 'defaultValue' | 'onBlur' | 'convert' | 'display'>, Snapshot<T> {
 	convert?: (value: string) => T | undefined
 	display?: (value: T | undefined) => string
 }
@@ -185,7 +212,7 @@ const LazyNumberInput = convertComponent(
 	(value) => value !== undefined ? `${value}` : '',
 )
 
-interface BaseTextAreaProps<T> extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'>, Snapshot<T> {
+interface BaseTextAreaProps<T> extends Omit<XYZZY2, 'value' | 'onChange'>, Snapshot<T> {
 	convert?: (value: string) => T
 }
 

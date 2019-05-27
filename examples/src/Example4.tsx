@@ -34,7 +34,6 @@ export default class Example4 extends React.Component<{}, MyFormState> {
 						value={true} 
 						controller={this.controller} 
 						prop="likeAnimals" 
-						convert={this.toBoolean}
 					/> Like animals</label>
 				</div>
 				<div>

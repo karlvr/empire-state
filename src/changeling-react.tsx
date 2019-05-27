@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Snapshot, Controller } from './changeling'
+import { Snapshot, Controller, withMutable } from './changeling'
 import { Omit, Subtract, CompatibleKeys } from './utilities';
 import { KEY, KEYABLE, ANDTHIS, PROPERTYORTHIS } from './types';
 
@@ -235,4 +235,36 @@ export const Input = {
 
 	TextArea: wrapComponent(StringTextArea),
 	TextAreaGeneric: wrapComponentConvert(StringTextArea),
+}
+
+/* Testing */
+function test() {
+	interface Test1 {
+		name: string
+		age: number
+		works: boolean
+	}
+
+	const value: Test1 = {
+		name: '',
+		age: 0,
+		works: false,
+	}
+
+	const c = withMutable(value)
+	const jsx1 = (
+		<>
+			{/* this */}
+			<Input.String controller={c.controller('name')} prop="this" />
+			<Input.Generic controller={c} prop="this" convert={(v: string) => value} />
+			<Input.LazyString controller={c.controller('name')} prop="this" />
+			<Input.LazyGeneric controller={c.controller('age')} prop="this" convert={(value) => parseInt(value)} display={(value) => value !== undefined ? `${value}` : ''} />
+
+			{/* prop */}
+			<Input.LazyString controller={c} prop="name" />
+			<Input.LazyGeneric controller={c} prop="age" convert={(value) => parseInt(value)} display={(value) => value !== undefined ? `${value}` : ''} />
+
+			<Input.TextArea controller={c} prop="name" />
+		</>
+	)
 }

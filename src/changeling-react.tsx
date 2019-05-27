@@ -185,7 +185,7 @@ const LazyNumberInput = convertComponent(
 	(value) => value !== undefined ? `${value}` : '',
 )
 
-interface BaseTextAreaProps<T> extends Omit<React.InputHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'>, Snapshot<T> {
+interface BaseTextAreaProps<T> extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'>, Snapshot<T> {
 	convert?: (value: string) => T
 }
 

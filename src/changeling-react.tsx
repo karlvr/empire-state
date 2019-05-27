@@ -21,7 +21,7 @@ interface WrapComponentConvertType<T, K extends KEY<T> | 'this', R> {
 }
 
 function wrapComponentConvert<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {
-	return <T, K extends KEY<ANDTHIS<T>>>(props: Subtract<P, Snapshot<R>> & WrapComponentConvertType<T, K, R>) => {
+	return <T, K extends KEY<T> | 'this'>(props: Subtract<P, Snapshot<R>> & WrapComponentConvertType<T, K, R>) => {
 		const { controller, prop, convert, display, ...rest } = props
 		const c = prop !== 'this' ? (controller as any as Controller<T>).snapshot(prop as KEY<T>) : controller.snapshot()
 		return (

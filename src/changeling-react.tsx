@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Snapshot, Controller, withMutable } from './changeling'
 import { Omit, Subtract, CompatibleKeys } from './utilities';
-import { KEY, KEYABLE, ANDTHIS, PROPERTYORTHIS } from './types';
+import { KEY, KEYABLE, ANDTHIS, PROPERTYORTHIS, KEYORTHIS } from './types';
 
 /**
  * Fake interface for React.InputHTMLAttributes<HTMLInputElement> that defines all of the properties that we exclude using Omit etc.
@@ -250,6 +250,100 @@ class StringTextArea extends React.Component<Omit<BaseTextAreaProps<string>, 'co
 
 }
 
+export type OptionType<C> = string | number | OptionTypeObject<C>
+
+export interface OptionTypeObject<C> {
+	/** The label for this option */
+	label?: string
+
+	/** The text to show for this option */
+	text?: string
+
+	/** The value of this option in your model */
+	value: C | undefined
+}
+
+function isOptionTypeObject<C>(o: OptionType<C>): o is OptionTypeObject<C> {
+	return !isPrimitiveOptionType(o)
+}
+
+function isPrimitiveOptionType<C>(o: OptionType<C>): o is string | number {
+	return typeof o === 'string' || typeof o === 'number'
+}
+
+interface SelectProps<T, O extends OptionType<T>> extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value' | 'multiple'>, Snapshot<T> {
+	options?: O[]
+}
+
+class Select<T, O extends OptionType<T>> extends React.Component<SelectProps<T, O>> {
+
+	public render() {
+		const { value, onChange, options, ...rest } = this.props
+		/* We don't use option values, we just use their indexes, so we don't have to convert things to strings */
+		const selectedIndex = options ? options.findIndex(o => isOptionTypeObject(o) ? o.value === value : isPrimitiveOptionType(o) ? o === value as any : false) : -1
+
+		return (
+			<select onChange={this.onChange} value={selectedIndex !== undefined ? selectedIndex : ''} {...rest}>
+				{(options || []).map((item, index) => {
+					if (isOptionTypeObject(item)) {
+						return (
+							<option key={index} value={index} label={item.label}>{item.text || item.value}</option>
+						)
+					} else if (isPrimitiveOptionType(item)) {
+						return (
+							<option key={index} value={index}>{item}</option>
+						)
+					}
+				})}
+			</select>
+		)
+	}
+
+	private onChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
+		const selectedIndex = evt.target.selectedIndex
+
+		/* Convert the selected index to an option index (in our this.props.options), in case the select's options aren't what we expected */
+		const selectedItem = selectedIndex !== -1 ? evt.target.options.item(selectedIndex) : null
+		const selectedOptionIndex = selectedItem ? parseInt(selectedItem.value, 10) : -1
+
+		let newValue: T | undefined = undefined
+		if (selectedOptionIndex !== -1 && this.props.options) {
+			const selectedOption = this.props.options[selectedOptionIndex]
+			if (isOptionTypeObject(selectedOption)) {
+				newValue = selectedOption.value
+			} else if (isPrimitiveOptionType(selectedOption)) {
+				newValue = selectedOption as any
+			} else {
+				console.error('Select has unexpected option type')
+			}
+		}
+
+		this.props.onChange(newValue as any)
+	}
+
+}
+
+interface ControllerProps<T, K extends KEYORTHIS<T>> {
+	controller: Controller<T>
+	prop: K
+}
+
+interface SelectWrapperProps<T, K extends KEYORTHIS<T>, O extends OptionType<PROPERTYORTHIS<T, K>>> extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value' | 'multiple'>, ControllerProps<T, K> {
+	options?: O[]
+}
+
+class SelectWrapper<T, K extends KEYORTHIS<T>, O extends OptionType<PROPERTYORTHIS<T, K>>> extends React.Component<SelectWrapperProps<T, K, O>> {
+	/* Had to wrap this manually as the HOC loses the type on the options, as it has to bind the Changeable generic type before it know which prop, so it gives it {} */
+
+	public render() {
+		const { controller, prop, ...rest } = this.props
+		const snapshot = prop !== 'this' ? controller.snapshot(prop as KEY<T>) : controller.snapshot()
+		return (
+			<Select value={snapshot.value as any} onChange={snapshot.onChange as any} {...rest} />
+		)
+	}
+
+}
 export const Input = {
 	Checkable: wrapComponent(CheckableInput),
 	Generic: wrapComponentConvert(StringInput),
@@ -262,6 +356,8 @@ export const Input = {
 
 	TextArea: wrapComponent(StringTextArea),
 	TextAreaGeneric: wrapComponentConvert(StringTextArea),
+
+	Select: SelectWrapper,
 }
 
 /* Testing */
@@ -292,6 +388,13 @@ function test() {
 			<Input.LazyGeneric controller={c} prop="age" convert={(value) => parseInt(value)} display={(value) => value !== undefined ? `${value}` : ''} />
 
 			<Input.TextArea controller={c} prop="name" />
+
+			<Input.Select controller={c} prop="name" options={['John' ,'Frank']} />
+			
+			Should break
+			{/* <Input.Select controller={c} prop="name" options={[{key: 'John', value: 34}]} /> */}
+			<Input.Select controller={c} prop="age" options={[{key: 34, value: 34}]} />
+
 		</>
 	)
 }

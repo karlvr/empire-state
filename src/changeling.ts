@@ -19,7 +19,7 @@ interface ChangeableComponentWithPropsGeneral<T> {
 
 /** Interface for component with the changeable value in the state */
 interface ChangeableComponentWithState<T> {
-	setState: (func: (state: T) => T) => void
+	setState: (func: (state: T) => any) => void
 	state: T
 }
 

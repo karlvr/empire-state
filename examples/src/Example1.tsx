@@ -2,7 +2,7 @@
  * An example of using Changeling to manage a simple form state.
  */
 
-import { forComponentState, Input, LazyInput, TextArea } from 'changeling'
+import { forComponentState, Input } from 'changeling'
 import * as React from 'react'
 
 interface MyFormState {
@@ -25,15 +25,15 @@ export default class Example1 extends React.Component<{}, MyFormState> {
 				<h1>Example 1</h1>
 				<div>
 					<label>Name:</label>
-					<Input type="text" controller={this.controller} prop="name" />
+					<Input.String type="text" controller={this.controller} prop="name" />
 				</div>
-				<div>
+				{/* <div>
 					<label>Age:</label>
-					<LazyInput type="text" controller={this.controller} prop="age" convert={this.toNumber} />
-				</div>
+					<Input.LazyGeneric type="text" controller={this.controller} prop="age" convert={this.toNumber} />
+				</div> */}
 				<div>
 					<label>Address:</label>
-					<TextArea type="text" controller={this.controller} prop="address" />
+					<Input.TextArea type="text" controller={this.controller} prop="address" />
 				</div>
 				<h2>Summary</h2>
 				<div>Name: {this.state.name}</div>

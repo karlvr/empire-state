@@ -2,7 +2,7 @@
  * An example of using Changeling to manage a more complex form state.
  */
 
-import { forComponentProps, forComponentState, Input, LazyInput, Snapshot, wrapComponent } from 'changeling'
+import { forComponentProps, forComponentState, Input, Snapshot, wrapComponent } from 'changeling'
 import * as React from 'react'
 
 interface MyFormState {
@@ -83,23 +83,23 @@ const AddressComponent = wrapComponent(class AddressComponentImpl extends React.
 				<h3>Address</h3>
 				<div>
 					<label>Line 1</label>
-					<Input controller={this.controller} prop="line1" />
+					<Input.String controller={this.controller} prop="line1" />
 				</div>
 				<div>
 					<label>Line 2</label>
-					<Input controller={this.controller} prop="line2" />
+					<Input.String controller={this.controller} prop="line2" />
 				</div>
 				<div>
 					<label>City</label>
-					<Input controller={this.controller} prop="city" />
+					<Input.String controller={this.controller} prop="city" />
 				</div>
-				<div>
+				{/* <div>
 					<label>Postcode</label>
-					<LazyInput controller={this.controller} prop="postcode" convert={this.toNumber} />
-				</div>
+					<Input.LazyGeneric controller={this.controller} prop="postcode" convert={this.toNumber} />
+				</div> */}
 				<div>
 					<label>Country</label>
-					<Input controller={this.controller} prop="country" />
+					<Input.String controller={this.controller} prop="country" />
 				</div>
 			</div>
 		)
@@ -125,11 +125,11 @@ const PersonalDetailsComponent = wrapComponent(class PersonalDetailsComponentImp
 				<h2>Personal details</h2>
 				<div>
 					<label>Given name:</label>
-					<Input controller={this.controller} prop="givenName" />
+					<Input.String controller={this.controller} prop="givenName" />
 				</div>
 				<div>
 					<label>Family name:</label>
-					<Input controller={this.controller} prop="familyName" />
+					<Input.String controller={this.controller} prop="familyName" />
 				</div>
 				<AddressComponent controller={this.controller} prop="address" />
 			</div>
@@ -148,7 +148,7 @@ const WorkDetailsComponent = wrapComponent(class WorkDetailsComponentImpl extend
 				<h2>Work details</h2>
 				<div>
 					<label>Business name:</label>
-					<Input controller={this.controller} prop="businessName" />
+					<Input.String controller={this.controller} prop="businessName" />
 				</div>
 				<AddressComponent controller={this.controller} prop="address" />
 			</div>

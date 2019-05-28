@@ -15,3 +15,6 @@ export type KEYORTHIS<T> = KEY<T> | 'this'
 export type PROPERTYORTHIS<T, K extends KEY<T> | 'this'> = 
 	K extends 'this' ? T 
 	: PROPERTY<T, Exclude<K, 'this'>>
+
+/** Returns the component type of an indexed type, or never if the type isn't indexable */
+export type INDEXPROPERTY<T> = T extends (infer R)[] ? R : never

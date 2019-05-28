@@ -1,5 +1,5 @@
 import { produce } from 'immer'
-import { KEY, PROPERTY, KEYABLE } from './types';
+import { KEY, PROPERTY, KEYABLE, INDEXPROPERTY } from './types';
 import { FunctionKeys } from './utilities';
 
 /** Interface for component props */
@@ -24,10 +24,14 @@ interface ChangeableComponentWithState<T> {
 }
 
 export interface Controller<T> {
+	controller(index: number): Controller<INDEXPROPERTY<T>>
 	controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
+	controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 
 	snapshot(): Snapshot<T>
+	snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
 	snapshot<K extends KEY<T>>(name: K): Snapshot<PROPERTY<T, K>>
+	snapshot<K extends KEY<T>>(name: K, index: number): Snapshot<INDEXPROPERTY<PROPERTY<T, K>>>
 	
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
@@ -134,13 +138,28 @@ class ChangelingImpl<T> implements Controller<T> {
 	}
 
 	public snapshot(): Snapshot<T>
+	public snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
 	public snapshot<K extends KEY<T>>(name?: K): Snapshot<PROPERTY<T, K>>
-	public snapshot<K extends KEY<T>>(name?: K): Snapshot<T> | Snapshot<PROPERTY<T, K>> {
-		if (name !== undefined) {
-			const onChange: any = this.propOnChange(name as any as keyof T)
-			let value: any = this.value !== undefined ? this.value[name as any as keyof T] : undefined
+	public snapshot<K extends KEY<T>>(nameOrIndex?: K | number, index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>> {
+		if (typeof nameOrIndex === 'number') {
+			const onChange = (newValue: INDEXPROPERTY<T>) => {
+				const parentNewValue = produce(this.value, draft => {
+					(draft as any)[nameOrIndex] = newValue
+				})
+				this.onChange(parentNewValue)
+			}
+			const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
+			return {
+				onChange,
+				value,
+			}
+		} else if (nameOrIndex !== undefined && index !== undefined) {
+			return this.controller(nameOrIndex).snapshot(index)
+		} else if (nameOrIndex !== undefined) {
+			const onChange: any = this.propOnChange(nameOrIndex as any as keyof T)
+			let value: any = this.value !== undefined ? this.value[nameOrIndex as any as keyof T] : undefined
 
-			const getter = this.getters[name as string]
+			const getter = this.getters[nameOrIndex as string]
 			if (getter) {
 				value = getter(value)
 			}
@@ -166,8 +185,17 @@ class ChangelingImpl<T> implements Controller<T> {
 		delete this.onChanges[name as string]
 	}
 
-	public controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>> {
-		return new ChangelingImpl(() => this.snapshot(name as any) as any)
+	public controller(index: number): Controller<INDEXPROPERTY<T>>
+	public controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
+	public controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	public controller<K extends KEY<T>>(nameOrIndex: K | number, index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+		if (typeof nameOrIndex === 'number') {
+			return new ChangelingImpl(() => this.snapshot(nameOrIndex))
+		} else if (index !== undefined) {
+			return this.controller(nameOrIndex).controller(index)
+		} else {
+			return new ChangelingImpl(() => this.snapshot(nameOrIndex))
+		}
 	}
 
 	private get value(): T {

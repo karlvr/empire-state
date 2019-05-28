@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Snapshot, Controller, withMutable } from './changeling'
 import { Omit, Subtract, CompatibleKeys } from './utilities';
-import { KEY, KEYABLE, ANDTHIS, PROPERTYORTHIS, KEYORTHIS } from './types';
+import { KEY, KEYABLE, ANDTHIS, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY } from './types';
 
 /**
  * Fake interface for React.InputHTMLAttributes<HTMLInputElement> that defines all of the properties that we exclude using Omit etc.
@@ -344,6 +344,94 @@ class SelectWrapper<T, K extends KEYORTHIS<T>, O extends OptionType<PROPERTYORTH
 	}
 
 }
+
+export interface IndexedCursor {
+	index: number
+	first: boolean
+	last: boolean
+}
+
+export type IndexedOnPush<V> = (value: V) => void
+export type IndexedOnInsert<V> = (index: number, value: V) => void
+export type IndexedOnRemove<V> = (index: number) => void
+
+export interface IndexedActions<V> {
+	onPush: IndexedOnPush<V>
+	onInsert: IndexedOnInsert<V>
+	onRemove: IndexedOnRemove<V>
+}
+
+interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProps<T, K> {
+	/* Optional so that autocomplete works for the prop field */
+	renderEach?: (
+		controller: Controller<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
+		cursor: IndexedCursor, 
+		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
+	) => JSX.Element
+	renderBefore?: (
+		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
+	) => JSX.Element
+	renderAfter?: (
+		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
+	) => JSX.Element
+}
+
+class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T, K>> {
+
+	public render() {
+		const { controller, prop, renderEach, renderBefore, renderAfter } = this.props
+		const actualController = prop !== 'this' ? controller.controller(prop as KEY<T>) : controller
+		const snapshot = actualController.snapshot() as any as Snapshot<Array<any>>
+		let arrayValue = snapshot.value
+		if (arrayValue === undefined) {
+			arrayValue = []
+		}
+		if (arrayValue.length === undefined) {
+			arrayValue = [arrayValue]
+		}
+		if (renderEach === undefined) {
+			throw 'renderFunc not defined'
+		}
+
+		const actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>> = {
+			onPush: (value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
+				snapshot.onChange([ ...arrayValue, value])
+			},
+			onInsert: (index: number, value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
+				const newArrayValue = [ ...arrayValue ]
+				newArrayValue.splice(index, 0, value)
+				snapshot.onChange(newArrayValue)
+			},
+			onRemove: (index: number) => {
+				const newArrayValue = [ ...arrayValue ]
+				newArrayValue.splice(index, 1)
+				snapshot.onChange(newArrayValue)
+			},
+		}
+
+		return (
+			<>
+				{renderBefore ? renderBefore(actions) : null}
+				{arrayValue.map((v, i) => {
+					const indexController = actualController.controller(i)
+					const cursor: IndexedCursor = {
+						index: i,
+						first: i === 0,
+						last: i === arrayValue.length - 1,
+					}
+					return renderEach(
+						indexController as Controller<any>,
+						cursor,
+						actions,
+					)
+				})}
+				{renderAfter ? renderAfter(actions) : null}
+			</>
+		)
+	}
+
+}
+
 export const Input = {
 	Checkable: wrapComponent(CheckableInput),
 	Generic: wrapComponentConvert(StringInput),
@@ -358,6 +446,8 @@ export const Input = {
 	TextAreaGeneric: wrapComponentConvert(StringTextArea),
 
 	Select: SelectWrapper,
+
+	Indexed: Indexed,
 }
 
 /* Testing */

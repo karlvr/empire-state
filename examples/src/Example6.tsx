@@ -11,7 +11,7 @@ interface MyFormState {
 
 const INITIAL_STATE: MyFormState = {}
 
-export default class Example2 extends React.Component<{}, MyFormState> {
+export default class Example6 extends React.Component<{}, MyFormState> {
 
 	public state = INITIAL_STATE
 

@@ -6,6 +6,7 @@ import Example3 from './Example3'
 import Example4 from './Example4'
 import Example5 from './Example5'
 import Example6 from './Example6'
+import Example7 from './Example7'
 import Existing from './Existing'
 
 export default class App extends React.Component {
@@ -25,6 +26,8 @@ export default class App extends React.Component {
 				<Example5 />
 				<hr />
 				<Example6 />
+				<hr />
+				<Example7 />
 			</div>
 		)
 	}

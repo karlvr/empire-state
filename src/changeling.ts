@@ -41,7 +41,7 @@ export interface Controller<T> {
  * Create a Changeling for a React component's props containing a `value` and `onChange` prop like `Changeable`.
  * @param component A React component
  */
-export function forComponentProps<T, K extends KEY<T>>(component: ChangeableComponentWithProps<T>): Controller<T>
+export function forComponentProps<T>(component: ChangeableComponentWithProps<T>): Controller<T>
 
 /**
  * Create a Changeling for a named property in a React component's state. You must provide the name of the

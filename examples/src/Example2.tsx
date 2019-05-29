@@ -73,7 +73,7 @@ export default class Example2 extends React.Component<{}, MyFormState> {
 
 }
 
-const AddressComponent = wrapComponent(class AddressComponentImpl extends React.Component<Snapshot<Address>> {
+const AddressComponent = wrapComponent(class AddressComponentImpl extends React.Component<Snapshot<Address | undefined>> {
 
 	private controller = forComponentProps(this)
 
@@ -95,7 +95,7 @@ const AddressComponent = wrapComponent(class AddressComponentImpl extends React.
 				</div>
 				<div>
 					<label>Postcode</label>
-					<Input.LazyGeneric controller={this.controller} prop="postcode" convert={this.toNumber} />
+					<Input.LazyNumber controller={this.controller} prop="postcode" />
 				</div>
 				<div>
 					<label>Country</label>
@@ -115,7 +115,7 @@ const AddressComponent = wrapComponent(class AddressComponentImpl extends React.
 
 })
 
-const PersonalDetailsComponent = wrapComponent(class PersonalDetailsComponentImpl extends React.Component<Snapshot<PersonalDetails>> {
+const PersonalDetailsComponent = wrapComponent(class PersonalDetailsComponentImpl extends React.Component<Snapshot<PersonalDetails | undefined>> {
 
 	private controller = forComponentProps(this)
 
@@ -138,7 +138,7 @@ const PersonalDetailsComponent = wrapComponent(class PersonalDetailsComponentImp
 
 })
 
-const WorkDetailsComponent = wrapComponent(class WorkDetailsComponentImpl extends React.Component<Snapshot<WorkDetails>> {
+const WorkDetailsComponent = wrapComponent(class WorkDetailsComponentImpl extends React.Component<Snapshot<WorkDetails | undefined>> {
 
 	private controller = forComponentProps(this)
 

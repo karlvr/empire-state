@@ -25,7 +25,7 @@ export default class Example6 extends React.Component<{}, MyFormState> {
 				<h1>Example 6: Repeating</h1>
 				{
 					(namesSnapshot.value || []).map((name, index) => (
-						<Input.String controller={this.namesController.controller(index)} prop="this" />
+						<Input.String key={index} controller={this.namesController.controller(index)} prop="this" />
 					))
 				}
 

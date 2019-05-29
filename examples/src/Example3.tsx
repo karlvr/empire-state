@@ -35,11 +35,11 @@ export default class Example3 extends React.Component<{}, MyFormState> {
 				<h1>Example 3: Manual</h1>
 				<div>
 					<label>Name:</label>
-					<input type="text" value={nameSnapshot.value} onChange={evt => nameSnapshot.onChange(evt.target.value)} />
+					<input type="text" value={nameSnapshot.value || ''} onChange={evt => nameSnapshot.onChange(evt.target.value)} />
 				</div>
 				<div>
 					<label>Age:</label>
-					<input type="number" value={ageSnapshot.value} onChange={evt => {
+					<input type="number" value={ageSnapshot.value !== undefined ? ageSnapshot.value : ''} onChange={evt => {
 						const age = parseInt(evt.target.value, 10)
 						if (!isNaN(age)) {
 							ageSnapshot.onChange(age)
@@ -50,7 +50,7 @@ export default class Example3 extends React.Component<{}, MyFormState> {
 				</div>
 				<div>
 					<label>Address:</label>
-					<textarea value={addressSnapshot.value} onChange={evt => addressSnapshot.onChange(evt.target.value)} />
+					<textarea value={addressSnapshot.value || ''} onChange={evt => addressSnapshot.onChange(evt.target.value)} />
 				</div>
 				<h2>Summary</h2>
 				{this.state.myStuff && (

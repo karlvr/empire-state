@@ -29,7 +29,7 @@ export default class Example1 extends React.Component<{}, MyFormState> {
 				</div>
 				<div>
 					<label>Age:</label>
-					<Input.LazyGeneric type="text" controller={this.controller} prop="age" convert={this.toNumber} />
+					<Input.LazyNumber type="text" controller={this.controller} prop="age" />
 				</div>
 				<div>
 					<label>Address:</label>

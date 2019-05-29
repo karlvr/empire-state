@@ -22,7 +22,7 @@ export default class Example6 extends React.Component<{}, MyFormState> {
 		const namesSnapshot = this.namesController.snapshot()
 		return (
 			<div>
-				<h1>Example 6</h1>
+				<h1>Example 6: Repeating</h1>
 				{
 					(namesSnapshot.value || []).map((name, index) => (
 						<Input.String controller={this.namesController.controller(index)} prop="this" />

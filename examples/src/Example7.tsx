@@ -21,7 +21,7 @@ export default class Example7 extends React.Component<{}, MyFormState> {
 	public render() {
 		return (
 			<div>
-				<h1>Example 7</h1>
+				<h1>Example 7: Indexed</h1>
 				<Input.Indexed 
 					controller={this.controller} 
 					prop="names" 

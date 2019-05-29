@@ -22,15 +22,15 @@ export default class Example1 extends React.Component<{}, MyFormState> {
 	public render() {
 		return (
 			<div>
-				<h1>Example 1</h1>
+				<h1>Example 1: Simple</h1>
 				<div>
 					<label>Name:</label>
 					<Input.String type="text" controller={this.controller} prop="name" />
 				</div>
-				{/* <div>
+				<div>
 					<label>Age:</label>
 					<Input.LazyGeneric type="text" controller={this.controller} prop="age" convert={this.toNumber} />
-				</div> */}
+				</div>
 				<div>
 					<label>Address:</label>
 					<Input.TextArea controller={this.controller} prop="address" />

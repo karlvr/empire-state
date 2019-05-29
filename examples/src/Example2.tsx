@@ -26,7 +26,7 @@ interface Address {
 	line1: string
 	line2: string
 	city: string
-	postcode: number
+	postcode?: number
 	country: string
 }
 
@@ -41,7 +41,7 @@ export default class Example2 extends React.Component<{}, MyFormState> {
 	public render() {
 		return (
 			<div>
-				<h1>Example 2</h1>
+				<h1>Example 2: Complex</h1>
 
 				<PersonalDetailsComponent controller={this.controller} prop="personalDetails" />
 				<WorkDetailsComponent controller={this.controller} prop="workDetails" />
@@ -93,10 +93,10 @@ const AddressComponent = wrapComponent(class AddressComponentImpl extends React.
 					<label>City</label>
 					<Input.String controller={this.controller} prop="city" />
 				</div>
-				{/* <div>
+				<div>
 					<label>Postcode</label>
 					<Input.LazyGeneric controller={this.controller} prop="postcode" convert={this.toNumber} />
-				</div> */}
+				</div>
 				<div>
 					<label>Country</label>
 					<Input.String controller={this.controller} prop="country" />

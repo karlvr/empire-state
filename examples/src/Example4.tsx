@@ -1,5 +1,5 @@
 /**
- * An example of using Changeling with non-standard input elements.
+ * An example of using Changeling with Checkable input elements.
  */
 
 import { forComponentState, Input, Controller } from 'changeling'
@@ -26,7 +26,7 @@ export default class Example4 extends React.Component<{}, MyFormState> {
 	public render() {
 		return (
 			<div>
-				<h1>Example 4</h1>
+				<h1>Example 4: Checkable</h1>
 				<div>
 					<label><Input.Checkable 
 						type="checkbox" 

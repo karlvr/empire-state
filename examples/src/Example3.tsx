@@ -32,7 +32,7 @@ export default class Example3 extends React.Component<{}, MyFormState> {
 		const addressSnapshot = this.controller.snapshot('address')
 		return (
 			<div>
-				<h1>Example 3</h1>
+				<h1>Example 3: Manual</h1>
 				<div>
 					<label>Name:</label>
 					<input type="text" value={nameSnapshot.value} onChange={evt => nameSnapshot.onChange(evt.target.value)} />

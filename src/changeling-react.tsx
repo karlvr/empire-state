@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Snapshot, Controller, withMutable } from './changeling'
-import { Omit, Subtract, CompatibleKeys } from './utilities';
-import { KEY, KEYABLE, ANDTHIS, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY } from './types';
+import { Omit, Subtract } from './utilities';
+import { KEY, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY, COMPATIBLEKEYS } from './types';
 
 /**
  * Fake interface for React.InputHTMLAttributes<HTMLInputElement> that defines all of the properties that we exclude using Omit etc.
@@ -31,60 +31,27 @@ interface XYZZY2 {
 }
 
 export function wrapComponent<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {
-	return <T, K extends CompatibleKeys<KEYABLE<ANDTHIS<T>>, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>, prop: K }) => {
+	return <T, K extends COMPATIBLEKEYS<T, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>, prop: K }) => {
 		const { controller, prop, ...rest } = props
-		const c = prop !== 'this' ? (controller as any as Controller<T>).snapshot(prop as KEY<T>) : controller.snapshot()
+		const c = prop !== 'this' ? (controller as any as Controller<T>).snapshot(prop as any as KEY<T>) : controller.snapshot()
 		return (
 			<Component value={c.value} onChange={c.onChange} {...rest as any} />
 		)
 	}
 }
 
-interface WrapComponentConvertType<T, K extends KEY<T> | 'this', R> {
-	controller: Controller<T>
-	prop: K
-	convert: (value: R) => PROPERTYORTHIS<T, K>
-	display?: (value: PROPERTYORTHIS<T, K> | undefined) => R
-}
-
-function wrapComponentConvert<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {
-	return <T, K extends KEY<T> | 'this'>(props: Subtract<P, Snapshot<R>> & WrapComponentConvertType<T, K, R>) => {
-		const { controller, prop, convert, display, ...rest } = props
-		const c = prop !== 'this' ? (controller as any as Controller<T>).snapshot(prop as KEY<T>) : controller.snapshot()
-		return (
-			<Component value={display ? display(c.value as any) : c.value} onChange={(value) => { c.onChange(convert(value) as any) }} {...rest as any} />
-		)
-	}
-}
-
-/**
- * Convert a component that accepts values of type R to a component that accepts values of type S.
- * @param Component A component that accepts a Snapshot<R>
- * @param convert A function to convert from R to S
- * @param display A function to convert from S to R
- */
-export function convertComponent<R, S, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>, 
-		convert: (value: R) => S, 
-		display?: (value: S | undefined) => R
-	) {
-	return (props: Subtract<P, Snapshot<R>> & Snapshot<S>) => {
-		const { value, onChange, ...rest } = props
-		return (
-			<Component value={display ? display(value as any) : value} onChange={(value) => { onChange(convert(value) as any) }} {...rest as any} />
-		)
-	}
-}
-
-interface BaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange'>, Snapshot<T> {
-	convert?: (value: string) => T
+interface BaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange' | 'convert'>, Snapshot<T> {
+	convert: (value: string) => T
+	display: (value: T) => string
 }
 
 class BaseInput<T> extends React.Component<BaseInputProps<T>> {
 
 	public render() {
-		const { value, onChange, convert, ...rest } = this.props
+		const { value, onChange, convert, display, ...rest } = this.props
+		const displayValue = display(value)
 		return (
-			<input value={value !== undefined && value !== null ? `${value}` : ''} onChange={this.onChange} {...rest} />
+			<input value={displayValue} onChange={this.onChange} {...rest} />
 		)
 	}
 
@@ -93,31 +60,91 @@ class BaseInput<T> extends React.Component<BaseInputProps<T>> {
 	}
 
 	private convertValue = (value: string): T => {
-		if (this.props.convert) {
-			return this.props.convert(value) as T
-		} else {
-			return value as any
-		}
+		return this.props.convert(value) as T
 	}
 
 }
 
-class StringInput extends React.Component<Omit<BaseInputProps<string>, 'convert'>> {
+interface BaseInputWrapperProps<T, K extends KEYORTHIS<T>, V> extends Omit<XYZZY1, 'value' | 'onChange' | 'convert'>, ControllerProps<T, K> {
+	convert: (value: string) => V
+	display: (value: V) => string
+}
+
+class BaseInputWrapper<T, K extends KEYORTHIS<T>, V extends PROPERTYORTHIS<T, K>> extends React.Component<BaseInputWrapperProps<T, K, V>> {
 
 	public render() {
-		const { ...rest } = this.props
+		const { controller, prop, ...rest } = this.props
+		const snapshot = prop !== 'this' ? controller.snapshot(prop as KEY<T>) : controller.snapshot()
 		return (
-			<BaseInput {...rest} />
+			<BaseInput 
+				value={snapshot.value as V} 
+				onChange={snapshot.onChange as (newValue: V) => void}
+				{...rest}
+			/>
 		)
 	}
 
 }
 
-const NumberInput = convertComponent(
-	StringInput, 
-	(value) => parseInt(value), 
-	(value) => value !== undefined ? `${value}` : '',
-)
+class StringInput extends React.Component<Omit<BaseInputProps<string | undefined>, 'convert' | 'display'>> {
+
+	public render() {
+		const { ...rest } = this.props
+		return (
+			<BaseInput 
+				convert={value => value !== '' ? value : undefined} 
+				display={value => value !== undefined ? value : ''} 
+				{...rest} 
+			/>
+		)
+	}
+
+}
+
+interface StringInputWrapperProps<T, K extends KEYORTHIS<T>> extends Omit<XYZZY1, 'value' | 'onChange' | 'convert'>, ControllerProps<T, K> {}
+
+class StringInputWrapper<T, K extends COMPATIBLEKEYS<T, string | undefined>> extends React.Component<StringInputWrapperProps<T, K>> {
+
+	public render() {
+		const { controller, prop, ...rest } = this.props
+		const snapshot = prop !== 'this' ? controller.snapshot(prop as any as KEY<T>) : controller.snapshot()
+		return (
+			<StringInput 
+				value={snapshot.value as any} 
+				onChange={snapshot.onChange as any}
+				{...rest}
+			/>
+		)
+	}
+
+}
+
+class NumberInput extends React.Component<Omit<BaseInputProps<number | undefined>, 'convert' | 'display'>> {
+
+	public render() {
+		const { ...rest } = this.props
+		return (
+			<BaseInput 
+				convert={value => {
+					const result = parseInt(value, 10)
+					if (!isNaN(result)) {
+						return result
+					}
+					return undefined
+				}} 
+				display={value => {
+					if (value !== undefined) {
+						return `${value}`
+					} else {
+						return ''
+					}
+				}}
+				{...rest}
+			/>
+		)
+	}
+
+}
 
 interface CheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'onChange' | 'value'>, Snapshot<T> {
 	checkedValue: T
@@ -144,107 +171,143 @@ class CheckableInput<T> extends React.Component<CheckableInputProps<T>> {
 }
 
 interface LazyBaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange' | 'defaultValue' | 'onBlur' | 'convert' | 'display'>, Snapshot<T> {
-	convert?: (value: string) => T | undefined
-	display?: (value: T | undefined) => string
+	convert: (value: string) => T
+	display: (value: T) => string
 }
 
 class LazyBaseInput<T> extends React.Component<LazyBaseInputProps<T>> {
 
 	public render() {
-		const { value, onChange, ...rest } = this.props
-
-		const displayValue = this.displayValue(value)
+		const { value, onChange, convert, display, ...rest } = this.props
+		const displayValue = display(value)
 		return (
 			<input key={displayValue} defaultValue={displayValue} onBlur={this.onBlur} {...rest} />
 		)
 	}
 
 	private onBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
-		const { onChange } = this.props
+		const { onChange, convert, display } = this.props
 
-		const value = this.convertValue(evt.target.value)
+		const value = convert(evt.target.value)
 		if (value !== undefined) {
 			onChange(value)
 		} else if (evt.target.value === '') {
+			/* The converted result was undefined, and the input was empty, so we change to undefined */
 			onChange(undefined as any as T)
 		} else {
-			evt.target.value = this.displayValue(this.props.value)
+			/* The converted result was undefined, but our input wasn't empty, so we assume an error and reset the value */
+			evt.target.value = display(this.props.value)
 			evt.target.select()
-		}
-	}
-
-	private displayValue = (value: T): string => {
-		if (this.props.display) {
-			return this.props.display(value)
-		}
-
-		if (value !== undefined && value !== null) {
-			return `${value}`
-		} else {
-			return ''
-		}
-	}
-
-	private convertValue = (value: string): T | undefined => {
-		if (this.props.convert) {
-			return this.props.convert(value)
-		} else {
-			return value as any
 		}
 	}
 
 }
 
-class LazyStringInput extends React.Component<Omit<LazyBaseInputProps<string>, 'convert' | 'display'>> {
+interface LazyBaseInputWrapperProps<T, K extends KEYORTHIS<T>, V> extends Omit<XYZZY1, 'value' | 'onChange' | 'defaultValue' | 'onBlur' | 'convert' | 'display'>, ControllerProps<T, K> {
+	convert: (value: string) => V
+	display: (value: V) => string
+}
+
+class LazyBaseInputWrapper<T, K extends KEYORTHIS<T>, V extends PROPERTYORTHIS<T, K>> extends React.Component<LazyBaseInputWrapperProps<T, K, V>> {
 
 	public render() {
-		const { ...rest } = this.props
+		const { controller, prop, ...rest } = this.props
+		const snapshot = prop !== 'this' ? controller.snapshot(prop as KEY<T>) : controller.snapshot()
 		return (
-			<LazyBaseInput {...rest} />
+			<LazyBaseInput 
+				value={snapshot.value as V} 
+				onChange={snapshot.onChange as (newValue: V) => void}
+				{...rest} />
 		)
 	}
 
 }
 
-const LazyNumberInput = convertComponent(
-	LazyStringInput, 
-	(value) => parseInt(value), 
-	(value) => value !== undefined ? `${value}` : '',
-)
+class LazyStringInput extends React.Component<Omit<LazyBaseInputProps<string | undefined>, 'convert' | 'display'>> {
 
-interface BaseTextAreaProps<T> extends Omit<XYZZY2, 'value' | 'onChange'>, Snapshot<T> {
-	convert?: (value: string) => T
+	public render() {
+		const { ...rest } = this.props
+		return (
+			<LazyBaseInput convert={value => value !== '' ? value : undefined} display={value => value !== undefined ? value : ''} {...rest} />
+		)
+	}
+
+}
+
+class LazyNumberInput extends React.Component<Omit<LazyBaseInputProps<number | undefined>, 'convert' | 'display'>> {
+
+	public render() {
+		const { ...rest } = this.props
+		return (
+			<LazyBaseInput 
+				convert={value => {
+					const result = parseInt(value, 10)
+					if (!isNaN(result)) {
+						return result
+					}
+					return undefined
+				}} 
+				display={value => {
+					if (value !== undefined) {
+						return `${value}`
+					} else {
+						return ''
+					}
+				}}
+				{...rest} 
+			/>
+		)
+	}
+
+}
+
+interface BaseTextAreaProps<T> extends Omit<XYZZY2, 'value' | 'onChange' | 'convert'>, Snapshot<T> {
+	convert: (value: string) => T
+	display: (value: T) => string
 }
 
 class BaseTextArea<T> extends React.Component<BaseTextAreaProps<T>> {
 
 	public render() {
-		const { value, onChange, convert, ...rest } = this.props
+		const { value, onChange, convert, display, ...rest } = this.props
+		const displayValue = display(value)
 		return (
-			<textarea value={value !== undefined && value !== null ? `${value}` : ''} onChange={this.onChange} {...rest} />
+			<textarea value={displayValue} onChange={this.onChange} {...rest} />
 		)
 	}
 
 	private onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-		this.props.onChange(this.convertValue(evt.target.value))
-	}
-
-	private convertValue = (value: string): T => {
-		if (this.props.convert) {
-			return this.props.convert(value)
-		} else {
-			return value as any
-		}
+		this.props.onChange(this.props.convert(evt.target.value))
 	}
 
 }
 
-class StringTextArea extends React.Component<Omit<BaseTextAreaProps<string>, 'convert'>> {
+interface BaseTextAreaWrapperProps<T, K extends KEYORTHIS<T>, V> extends Omit<XYZZY1, 'value' | 'onChange' | 'convert'>, ControllerProps<T, K> {
+	convert: (value: string) => V
+	display: (value: V) => string
+}
+
+class BaseTextAreaWrapper<T, K extends KEYORTHIS<T>, V extends PROPERTYORTHIS<T, K>> extends React.Component<BaseTextAreaWrapperProps<T, K, V>> {
+
+	public render() {
+		const { controller, prop, ...rest } = this.props
+		const snapshot = prop !== 'this' ? controller.snapshot(prop as KEY<T>) : controller.snapshot()
+		return (
+			<BaseTextArea
+				value={snapshot.value as V} 
+				onChange={snapshot.onChange as (newValue: V) => void}
+				{...rest} />
+		)
+	}
+
+}
+
+class StringTextArea extends React.Component<Omit<BaseTextAreaProps<string | undefined>, 'convert' | 'display'>> {
 
 	public render() {
 		const { ...rest } = this.props
 		return (
-			<BaseTextArea {...rest} />
+			<BaseTextArea convert={value => value !== '' ? value : undefined} display={value => value !== undefined ? value : ''} {...rest} />
 		)
 	}
 
@@ -431,16 +494,16 @@ class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T,
 
 export const Input = {
 	Checkable: wrapComponent(CheckableInput),
-	Generic: wrapComponentConvert(StringInput),
+	Generic: BaseInputWrapper,
 	String: wrapComponent(StringInput),
 	Number: wrapComponent(NumberInput),
 
-	LazyGeneric: wrapComponentConvert(LazyStringInput),
+	LazyGeneric: LazyBaseInputWrapper,
 	LazyString: wrapComponent(LazyStringInput),
 	LazyNumber: wrapComponent(LazyNumberInput),
 
 	TextArea: wrapComponent(StringTextArea),
-	TextAreaGeneric: wrapComponentConvert(StringTextArea),
+	TextAreaGeneric: BaseTextAreaWrapper,
 
 	Select: SelectWrapper,
 
@@ -466,13 +529,15 @@ function test() {
 		<>
 			{/* this */}
 			<Input.String controller={c.controller('name')} prop="this" />
-			<Input.Generic controller={c} prop="this" convert={(v: string) => value} />
+			<Input.Number controller={c.controller('age')} prop="this" />
+			<Input.Generic controller={c} prop="this" convert={(v: string) => JSON.parse(v) as Test1} display={v => JSON.stringify(v)} />
 			<Input.LazyString controller={c.controller('name')} prop="this" />
-			<Input.LazyGeneric controller={c.controller('age')} prop="this" convert={(value) => parseInt(value)} display={(value) => value !== undefined ? `${value}` : ''} />
+			<Input.LazyGeneric controller={c.controller('age')} prop="this" convert={(value) => parseInt(value)} display={(value) => `${value}`} />
 
 			{/* prop */}
 			<Input.LazyString controller={c} prop="name" />
-			<Input.LazyGeneric controller={c} prop="age" convert={(value) => parseInt(value)} display={(value) => value !== undefined ? `${value}` : ''} />
+			<Input.LazyNumber controller={c} prop="age" />
+			<Input.LazyGeneric controller={c} prop="age" convert={(value) => parseInt(value)} display={(value) => `${value}`} />
 
 			<Input.TextArea controller={c} prop="name" />
 
@@ -481,7 +546,50 @@ function test() {
 			Should break
 			{/* <Input.Select controller={c} prop="name" options={[{key: 'John', value: 34}]} /> */}
 			<Input.Select controller={c} prop="age" options={[{key: 34, value: 34}]} />
+		</>
+	)
 
+	interface Test2 {
+		name?: string
+		age?: number
+		works?: boolean
+		sub?: Test2Sub
+	}
+
+	interface Test2Sub {
+		subname?: string
+	}
+
+	const value2: Test2 = {}
+
+	const c2 = withMutable(value2)
+
+	const c2sub = c2.controller('sub')
+	
+	const jsx2 = (
+		<>
+			{/* this */}
+			<Input.String controller={c2.controller('name')} prop="this" />
+			<Input.Number controller={c2.controller('age')} prop="this" />
+			<Input.Generic controller={c2} prop="this" convert={(v: string) => JSON.parse(v) as Test1} display={v => JSON.stringify(v)} />
+			<Input.LazyString controller={c2.controller('name')} prop="this" />
+			<Input.LazyGeneric controller={c2.controller('age')} prop="this" convert={(value) => parseInt(value)} display={(value) => `${value}`} />
+
+			{/* prop */}
+			<Input.LazyString controller={c2} prop="name" />
+			<Input.LazyNumber controller={c2} prop="age" />
+			<Input.LazyGeneric controller={c2} prop="age" convert={(value) => parseInt(value)} display={(value) => `${value}`} />
+
+			<Input.TextArea controller={c2} prop="name" />
+
+			<Input.Select controller={c2} prop="name" options={['John' ,'Frank']} />
+
+			<Input.String controller={c2sub} prop="subname" />
+			<StringInputWrapper controller={c2sub} prop="subname" />
+			
+			Should break
+			{/* <Input.Select controller={c2} prop="name" options={[{key: 'John', value: 34}]} /> */}
+			<Input.Select controller={c2} prop="age" options={[{key: 34, value: 34}]} />
 		</>
 	)
 }

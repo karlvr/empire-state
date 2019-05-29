@@ -389,9 +389,6 @@ class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T,
 		if (arrayValue.length === undefined) {
 			arrayValue = [arrayValue]
 		}
-		if (renderEach === undefined) {
-			throw 'renderFunc not defined'
-		}
 
 		const actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>> = {
 			onPush: (value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
@@ -412,7 +409,7 @@ class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T,
 		return (
 			<>
 				{renderBefore ? renderBefore(actions) : null}
-				{arrayValue.map((v, i) => {
+				{renderEach ? arrayValue.map((v, i) => {
 					const indexController = actualController.controller(i)
 					const cursor: IndexedCursor = {
 						index: i,
@@ -424,7 +421,7 @@ class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T,
 						cursor,
 						actions,
 					)
-				})}
+				}) : null}
 				{renderAfter ? renderAfter(actions) : null}
 			</>
 		)

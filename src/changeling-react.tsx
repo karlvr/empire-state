@@ -170,6 +170,27 @@ class CheckableInput<T> extends React.Component<CheckableInputProps<T>> {
 
 }
 
+interface CheckableInputWrapperProps<T, K extends KEYORTHIS<T>, V> extends Omit<XYZZY1, 'checked' | 'onChange' | 'value'>, ControllerProps<T, K> {
+	checkedValue: V
+	uncheckedValue?: V
+}
+
+class CheckableInputWrapper<T, K extends KEYORTHIS<T>, C extends PROPERTYORTHIS<T, K>> extends React.Component<CheckableInputWrapperProps<T, K, C>> {
+
+	public render() {
+		const { controller, prop, ...rest } = this.props
+		const snapshot = prop !== 'this' ? controller.snapshot(prop as any as KEY<T>) : controller.snapshot()
+		return (
+			<CheckableInput 
+				value={snapshot.value as any} 
+				onChange={snapshot.onChange as any}
+				{...rest}
+			/>
+		)
+	}
+
+}
+
 interface LazyBaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange' | 'defaultValue' | 'onBlur' | 'convert' | 'display'>, Snapshot<T> {
 	convert: (value: string) => T
 	display: (value: T) => string
@@ -493,7 +514,7 @@ class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T,
 }
 
 export const Input = {
-	Checkable: wrapComponent(CheckableInput),
+	Checkable: CheckableInputWrapper,
 	Generic: BaseInputWrapper,
 	String: wrapComponent(StringInput),
 	Number: wrapComponent(NumberInput),
@@ -542,6 +563,8 @@ function test() {
 			<Input.TextArea controller={c} prop="name" />
 
 			<Input.Select controller={c} prop="name" options={['John' ,'Frank']} />
+
+			<Input.Checkable controller={c} prop="age" checkedValue={42} />
 			
 			Should break
 			{/* <Input.Select controller={c} prop="name" options={[{key: 'John', value: 34}]} /> */}

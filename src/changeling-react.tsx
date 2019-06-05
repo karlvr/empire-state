@@ -30,13 +30,8 @@ interface XYZZY2 {
 	yzzyx2?: string
 }
 
-export interface WrappedComponentProps<T, K extends COMPATIBLEKEYS<T, R>, R> {
-	controller: Controller<T>
-	prop: K
-}
-
 export function wrapComponent<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {
-	return <T, K extends COMPATIBLEKEYS<T, R>>(props: Subtract<P, Snapshot<R>> & WrappedComponentProps<T, K, R>) => {
+	return <T, K extends COMPATIBLEKEYS<T, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>, prop: K }) => {
 		const { controller, prop, ...rest } = props
 		const c = prop !== 'this' ? (controller as any as Controller<T>).snapshot(prop as any as KEY<T>) : controller.snapshot()
 		return (

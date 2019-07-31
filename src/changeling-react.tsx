@@ -156,7 +156,7 @@ class CheckableInput<T> extends React.Component<CheckableInputProps<T>> {
 	public render() {
 		const { value, checkedValue, uncheckedValue, onChange, ...rest } = this.props
 		return (
-			<input checked={value === checkedValue as any} onChange={this.onChange} value={checkedValue !== undefined && checkedValue !== null ? `${checkedValue}` : ''} {...rest} />
+			<input checked={value === checkedValue} onChange={this.onChange} value={checkedValue !== undefined && checkedValue !== null ? `${checkedValue}` : ''} {...rest} />
 		)
 	}
 
@@ -182,6 +182,60 @@ class CheckableInputWrapper<T, K extends KEYORTHIS<T>, C extends PROPERTYORTHIS<
 		const snapshot = prop !== 'this' ? controller.snapshot(prop as any as KEY<T>) : controller.snapshot()
 		return (
 			<CheckableInput 
+				value={snapshot.value as any} 
+				onChange={snapshot.onChange as any}
+				{...rest}
+			/>
+		)
+	}
+
+}
+
+interface MultiCheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'onChange' | 'value'>, Snapshot<T[]> {
+	checkedValue: T
+	uncheckedValue?: T
+}
+
+class MultiCheckableInput<T> extends React.Component<MultiCheckableInputProps<T>> {
+
+	public render() {
+		const { value, checkedValue, uncheckedValue, onChange, ...rest } = this.props
+		const checked = value && value.indexOf(checkedValue) !== -1
+		return (
+			<input checked={checked} onChange={this.onChange} value={checkedValue !== undefined && checkedValue !== null ? `${checkedValue}` : ''} {...rest} />
+		)
+	}
+
+	private onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+		const index = this.props.value.indexOf(this.props.checkedValue)
+		if (evt.target.checked) {
+			if (index === -1) {
+				const newValue = [ ...this.props.value, this.props.checkedValue ]
+				this.props.onChange(newValue)
+			}
+		} else {
+			if (index !== -1) {
+				const newValue = [ ...this.props.value ]
+				newValue.splice(index, 1)
+				this.props.onChange(newValue)
+			}
+		}
+	}
+
+}
+
+interface MultiCheckableInputWrapperProps<T, K extends KEYORTHIS<T>, V> extends Omit<XYZZY1, 'checked' | 'onChange' | 'value'>, ControllerProps<T, K> {
+	checkedValue: V
+	uncheckedValue?: V
+}
+
+class MultiCheckableInputWrapper<T, K extends KEYORTHIS<T>, C extends INDEXPROPERTY<PROPERTYORTHIS<T, K>>> extends React.Component<MultiCheckableInputWrapperProps<T, K, C>> {
+
+	public render() {
+		const { controller, prop, ...rest } = this.props
+		const snapshot = prop !== 'this' ? controller.snapshot(prop as any as KEY<T>) : controller.snapshot()
+		return (
+			<MultiCheckableInput 
 				value={snapshot.value as any} 
 				onChange={snapshot.onChange as any}
 				{...rest}
@@ -515,6 +569,8 @@ class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T,
 
 export const Input = {
 	Checkable: CheckableInputWrapper,
+	MultiCheckable: MultiCheckableInputWrapper,
+
 	Generic: BaseInputWrapper,
 	String: wrapComponent(StringInput),
 	Number: wrapComponent(NumberInput),
@@ -537,12 +593,14 @@ function test() {
 		name: string
 		age: number
 		works: boolean
+		options: string[]
 	}
 
 	const value: Test1 = {
 		name: '',
 		age: 0,
 		works: false,
+		options: [],
 	}
 
 	const c = withMutable(value)
@@ -565,6 +623,7 @@ function test() {
 			<Input.Select controller={c} prop="name" options={['John' ,'Frank']} />
 
 			<Input.Checkable controller={c} prop="age" checkedValue={42} />
+			<Input.MultiCheckable controller={c} prop="options" checkedValue="Cool" />
 			
 			Should break
 			{/* <Input.Select controller={c} prop="name" options={[{key: 'John', value: 34}]} /> */}

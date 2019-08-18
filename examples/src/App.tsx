@@ -4,6 +4,7 @@ import Example1 from './Example1'
 import Example2 from './Example2'
 import Example3 from './Example3'
 import Example4 from './Example4'
+import Example4a from './Example4a'
 import Example5 from './Example5'
 import Example6 from './Example6'
 import Example7 from './Example7'
@@ -23,6 +24,8 @@ export default class App extends React.Component {
 				<Example3 />
 				<hr />
 				<Example4 />
+				<hr />
+				<Example4a />
 				<hr />
 				<Example5 />
 				<hr />

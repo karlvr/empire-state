@@ -200,7 +200,7 @@ class MultiCheckableInput<T> extends React.Component<MultiCheckableInputProps<T>
 
 	public render() {
 		const { value, checkedValue, uncheckedValue, onChange, ...rest } = this.props
-		const checked = value && value.indexOf(checkedValue) !== -1
+		const checked = value ? value.indexOf(checkedValue) !== -1 : false
 		return (
 			<input checked={checked} onChange={this.onChange} value={checkedValue !== undefined && checkedValue !== null ? `${checkedValue}` : ''} {...rest} />
 		)

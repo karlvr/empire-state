@@ -207,15 +207,16 @@ class MultiCheckableInput<T> extends React.Component<MultiCheckableInputProps<T>
 	}
 
 	private onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		const index = this.props.value.indexOf(this.props.checkedValue)
+		const existing = this.props.value || []
+		const index = existing.indexOf(this.props.checkedValue)
 		if (evt.target.checked) {
 			if (index === -1) {
-				const newValue = [ ...this.props.value, this.props.checkedValue ]
+				const newValue = [ ...existing, this.props.checkedValue ]
 				this.props.onChange(newValue)
 			}
 		} else {
 			if (index !== -1) {
-				const newValue = [ ...this.props.value ]
+				const newValue = [ ...existing ]
 				newValue.splice(index, 1)
 				this.props.onChange(newValue)
 			}

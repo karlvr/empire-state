@@ -43,12 +43,4 @@ export default class Example1 extends React.Component<{}, MyFormState> {
 		)
 	}
 
-	private toNumber(value: string): number | undefined {
-		const result = parseInt(value, 10)
-		if (isNaN(result)) {
-			return undefined
-		}
-		return result
-	}
-
 }

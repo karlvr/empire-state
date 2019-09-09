@@ -105,14 +105,6 @@ const AddressComponent = wrapComponent(class AddressComponentImpl extends React.
 		)
 	}
 
-	private toNumber(value: string): number | undefined {
-		const result = parseInt(value, 10)
-		if (isNaN(result)) {
-			return undefined
-		}
-		return result
-	}
-
 })
 
 const PersonalDetailsComponent = wrapComponent(class PersonalDetailsComponentImpl extends React.Component<Snapshot<PersonalDetails | undefined>> {

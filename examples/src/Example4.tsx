@@ -59,8 +59,4 @@ export default class Example4 extends React.Component<{}, MyFormState> {
 		)
 	}
 
-	private toBoolean = (value: string): boolean => {
-		return value === 'true'
-	}
-
 }

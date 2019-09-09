@@ -2,9 +2,8 @@
  * An example of repeating fields using Indexed component.
  */
 
-import { forComponentState, Input, Controller } from 'changeling'
+import { forComponentState, Input, Controller, IndexedCursor, IndexedActions } from 'changeling'
 import * as React from 'react'
-import { IndexedCursor, IndexedActions } from '../../dist/changeling-react';
 
 interface MyFormState {
 	names?: string[]

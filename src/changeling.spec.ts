@@ -1,4 +1,5 @@
-import { forComponentProps, withFuncs, forComponentState, withMutable } from './changeling'
+import { withFuncs, withMutable } from './changeling'
+import { forComponentProps, forComponentState } from './changeling-react';
 
 function fakeComponentProps<T>(initial: T) {
 	const comp = {

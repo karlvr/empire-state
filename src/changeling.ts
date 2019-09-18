@@ -19,6 +19,9 @@ export interface Controller<T> {
 	
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
+
+	addChangeListener(listener: ChangeListener<T>): void
+	removeChangeListener(listener: ChangeListener<T>): void
 }
 
 export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Controller<T> {
@@ -47,6 +50,8 @@ export function withMutable<T extends object>(value: T): Controller<T> {
 	}))
 }
 
+export type ChangeListener<T> = (value: T) => void
+
 export class ChangelingImpl<T> implements Controller<T> {
 
 	private locator: () => Snapshot<T>
@@ -62,6 +67,8 @@ export class ChangelingImpl<T> implements Controller<T> {
 	private setters: {
 		[name: string]: (value: any) => PROPERTY<T, KEY<T>>,
 	} = {}
+
+	private changeListeners: ChangeListener<T>[] = []
 
 	public constructor(locator: () => Snapshot<T>) {
 		this.locator = locator
@@ -115,6 +122,17 @@ export class ChangelingImpl<T> implements Controller<T> {
 		delete this.onChanges[name as string]
 	}
 
+	public addChangeListener(listener: ChangeListener<T>) {
+		this.changeListeners.push(listener)
+	}
+
+	public removeChangeListener(listener: ChangeListener<T>) {
+		const index = this.changeListeners.indexOf(listener)
+		if (index !== -1) {
+			this.changeListeners.splice(index, 1)
+		}
+	}
+
 	public controller(index: number): Controller<INDEXPROPERTY<T>>
 	public controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
 	public controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
@@ -133,7 +151,11 @@ export class ChangelingImpl<T> implements Controller<T> {
 	}
 
 	private onChange(value: T) {
-		return this.locator().onChange(value)
+		this.locator().onChange(value)
+
+		for (const listener of this.changeListeners) {
+			listener(value)
+		}
 	}
 
 	private propOnChange<K extends keyof T>(name: K): ((value: T[K]) => void) {

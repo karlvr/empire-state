@@ -506,13 +506,13 @@ interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProps<T, K> 
 		controller: Controller<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
 		cursor: IndexedCursor, 
 		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
-	) => JSX.Element
+	) => JSX.Element | null
 	renderBefore?: (
 		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
-	) => JSX.Element
+	) => JSX.Element | null
 	renderAfter?: (
 		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
-	) => JSX.Element
+	) => JSX.Element | null
 }
 
 class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T, K>> {

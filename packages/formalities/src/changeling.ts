@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-dupe-class-members */
 import { produce } from 'immer'
-import { KEY, PROPERTY, INDEXPROPERTY } from './types'
+import { KEY, PROPERTY, INDEXPROPERTY } from './type-utils'
 
 /** Interface for component props */
 export interface Snapshot<T> {

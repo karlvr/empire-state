@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Snapshot, Controller } from './changeling'
 import { withMutable } from './creators'
-import { Omit, Subtract } from './utilities';
-import { KEY, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY, COMPATIBLEKEYS } from './types';
+import { Omit, Subtract } from './utilities'
+import { KEY, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY, COMPATIBLEKEYS } from './type-utils'
 
 /**
  * Fake interface for React.InputHTMLAttributes<HTMLInputElement> that defines all of the properties that we exclude using Omit etc.
@@ -32,7 +32,7 @@ interface XYZZY2 {
 }
 
 export function wrapComponent<R, P extends Snapshot<R>>(Component: React.ComponentType<Snapshot<R> & P>) {
-	return <T, K extends COMPATIBLEKEYS<T, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>, prop: K }) => {
+	return <T, K extends COMPATIBLEKEYS<T, R>>(props: Subtract<P, Snapshot<R>> & { controller: Controller<T>; prop: K }) => {
 		const { controller, prop, ...rest } = props
 		const c = prop !== 'this' ? (controller as any as Controller<T>).snapshot(prop as any as KEY<T>) : controller.snapshot()
 		return (
@@ -212,12 +212,12 @@ class MultiCheckableInput<T> extends React.Component<MultiCheckableInputProps<T>
 		const index = existing.indexOf(this.props.checkedValue)
 		if (evt.target.checked) {
 			if (index === -1) {
-				const newValue = [ ...existing, this.props.checkedValue ]
+				const newValue = [...existing, this.props.checkedValue]
 				this.props.onChange(newValue)
 			}
 		} else {
 			if (index !== -1) {
-				const newValue = [ ...existing ]
+				const newValue = [...existing]
 				newValue.splice(index, 1)
 				this.props.onChange(newValue)
 			}
@@ -532,15 +532,15 @@ class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T,
 
 		const actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>> = {
 			onPush: (value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
-				snapshot.onChange([ ...arrayValue, value])
+				snapshot.onChange([...arrayValue, value])
 			},
 			onInsert: (index: number, value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
-				const newArrayValue = [ ...arrayValue ]
+				const newArrayValue = [...arrayValue]
 				newArrayValue.splice(index, 0, value)
 				snapshot.onChange(newArrayValue)
 			},
 			onRemove: (index: number) => {
-				const newArrayValue = [ ...arrayValue ]
+				const newArrayValue = [...arrayValue]
 				newArrayValue.splice(index, 1)
 				snapshot.onChange(newArrayValue)
 			},
@@ -622,14 +622,14 @@ function test() {
 
 			<Input.TextArea controller={c} prop="name" />
 
-			<Input.Select controller={c} prop="name" options={['John' ,'Frank']} />
+			<Input.Select controller={c} prop="name" options={['John', 'Frank']} />
 
 			<Input.Checkable controller={c} prop="age" checkedValue={42} />
 			<Input.MultiCheckable controller={c} prop="options" checkedValue="Cool" />
 			
 			Should break
 			{/* <Input.Select controller={c} prop="name" options={[{key: 'John', value: 34}]} /> */}
-			<Input.Select controller={c} prop="age" options={[{key: 34, value: 34}]} />
+			<Input.Select controller={c} prop="age" options={[{ key: 34, value: 34 }]} />
 		</>
 	)
 
@@ -666,14 +666,14 @@ function test() {
 
 			<Input.TextArea controller={c2} prop="name" />
 
-			<Input.Select controller={c2} prop="name" options={['John' ,'Frank']} />
+			<Input.Select controller={c2} prop="name" options={['John', 'Frank']} />
 
 			<Input.String controller={c2sub} prop="subname" />
 			<StringInputWrapper controller={c2sub} prop="subname" />
 			
 			Should break
 			{/* <Input.Select controller={c2} prop="name" options={[{key: 'John', value: 34}]} /> */}
-			<Input.Select controller={c2} prop="age" options={[{key: 34, value: 34}]} />
+			<Input.Select controller={c2} prop="age" options={[{ key: 34, value: 34 }]} />
 		</>
 	)
 }

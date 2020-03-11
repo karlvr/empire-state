@@ -1,6 +1,6 @@
 import { Snapshot, Controller, ChangelingImpl } from './changeling'
-import { FunctionKeys } from './utilities';
-import { KEY, KEYABLE, PROPERTY } from './types';
+import { FunctionKeys } from './utilities'
+import { KEY, KEYABLE, PROPERTY } from './types'
 import { produce } from 'immer'
 
 /** Interface for component containing changeable props */

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-dupe-class-members */
 import { produce } from 'immer'
-import { KEY, PROPERTY, KEYABLE, INDEXPROPERTY } from './types';
+import { KEY, PROPERTY, INDEXPROPERTY } from './types'
 
 /** Interface for component props */
 export interface Snapshot<T> {
@@ -34,13 +36,13 @@ export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): C
 export function withMutable<T extends object>(value: T): Controller<T> {
 	return new ChangelingImpl(() => ({
 		onChange: (newValue: T) => {
-			for (let i in value) {
+			for (const i in value) {
 				if (value.hasOwnProperty(i)) {
 					delete value[i]
 				}
 			}
 
-			for (let i in newValue) {
+			for (const i in newValue) {
 				if (newValue.hasOwnProperty(i)) {
 					value[i] = newValue[i]
 				}
@@ -57,15 +59,15 @@ export class ChangelingImpl<T> implements Controller<T> {
 	private locator: () => Snapshot<T>
 
 	private onChanges: {
-		[name: string]: (value: any) => void,
+		[name: string]: (value: any) => void
 	} = {}
 	
 	private getters: {
-		[name: string]: (value: any) => PROPERTY<T, KEY<T>>,
+		[name: string]: (value: any) => PROPERTY<T, KEY<T>>
 	} = {}
 	
 	private setters: {
-		[name: string]: (value: any) => PROPERTY<T, KEY<T>>,
+		[name: string]: (value: any) => PROPERTY<T, KEY<T>>
 	} = {}
 
 	private changeListeners: ChangeListener<T>[] = []
@@ -171,7 +173,7 @@ export class ChangelingImpl<T> implements Controller<T> {
 					(draft as any)[name] = subValue as any
 				})
 				: {
-					[name]: subValue
+					[name]: subValue,
 				}
 
 			this.onChange(newValue as T)

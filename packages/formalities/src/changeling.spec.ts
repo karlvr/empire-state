@@ -1,5 +1,5 @@
 import { withFuncs, withMutable } from './changeling'
-import { forComponentProps, forComponentState } from './changeling-react';
+import { forComponentProps, forComponentState } from './changeling-react'
 
 function fakeComponentProps<T>(initial: T) {
 	const comp = {
@@ -18,7 +18,7 @@ function fakeComponentState<T>(initial: T) {
 		state: initial,
 		setState: (func: (state: T) => T) => {
 			comp.state = func(comp.state)
-		}
+		},
 	}
 	return comp
 }
@@ -229,7 +229,7 @@ describe('controller', () => {
 		const initial: TestInterface = {
 			nested: {
 				givenName: 'Jorge',
-			}
+			},
 		}
 
 		const comp = fakeComponentState(initial)
@@ -347,7 +347,7 @@ describe('controller', () => {
 			names: string[]
 		}
 		const value: TestInterface = {
-			names: ['Blake', 'Avon']
+			names: ['Blake', 'Avon'],
 		}
 		const controller = withMutable(value)
 		expect(controller.snapshot('names').value).toEqual(['Blake', 'Avon'])
@@ -368,7 +368,7 @@ describe('controller', () => {
 			names: string[]
 		}
 		const value: TestInterface = {
-			names: ['Blake', 'Avon']
+			names: ['Blake', 'Avon'],
 		}
 		const controller = withMutable(value)
 
@@ -388,7 +388,7 @@ describe('controller', () => {
 			names: string[]
 		}
 		const value: TestInterface = {
-			names: ['Blake', 'Avon']
+			names: ['Blake', 'Avon'],
 		}
 		const controller = withMutable(value)
 

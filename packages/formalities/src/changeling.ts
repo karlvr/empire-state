@@ -168,7 +168,7 @@ export class ChangelingImpl<T> implements Controller<T> {
 			const value = this.value
 			const newValue = value !== undefined ?
 				produce(value, (draft) => {
-					draft[name] = subValue as any
+					(draft as any)[name] = subValue as any
 				})
 				: {
 					[name]: subValue

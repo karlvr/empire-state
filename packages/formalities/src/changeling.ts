@@ -26,32 +26,6 @@ export interface Controller<T> {
 	removeChangeListener(listener: ChangeListener<T>): void
 }
 
-export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Controller<T> {
-	return new ChangelingImpl(() => ({
-		onChange,
-		value: value(),
-	}))
-}
-
-export function withMutable<T extends object>(value: T): Controller<T> {
-	return new ChangelingImpl(() => ({
-		onChange: (newValue: T) => {
-			for (const i in value) {
-				if (value.hasOwnProperty(i)) {
-					delete value[i]
-				}
-			}
-
-			for (const i in newValue) {
-				if (newValue.hasOwnProperty(i)) {
-					value[i] = newValue[i]
-				}
-			}
-		},
-		value,
-	}))
-}
-
 export type ChangeListener<T> = (value: T) => void
 
 export class ChangelingImpl<T> implements Controller<T> {

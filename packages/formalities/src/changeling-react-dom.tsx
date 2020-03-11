@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { Snapshot, Controller, withMutable } from './changeling'
+import { Snapshot, Controller } from './changeling'
+import { withMutable } from './creators'
 import { Omit, Subtract } from './utilities';
 import { KEY, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY, COMPATIBLEKEYS } from './types';
 

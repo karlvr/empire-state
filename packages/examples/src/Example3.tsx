@@ -2,7 +2,7 @@
  * An example of using Changeling manually; without the helper React components.
  */
 
-import { forComponentState, Snapshot, withFuncs } from 'changeling'
+import { forComponentState, Snapshot, withFuncs } from 'formalities'
 import * as React from 'react'
 
 interface MyFormState {

@@ -2,7 +2,7 @@
  * An example of using Changeling to manage a more complex form state.
  */
 
-import { forComponentProps, forComponentState, Input, Snapshot, wrapComponent } from 'changeling'
+import { forComponentProps, forComponentState, Input, Snapshot, wrapComponent } from 'formalities'
 import * as React from 'react'
 
 interface MyFormState {

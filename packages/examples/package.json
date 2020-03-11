@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "formalities": "file:../formalities",
-    "immer": "^3.1.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "immer": "^6.0.1",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
   },
   "scripts": {
     "build": "webpack",

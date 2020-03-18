@@ -1,5 +1,5 @@
 module.exports = {
-	'extends': ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+	'extends': ['react-app', 'eslint:recommended', 'plugin:@typescript-eslint/recommended'],
 	'env': {
 		'node': true,
 		'jest': true,

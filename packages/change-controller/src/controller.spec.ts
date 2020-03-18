@@ -1,4 +1,4 @@
-import { withFuncs, withMutable } from 'formalities'
+import { withFuncs, withMutable } from './creators'
 
 describe('controller', () => {
 	it('can work with functions', () => {

@@ -38,7 +38,7 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 		return new ControllerImpl(() => component.props as any as Snapshot<T>)
 	} else {
 		return new ControllerImpl(() => ({
-			onChange: (newValue: T) => ((component.props as any)[onChangeProperty] as any as (newValue: T) => void)(newValue),
+			setValue: (newValue: T) => ((component.props as any)[onChangeProperty] as any as (newValue: T) => void)(newValue),
 			value: (component.props as any)[valueProperty] as T,
 		}))
 	}
@@ -60,12 +60,12 @@ export function forComponentState<T, K extends KEY<T>>(component: ChangeableComp
 export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property?: K): Controller<PROPERTY<T, K>> | Controller<T> {
 	if (property === undefined) {
 		return new ControllerImpl(() => ({
-			onChange: (newValue: T) => component.setState(() => newValue),
+			setValue: (newValue: T) => component.setState(() => newValue),
 			value: component.state,
 		}))
 	} else {
 		return new ControllerImpl(() => ({
-			onChange: (newValue: PROPERTY<T, K>) => component.setState(produce((draft) => {
+			setValue: (newValue: PROPERTY<T, K>) => component.setState(produce((draft) => {
 				draft[property] = newValue
 			})),
 			value: (component.state as KEYABLE<T>)[property],

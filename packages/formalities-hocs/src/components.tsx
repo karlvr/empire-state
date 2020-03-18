@@ -17,6 +17,7 @@ import { KEY, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY, COMPATIBLEKEYS } from 'c
 interface XYZZY1 {
 	xyzzy1?: string
 	value?: any
+	setValue?: any
 	checked?: any
 	defaultValue?: any
 	onChange?: any
@@ -27,7 +28,7 @@ interface XYZZY1 {
 interface XYZZY2 {
 	xyzzy2?: string
 	value?: any
-	onChange?: any
+	setValue?: any
 	yzzyx2?: string
 }
 
@@ -36,12 +37,12 @@ export function wrapComponent<R, P extends Snapshot<R>>(Component: React.Compone
 		const { controller, prop, ...rest } = props
 		const c = prop !== 'this' ? (controller as any as Controller<T>).snapshot(prop as any as KEY<T>) : controller.snapshot()
 		return (
-			<Component value={c.value} onChange={c.onChange} {...rest as any} />
+			<Component value={c.value} setValue={c.setValue} {...rest as any} />
 		)
 	}
 }
 
-interface BaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange' | 'convert'>, Snapshot<T> {
+interface BaseInputProps<T> extends Omit<XYZZY1, 'value' | 'setValue' | 'convert'>, Snapshot<T> {
 	convert: (value: string) => T
 	display: (value: T) => string
 }
@@ -49,7 +50,7 @@ interface BaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange' | 'convert
 class BaseInput<T> extends React.Component<BaseInputProps<T>> {
 
 	public render() {
-		const { value, onChange, convert, display, ...rest } = this.props
+		const { value, setValue, convert, display, ...rest } = this.props
 		const displayValue = display(value)
 		return (
 			<input value={displayValue} onChange={this.onChange} {...rest} />
@@ -57,7 +58,7 @@ class BaseInput<T> extends React.Component<BaseInputProps<T>> {
 	}
 
 	private onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		this.props.onChange(this.convertValue(evt.target.value))
+		this.props.setValue(this.convertValue(evt.target.value))
 	}
 
 	private convertValue = (value: string): T => {
@@ -79,7 +80,7 @@ class BaseInputWrapper<T, K extends KEYORTHIS<T>, V extends PROPERTYORTHIS<T, K>
 		return (
 			<BaseInput 
 				value={snapshot.value as V} 
-				onChange={snapshot.onChange as (newValue: V) => void}
+				setValue={snapshot.setValue as (newValue: V) => void}
 				{...rest}
 			/>
 		)
@@ -112,7 +113,7 @@ class StringInputWrapper<T, K extends COMPATIBLEKEYS<T, string | undefined>> ext
 		return (
 			<StringInput 
 				value={snapshot.value as any} 
-				onChange={snapshot.onChange as any}
+				setValue={snapshot.setValue as any}
 				{...rest}
 			/>
 		)
@@ -147,7 +148,7 @@ class NumberInput extends React.Component<Omit<BaseInputProps<number | undefined
 
 }
 
-interface CheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'onChange' | 'value'>, Snapshot<T> {
+interface CheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'setValue' | 'value'>, Snapshot<T> {
 	checkedValue: T
 	uncheckedValue?: T
 }
@@ -155,7 +156,7 @@ interface CheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'onChange' | '
 class CheckableInput<T> extends React.Component<CheckableInputProps<T>> {
 
 	public render() {
-		const { value, checkedValue, uncheckedValue, onChange, ...rest } = this.props
+		const { value, checkedValue, uncheckedValue, setValue, ...rest } = this.props
 		return (
 			<input checked={value === checkedValue} onChange={this.onChange} value={checkedValue !== undefined && checkedValue !== null ? `${checkedValue}` : ''} {...rest} />
 		)
@@ -163,9 +164,9 @@ class CheckableInput<T> extends React.Component<CheckableInputProps<T>> {
 
 	private onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
 		if (evt.target.checked) {
-			this.props.onChange(this.props.checkedValue)
+			this.props.setValue(this.props.checkedValue)
 		} else {
-			this.props.onChange(this.props.uncheckedValue as any)
+			this.props.setValue(this.props.uncheckedValue as any)
 		}
 	}
 
@@ -184,7 +185,7 @@ class CheckableInputWrapper<T, K extends KEYORTHIS<T>, C extends PROPERTYORTHIS<
 		return (
 			<CheckableInput 
 				value={snapshot.value as any} 
-				onChange={snapshot.onChange as any}
+				setValue={snapshot.setValue as any}
 				{...rest}
 			/>
 		)
@@ -192,7 +193,7 @@ class CheckableInputWrapper<T, K extends KEYORTHIS<T>, C extends PROPERTYORTHIS<
 
 }
 
-interface MultiCheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'onChange' | 'value'>, Snapshot<T[]> {
+interface MultiCheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'setValue' | 'value'>, Snapshot<T[]> {
 	checkedValue: T
 	uncheckedValue?: T
 }
@@ -200,7 +201,7 @@ interface MultiCheckableInputProps<T> extends Omit<XYZZY1, 'checked' | 'onChange
 class MultiCheckableInput<T> extends React.Component<MultiCheckableInputProps<T>> {
 
 	public render() {
-		const { value, checkedValue, uncheckedValue, onChange, ...rest } = this.props
+		const { value, checkedValue, uncheckedValue, setValue, ...rest } = this.props
 		const checked = value ? value.indexOf(checkedValue) !== -1 : false
 		return (
 			<input checked={checked} onChange={this.onChange} value={checkedValue !== undefined && checkedValue !== null ? `${checkedValue}` : ''} {...rest} />
@@ -213,13 +214,13 @@ class MultiCheckableInput<T> extends React.Component<MultiCheckableInputProps<T>
 		if (evt.target.checked) {
 			if (index === -1) {
 				const newValue = [...existing, this.props.checkedValue]
-				this.props.onChange(newValue)
+				this.props.setValue(newValue)
 			}
 		} else {
 			if (index !== -1) {
 				const newValue = [...existing]
 				newValue.splice(index, 1)
-				this.props.onChange(newValue)
+				this.props.setValue(newValue)
 			}
 		}
 	}
@@ -239,7 +240,7 @@ class MultiCheckableInputWrapper<T, K extends KEYORTHIS<T>, C extends INDEXPROPE
 		return (
 			<MultiCheckableInput 
 				value={snapshot.value as any} 
-				onChange={snapshot.onChange as any}
+				setValue={snapshot.setValue as any}
 				{...rest}
 			/>
 		)
@@ -247,7 +248,7 @@ class MultiCheckableInputWrapper<T, K extends KEYORTHIS<T>, C extends INDEXPROPE
 
 }
 
-interface LazyBaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange' | 'defaultValue' | 'onBlur' | 'convert' | 'display'>, Snapshot<T> {
+interface LazyBaseInputProps<T> extends Omit<XYZZY1, 'value' | 'setValue' | 'defaultValue' | 'onBlur' | 'convert' | 'display'>, Snapshot<T> {
 	convert: (value: string) => T
 	display: (value: T) => string
 }
@@ -255,7 +256,7 @@ interface LazyBaseInputProps<T> extends Omit<XYZZY1, 'value' | 'onChange' | 'def
 class LazyBaseInput<T> extends React.Component<LazyBaseInputProps<T>> {
 
 	public render() {
-		const { value, onChange, convert, display, ...rest } = this.props
+		const { value, setValue, convert, display, ...rest } = this.props
 		const displayValue = display(value)
 		return (
 			<input key={displayValue} defaultValue={displayValue} onBlur={this.onBlur} {...rest} />
@@ -263,14 +264,14 @@ class LazyBaseInput<T> extends React.Component<LazyBaseInputProps<T>> {
 	}
 
 	private onBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
-		const { onChange, convert, display } = this.props
+		const { setValue, convert, display } = this.props
 
 		const value = convert(evt.target.value)
 		if (value !== undefined) {
-			onChange(value)
+			setValue(value)
 		} else if (evt.target.value === '') {
 			/* The converted result was undefined, and the input was empty, so we change to undefined */
-			onChange(undefined as any as T)
+			setValue(undefined as any as T)
 		} else {
 			/* The converted result was undefined, but our input wasn't empty, so we assume an error and reset the value */
 			evt.target.value = display(this.props.value)
@@ -293,7 +294,7 @@ class LazyBaseInputWrapper<T, K extends KEYORTHIS<T>, V extends PROPERTYORTHIS<T
 		return (
 			<LazyBaseInput 
 				value={snapshot.value as V} 
-				onChange={snapshot.onChange as (newValue: V) => void}
+				setValue={snapshot.setValue as (newValue: V) => void}
 				{...rest} />
 		)
 	}
@@ -338,7 +339,7 @@ class LazyNumberInput extends React.Component<Omit<LazyBaseInputProps<number | u
 
 }
 
-interface BaseTextAreaProps<T> extends Omit<XYZZY2, 'value' | 'onChange' | 'convert'>, Snapshot<T> {
+interface BaseTextAreaProps<T> extends Omit<XYZZY2, 'value' | 'setValue' | 'convert'>, Snapshot<T> {
 	convert: (value: string) => T
 	display: (value: T) => string
 }
@@ -346,7 +347,7 @@ interface BaseTextAreaProps<T> extends Omit<XYZZY2, 'value' | 'onChange' | 'conv
 class BaseTextArea<T> extends React.Component<BaseTextAreaProps<T>> {
 
 	public render() {
-		const { value, onChange, convert, display, ...rest } = this.props
+		const { value, setValue, convert, display, ...rest } = this.props
 		const displayValue = display(value)
 		return (
 			<textarea value={displayValue} onChange={this.onChange} {...rest} />
@@ -354,7 +355,7 @@ class BaseTextArea<T> extends React.Component<BaseTextAreaProps<T>> {
 	}
 
 	private onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-		this.props.onChange(this.props.convert(evt.target.value))
+		this.props.setValue(this.props.convert(evt.target.value))
 	}
 
 }
@@ -372,7 +373,7 @@ class BaseTextAreaWrapper<T, K extends KEYORTHIS<T>, V extends PROPERTYORTHIS<T,
 		return (
 			<BaseTextArea
 				value={snapshot.value as V} 
-				onChange={snapshot.onChange as (newValue: V) => void}
+				setValue={snapshot.setValue as (newValue: V) => void}
 				{...rest} />
 		)
 	}
@@ -418,7 +419,7 @@ interface SelectProps<T, O extends OptionType<T>> extends Omit<React.SelectHTMLA
 class Select<T, O extends OptionType<T>> extends React.Component<SelectProps<T, O>> {
 
 	public render() {
-		const { value, onChange, options, ...rest } = this.props
+		const { value, setValue, options, ...rest } = this.props
 		/* We don't use option values, we just use their indexes, so we don't have to convert things to strings */
 		const selectedIndex = options ? options.findIndex(o => isOptionTypeObject(o) ? o.value === value : isPrimitiveOptionType(o) ? o === value as any : false) : -1
 
@@ -458,7 +459,7 @@ class Select<T, O extends OptionType<T>> extends React.Component<SelectProps<T, 
 			}
 		}
 
-		this.props.onChange(newValue as any)
+		this.props.setValue(newValue as any)
 	}
 
 }
@@ -479,7 +480,7 @@ class SelectWrapper<T, K extends KEYORTHIS<T>, O extends OptionType<PROPERTYORTH
 		const { controller, prop, ...rest } = this.props
 		const snapshot = prop !== 'this' ? controller.snapshot(prop as KEY<T>) : controller.snapshot()
 		return (
-			<Select value={snapshot.value as any} onChange={snapshot.onChange as any} {...rest} />
+			<Select value={snapshot.value as any} setValue={snapshot.setValue as any} {...rest} />
 		)
 	}
 
@@ -532,17 +533,17 @@ class Indexed<T, K extends KEYORTHIS<T>> extends React.Component<IndexedProps<T,
 
 		const actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>> = {
 			onPush: (value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
-				snapshot.onChange([...arrayValue, value])
+				snapshot.setValue([...arrayValue, value])
 			},
 			onInsert: (index: number, value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
 				const newArrayValue = [...arrayValue]
 				newArrayValue.splice(index, 0, value)
-				snapshot.onChange(newArrayValue)
+				snapshot.setValue(newArrayValue)
 			},
 			onRemove: (index: number) => {
 				const newArrayValue = [...arrayValue]
 				newArrayValue.splice(index, 1)
-				snapshot.onChange(newArrayValue)
+				snapshot.setValue(newArrayValue)
 			},
 		}
 

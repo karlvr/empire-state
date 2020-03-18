@@ -78,7 +78,7 @@ const AddressComponent = wrapComponent(class AddressComponentImpl extends React.
 	private controller = forComponentProps(this)
 
 	public render() {
-		return(
+		return (
 			<div>
 				<h3>Address</h3>
 				<div>

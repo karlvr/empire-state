@@ -40,7 +40,7 @@ export default class Example6 extends React.Component<{}, MyFormState> {
 	private addNew = (evt: React.MouseEvent) => {
 		const namesSnapshot = this.namesController.snapshot()
 
-		namesSnapshot.onChange([ ...(namesSnapshot.value || []), ''])
+		namesSnapshot.setValue([...(namesSnapshot.value || []), ''])
 	}
 
 }

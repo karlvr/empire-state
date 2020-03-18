@@ -2,7 +2,7 @@
  * An example of using Changeling with Select input elements.
  */
 
-import { forComponentState, Input, Controller } from 'formalities-hocs'
+import { forComponentState, Input } from 'formalities-hocs'
 import * as React from 'react'
 
 interface MyFormState {
@@ -48,10 +48,10 @@ export default class Example4 extends React.Component<{}, MyFormState> {
 				<div>
 					<label>Favourite animal:</label>
 					<Input.Select controller={this.controller} prop="favouriteAnimal" options={[
-						{value: ''},
-						{value: 'Kangaroo'},
-						{value: 'Donkey'},
-						{value: 'Giraffe', text: 'Mr Giraffe'}, 
+						{ value: '' },
+						{ value: 'Kangaroo' },
+						{ value: 'Donkey' },
+						{ value: 'Giraffe', text: 'Mr Giraffe' }, 
 					]} />
 				</div>
 				<div>

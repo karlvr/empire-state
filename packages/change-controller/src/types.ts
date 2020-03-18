@@ -12,7 +12,7 @@ export interface Snapshot<T> {
 	 * and to the original datasource, which will process and apply the change.
 	 * @param newValue The new snapshot value.
 	 */
-	readonly onChange: (newValue: T) => void
+	readonly setValue: (newValue: T) => void
 }
 
 /** A Controller is a way to access Snapshots of state. */

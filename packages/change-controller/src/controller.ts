@@ -39,7 +39,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			}
 			const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
 			return {
-				onChange,
+				setValue: onChange,
 				value,
 			}
 		} else if (nameOrIndex !== undefined && index !== undefined) {
@@ -54,12 +54,12 @@ export class ControllerImpl<T> implements Controller<T> {
 			}
 
 			return {
-				onChange,
+				setValue: onChange,
 				value: value as PROPERTY<T, K>,
 			}
 		} else {
 			return {
-				onChange: (newValue: T) => this.onChange(newValue),
+				setValue: (newValue: T) => this.onChange(newValue),
 				value: this.value,
 			}
 		}
@@ -103,7 +103,7 @@ export class ControllerImpl<T> implements Controller<T> {
 	}
 
 	private onChange(value: T) {
-		this.locator().onChange(value)
+		this.locator().setValue(value)
 
 		for (const listener of this.changeListeners) {
 			listener(value)

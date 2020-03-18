@@ -19,8 +19,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false
   },
-  "exclude": [
-    "node_modules",
-    "dist"
+  "include": [
+    "./src"
   ]
 }

@@ -1,14 +1,15 @@
-import { ChangelingImpl, Controller } from './changeling'
+import { ControllerImpl } from './controller'
+import { Controller } from './types'
 
 export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): Controller<T> {
-	return new ChangelingImpl(() => ({
+	return new ControllerImpl(() => ({
 		onChange,
 		value: value(),
 	}))
 }
 
 export function withMutable<T extends object>(value: T): Controller<T> {
-	return new ChangelingImpl(() => ({
+	return new ControllerImpl(() => ({
 		onChange: (newValue: T) => {
 			for (const i in value) {
 				if (Object.prototype.hasOwnProperty.call(value, i)) {

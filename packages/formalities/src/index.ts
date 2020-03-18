@@ -1,2 +1,2 @@
-export { Snapshot, Controller } from './changeling'
+export { Snapshot, Controller } from './types'
 export { withFuncs, withMutable } from './creators'

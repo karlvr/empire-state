@@ -2,33 +2,9 @@
 /* eslint-disable no-dupe-class-members */
 import { produce } from 'immer'
 import { KEY, PROPERTY, INDEXPROPERTY } from './type-utils'
+import { Snapshot, Controller, ChangeListener } from './types'
 
-/** Interface for component props */
-export interface Snapshot<T> {
-	readonly onChange: (value: T) => void
-	readonly value: T
-}
-
-export interface Controller<T> {
-	controller(index: number): Controller<INDEXPROPERTY<T>>
-	controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
-	controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
-
-	snapshot(): Snapshot<T>
-	snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
-	snapshot<K extends KEY<T>>(name: K): Snapshot<PROPERTY<T, K>>
-	snapshot<K extends KEY<T>>(name: K, index: number): Snapshot<INDEXPROPERTY<PROPERTY<T, K>>>
-	
-	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
-	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
-
-	addChangeListener(listener: ChangeListener<T>): void
-	removeChangeListener(listener: ChangeListener<T>): void
-}
-
-export type ChangeListener<T> = (value: T) => void
-
-export class ChangelingImpl<T> implements Controller<T> {
+export class ControllerImpl<T> implements Controller<T> {
 
 	private locator: () => Snapshot<T>
 
@@ -114,11 +90,11 @@ export class ChangelingImpl<T> implements Controller<T> {
 	public controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 	public controller<K extends KEY<T>>(nameOrIndex: K | number, index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
 		if (typeof nameOrIndex === 'number') {
-			return new ChangelingImpl(() => this.snapshot(nameOrIndex))
+			return new ControllerImpl(() => this.snapshot(nameOrIndex))
 		} else if (index !== undefined) {
 			return this.controller(nameOrIndex).controller(index)
 		} else {
-			return new ChangelingImpl(() => this.snapshot(nameOrIndex))
+			return new ControllerImpl(() => this.snapshot(nameOrIndex))
 		}
 	}
 

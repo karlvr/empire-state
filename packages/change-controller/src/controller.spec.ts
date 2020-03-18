@@ -143,4 +143,41 @@ describe('controller', () => {
 		expect(value.names[1]).toBe('Jenna')
 	})
 
+	it('example works', () => {
+		const state = {
+			a: 'Hello world',
+			b: 42,
+			c: {
+				d: 'Nested okay',
+				e: ['A', 'B', 'C', 'D'],
+			},
+		}
+		
+		const controller = withMutable(state)
+
+		const a = controller.snapshot('a')
+		expect(a.value).toBe('Hello world')
+
+		a.onChange('Bye')
+		expect(a.value).toBe('Hello world')
+		expect(state.a).toBe('Bye')
+
+		const aa = controller.snapshot('a')
+		expect(aa.value).toBe('Bye')
+
+		const c = controller.snapshot('c')
+		c.onChange({
+			d: 'Changed',
+			e: ['E'],
+		})
+
+		expect(state.c.d).toBe('Changed')
+
+		const e = controller.controller('c').snapshot('e')
+		expect(e.value).toEqual(['E'])
+
+		e.onChange(['F', 'G'])
+		expect(state.c.e).toEqual(['F', 'G'])
+	})
+
 })

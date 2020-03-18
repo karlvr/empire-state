@@ -33,7 +33,7 @@
     "webpack-dev-server": "^3.4.1"
   },
   "dependencies": {
-    "formalities": "file:packages/formalities",
+    "change-controller": "file:packages/change-controller",
     "formalities-examples": "file:packages/examples",
     "formalities-hocs": "file:packages/formalities-hocs"
   }

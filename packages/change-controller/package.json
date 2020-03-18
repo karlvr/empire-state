@@ -1,7 +1,7 @@
 {
-	"name": "formalities",
+	"name": "change-controller",
 	"version": "0.2.0",
-	"description": "Immutable component change helper",
+	"description": "Immutable state change helper",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {

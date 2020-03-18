@@ -19,7 +19,7 @@
 	"author": "Karl von Randow",
 	"license": "MIT",
 	"dependencies": {
-		"formalities": "file:../formalities"
+		"change-controller": "file:../change-controller"
 	},
 	"peerDependencies": {
 		"react": "^16.8.6",

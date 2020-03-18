@@ -1,7 +1,7 @@
-import { Snapshot, Controller } from 'formalities'
-import { ChangelingImpl } from 'formalities/dist/changeling'
-import { FunctionKeys } from 'formalities/src/utilities'
-import { KEY, KEYABLE, PROPERTY } from 'formalities/src/type-utils'
+import { Snapshot, Controller } from 'change-controller'
+import { ChangelingImpl } from 'change-controller/dist/changeling'
+import { FunctionKeys } from 'change-controller/src/utilities'
+import { KEY, KEYABLE, PROPERTY } from 'change-controller/src/type-utils'
 import { produce } from 'immer'
 
 /** Interface for component containing changeable props */

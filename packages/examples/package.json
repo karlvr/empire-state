@@ -4,12 +4,13 @@
   "private": true,
   "dependencies": {
     "formalities": "file:../formalities",
+    "formalities-hocs": "file:../formalities-hocs",
     "immer": "^6.0.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
   },
   "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server"
+    "build": "../../node_modules/.bin/webpack",
+    "start": "../../node_modules/.bin/webpack-dev-server"
   }
 }

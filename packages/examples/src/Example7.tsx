@@ -2,7 +2,7 @@
  * An example of repeating fields using Indexed component.
  */
 
-import { forComponentState, Input, Controller, IndexedCursor, IndexedActions } from 'formalities'
+import { forComponentState, Input, Controller, IndexedCursor, IndexedActions } from 'formalities-hocs'
 import * as React from 'react'
 
 interface MyFormState {

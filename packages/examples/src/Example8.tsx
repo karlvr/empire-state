@@ -2,7 +2,7 @@
  * An example of using Changeling to manage undefined properties.
  */
 
-import { forComponentProps, forComponentState, Input, Snapshot, wrapComponent } from 'formalities'
+import { forComponentProps, forComponentState, Input, Snapshot, wrapComponent } from 'formalities-hocs'
 import * as React from 'react'
 
 interface MyFormState {

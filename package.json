@@ -4,7 +4,7 @@
   "scripts": {
     "build": "lerna run build",
     "test": "lerna run test",
-    "watch": "lerna run watch"
+    "watch": "lerna run build && lerna run watch"
   },
   "devDependencies": {
     "@types/jest": "^25.1.4",
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "formalities": "file:packages/formalities",
-    "formalities-examples": "file:packages/examples"
+    "formalities-examples": "file:packages/examples",
+    "formalities-hocs": "file:packages/formalities-hocs"
   }
 }

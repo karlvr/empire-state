@@ -2,7 +2,7 @@
  * An example of repeating fields.
  */
 
-import { forComponentState, Input } from 'formalities'
+import { forComponentState, Input } from 'formalities-hocs'
 import * as React from 'react'
 
 interface MyFormState {

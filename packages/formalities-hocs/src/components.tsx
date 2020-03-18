@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import { Snapshot, Controller } from './changeling'
-import { withMutable } from './creators'
-import { Omit, Subtract } from './utilities'
-import { KEY, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY, COMPATIBLEKEYS } from './type-utils'
+import { Snapshot, Controller, withMutable } from 'formalities'
+import { Omit, Subtract } from 'formalities/dist/utilities'
+import { KEY, PROPERTYORTHIS, KEYORTHIS, INDEXPROPERTY, COMPATIBLEKEYS } from 'formalities/dist/type-utils'
 
 /**
  * Fake interface for React.InputHTMLAttributes<HTMLInputElement> that defines all of the properties that we exclude using Omit etc.

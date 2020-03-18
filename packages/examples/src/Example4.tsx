@@ -2,7 +2,7 @@
  * An example of using Changeling with Checkable input elements.
  */
 
-import { forComponentState, Input, Controller } from 'formalities'
+import { forComponentState, Input, Controller } from 'formalities-hocs'
 import * as React from 'react'
 
 interface MyFormState {

@@ -66,7 +66,7 @@ function processInterface(data, name, replacement, startMarker, endMarker) {
 	return processMarker(data, startMarker, endMarker, `keyof ${replacement}`, expected)
 }
 
-fs.readFile('dist/changeling-react-dom.d.ts', 'utf8', function (err, data) {
+fs.readFile('dist/components.d.ts', 'utf8', function (err, data) {
 	if (err) {
 		return console.error(err);
 	}
@@ -74,7 +74,7 @@ fs.readFile('dist/changeling-react-dom.d.ts', 'utf8', function (err, data) {
 	data = processInterface(data, 'XYZZY1', 'React.InputHTMLAttributes<HTMLInputElement>', '"xyzzy1"', '"yzzyx1"')
 	data = processInterface(data, 'XYZZY2', 'React.TextareaHTMLAttributes<HTMLTextAreaElement>', '"xyzzy2"', '"yzzyx2"')
 	
-	fs.writeFile('dist/changeling-react-dom.d.ts', data, 'utf8', function (err) {
+	fs.writeFile('dist/components.d.ts', data, 'utf8', function (err) {
 		 if (err) {
 			 return console.error(err);
 		 }

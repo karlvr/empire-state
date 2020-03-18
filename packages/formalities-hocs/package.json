@@ -1,11 +1,11 @@
 {
-	"name": "formalities",
+	"name": "formalities-hocs",
 	"version": "0.2.0",
 	"description": "Immutable component change helper",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"build": "../../node_modules/.bin/tsc --build tsconfig.prod.json",
+		"build": "../../node_modules/.bin/tsc --build tsconfig.prod.json && node fix-types.js",
 		"clean": "../../node_modules/.bin/rimraf dist",
 		"test": "../../node_modules/.bin/jest",
 		"test-watch": "../../node_modules/.bin/jest --watch",
@@ -19,7 +19,11 @@
 	"author": "Karl von Randow",
 	"license": "MIT",
 	"dependencies": {
-		"immer": "^6.0.1"
+		"formalities": "file:../formalities"
+	},
+	"peerDependencies": {
+		"react": "^16.8.6",
+		"react-dom": "^16.8.6"
 	},
 	"repository": {
 		"type": "git",

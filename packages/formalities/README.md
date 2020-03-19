@@ -10,6 +10,52 @@ Formalities makes use of [Immer](https://github.com/immerjs/immer) and [Immutabl
 npm install formalities
 ```
 
+## Usage
+
+```typescript
+import { useController, Formalities } from 'formalities'
+
+function MyForm() {
+	const controller = useController({
+		name: '',
+		age: undefined as number | undefined,
+		address: '',
+	})
+
+	function save() {
+		const values = controller.snapshot().value
+		...
+	}
+
+	return (
+		<div>
+			<div>
+				<label>Name:</label>
+				<Formalities.Text type="text" controller={controller} prop="name" />
+			</div>
+			<div>
+				<label>Age:</label>
+				<Formalities.Number type="number" controller={controller} prop="age" updateOnBlur={true} />
+			</div>
+			<div>
+				<label>Address:</label>
+				<Formalities.Text type="text" controller={controller} prop="address" />
+			</div>
+			<button onClick={save} />
+		</div>
+	)
+}
+```
+
+## Components
+
+* `<Formalities.Text>` an `<input>` element for `string` properties
+* `<Formalities.Number>` an `<input>` element for `number` properties
+* `<Formalities.Checkable>` an `<input>` element for checkboxes
+* `<Formalities.MultiCheckable>` an `<input>` element for checkboxes for array properties
+* `<Formalities.Select>` a `<select>` element
+* `<Formalities.Indexed>` a component for custom array properties
+
 ## The case for Formalities
 
 This is how we might manage form state in React components, while maintaining type-safety with
@@ -41,7 +87,6 @@ function MyForm() {
 
 	return (
 		<div>
-			<h1>Existing</h1>
 			<div>
 				<label>Name:</label>
 				<input type="text" value={name || ''} onChange={onChangeName} />
@@ -54,10 +99,6 @@ function MyForm() {
 				<label>Address:</label>
 				<input type="text" value={address || ''} onChange={onChangeAddress} />
 			</div>
-			<h2>Output</h2>
-			<div>Name: {name}</div>
-			<div>Age: {age}</div>
-			<div>Address: {address}</div>
 		</div>
 	)
 }

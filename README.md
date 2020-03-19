@@ -1,20 +1,20 @@
-# `change-controller`
+# `immutable-state-controller`
 
 A small library to manage mutable and immutable state without a lot of boilerplate, but with a lot of type-safety.
 
-`change-controller` lets you work with immutable snapshots of state, and provides a method to perform a change in that state,
+`immutable-state-controller` lets you work with immutable snapshots of state, and provides a method to perform a change in that state,
 which becomes visible when you obtain a new snapshot.
 
 ## Installation
 
 ```shell
-npm install change-controller
+npm install immutable-state-controller
 ```
 
 ## Usage
 
 ```typescript
-import { withMutable } from 'change-controller'
+import { withMutable } from 'immutable-state-controller'
 
 const state = {
 	a: 'Hello world',
@@ -35,7 +35,7 @@ Any changes you perform will be reflected immediately in the `state` object.
 const aSnapshot = controller.snapshot('a') // Snapshot<String>
 aSnapshot.value === 'Hello world'
 
-aSnapshot.onChange('Bye bye')
+aSnapshot.setValue('Bye bye')
 state.a === 'Bye bye'
 ```
 
@@ -51,7 +51,7 @@ Snapshots can be created for any type, including objects:
 const cSnapshot = controller.snapshot('c') // Snapshot<{ d: string, e: string[] }>
 cSnapshot.value.d === 'Nested okay'
 
-cSnapshot.onChange({
+cSnapshot.setValue({
 	d: 'Changed',
 	e: ['E'],
 })
@@ -66,7 +66,7 @@ const eSnapshot = controller.controller('c').snapshot('e') // Snapshot<string[]>
 
 eSnapshot.value == ['E']
 
-eSnapshot.onChange(['F', 'G'])
+eSnapshot.setValue(['F', 'G'])
 state.c.e == ['F', 'G']
 ```
 

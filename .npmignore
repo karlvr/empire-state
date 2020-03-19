@@ -1,1 +1,6 @@
+/.eslintrc
+/.nvmrc
+/.vscode
+/jest.config.js
+/tsconfig.*
 /src

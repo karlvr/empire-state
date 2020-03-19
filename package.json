@@ -34,7 +34,9 @@
   },
   "dependencies": {
     "change-controller": "file:packages/change-controller",
-    "formalities-examples": "file:packages/examples",
+    "examples-hocs": "file:packages/examples-hocs",
+    "examples-hooks": "file:packages/examples-hooks",
+    "formalities": "file:packages/formalities",
     "formalities-hocs": "file:packages/formalities-hocs"
   }
 }

@@ -1,42 +1,39 @@
 {
-  "name": "formalities-root",
-  "private": true,
-  "scripts": {
-    "build": "lerna run build",
-    "test": "lerna run test",
-    "watch": "lerna run --parallel watch"
-  },
-  "devDependencies": {
-    "@types/jest": "^25.1.4",
-    "@types/node": "^12.0.2",
-    "@types/react": "^16.8.18",
-    "@types/react-dom": "^16.8.4",
-    "@typescript-eslint/eslint-plugin": "^2.24.0",
-    "@typescript-eslint/parser": "^2.24.0",
-    "babel-eslint": "^10.1.0",
-    "copy-webpack-plugin": "^5.0.3",
-    "eslint": "^6.8.0",
-    "eslint-config-react-app": "^5.2.0",
-    "eslint-plugin-flowtype": "^3.13.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^1.7.0",
-    "jest": "^25.1.0",
-    "lerna": "^3.20.2",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^25.2.1",
-    "ts-loader": "^6.0.1",
-    "typescript": "^3.4.5",
-    "webpack": "^4.32.2",
-    "webpack-cli": "^3.3.2",
-    "webpack-dev-server": "^3.4.1"
-  },
-  "dependencies": {
-    "immutable-state-controller": "file:packages/immutable-state-controller",
-    "examples-hocs": "file:packages/examples-hocs",
-    "examples-hooks": "file:packages/examples-hooks",
-    "formalities": "file:packages/formalities",
-    "formalities-hocs": "file:packages/formalities-hocs"
-  }
+	"name": "immutable-state-controller",
+	"version": "0.2.0",
+	"description": "Immutable state change controller",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc --build tsconfig.prod.json",
+		"clean": "rimraf dist",
+		"test": "jest",
+		"test-watch": "jest --watch",
+		"watch": "tsc --watch"
+	},
+	"keywords": [
+		"immer"
+	],
+	"author": "Karl von Randow",
+	"license": "MIT",
+	"dependencies": {
+		"immer": "^6.0.1"
+	},
+	"devDependencies": {
+		"@types/jest": "^25.1.4",
+		"@types/node": "^12.0.2",
+		"@typescript-eslint/eslint-plugin": "^2.24.0",
+		"@typescript-eslint/parser": "^2.24.0",
+		"babel-eslint": "^10.1.0",
+		"copy-webpack-plugin": "^5.0.3",
+		"eslint": "^6.8.0",
+		"jest": "^25.1.0",
+		"rimraf": "^3.0.2",
+		"ts-jest": "^25.2.1",
+		"typescript": "^3.4.5"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/karlvr/immutable-state-controller.git"
+	}
 }

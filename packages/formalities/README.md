@@ -12,18 +12,10 @@ npm install formalities
 
 ## The case for Formalities
 
-This is how we usually manage form state in React components, while maintaining type-safety with
+This is how we might manage form state in React components, while maintaining type-safety with
 TypeScript:
 
 ```typescript
-interface MyFormState {
-	name?: string
-	age?: number
-	address?: string
-}
-
-const INITIAL_STATE: MyFormState = {}
-
 function MyForm() {
 	const [name, setName] = useState<string | undefined>(undefined)
 	const [age, setAge] = useState<number | undefined>(undefined)

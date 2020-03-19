@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { withFuncs, Controller, Snapshot } from 'change-controller'
+import { withFuncs, Controller, Snapshot } from 'immutable-state-controller'
 export * from './components'
-export { Controller, Snapshot } from 'change-controller'
+export { Controller, Snapshot } from 'immutable-state-controller'
 
 export function useController<T>(initialState: T): Controller<T>
 export function useController<T>(value: T, onChange: (newValue: T) => void): Controller<T>

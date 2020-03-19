@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Snapshot, withMutable } from 'change-controller'
+import { Snapshot, withMutable } from 'immutable-state-controller'
 import { wrapComponent, Input } from './components'
 
 function TestComponent(props: Snapshot<number> & { name: string }) {

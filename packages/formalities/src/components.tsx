@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
-import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY } from 'change-controller/dist/type-utils' // TODO change to an "spi" export
-import { Controller, Snapshot } from 'change-controller'
-import { Subtract } from 'change-controller/dist/utilities'
+import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY } from 'immutable-state-controller/dist/type-utils' // TODO change to an "spi" export
+import { Controller, Snapshot } from 'immutable-state-controller'
+import { Subtract } from 'immutable-state-controller/dist/utilities'
 
 /** The component props containing the controller and property to choose. */
 interface ControllerProps<T, K extends KEYORTHIS<T>> {

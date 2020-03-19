@@ -24,58 +24,50 @@ interface MyFormState {
 
 const INITIAL_STATE: MyFormState = {}
 
-class MyForm extends React.Component<{}, MyFormState> {
+function MyForm() {
+	const [name, setName] = useState<string | undefined>(undefined)
+	const [age, setAge] = useState<number | undefined>(undefined)
+	const [address, setAddress] = useState<string | undefined>(undefined)
 
-	public state = INITIAL_STATE
-
-	public render() {
-		return (
-			<div>
-				<h1>Existing</h1>
-				<div>
-					<label>Name:</label>
-					<input type="text" value={this.state.name || ''} onChange={this.onChangeName} />
-				</div>
-				<div>
-					<label>Age:</label>
-					<input type="number" defaultValue={this.state.age !== undefined ? `${this.state.age}` : ''} onBlur={this.onChangeAge} />
-				</div>
-				<div>
-					<label>Address:</label>
-					<input type="text" value={this.state.address || ''} onChange={this.onChangeAddress} />
-				</div>
-				<h2>Output</h2>
-				<div>Name: {this.state.name}</div>
-				<div>Age: {this.state.age}</div>
-				<div>Address: {this.state.address}</div>
-			</div>
-		)
+	function onChangeName(evt: React.ChangeEvent<HTMLInputElement>) {
+		setName(evt.target.value)
 	}
 
-	private onChangeName = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		this.setState({
-			name: evt.target.value,
-		})
-	}
-
-	private onChangeAge = (evt: React.FocusEvent<HTMLInputElement>) => {
-		const age = parseInt(evt.target.value, 10)
-		if (isNaN(age)) {
-			evt.target.value = this.state.age !== undefined ? `${this.state.age}` : ''
+	function onChangeAge(evt: React.FocusEvent<HTMLInputElement>) {
+		const newAge = parseInt(evt.target.value, 10)
+		if (isNaN(newAge)) {
+			evt.target.value = age !== undefined ? `${age}` : ''
 			evt.target.select()
 		} else {
-			this.setState({
-				age,
-			})
+			setAge(newAge)
 		}
 	}
 
-	private onChangeAddress = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		this.setState({
-			address: evt.target.value,
-		})
+	function onChangeAddress(evt: React.ChangeEvent<HTMLInputElement>) {
+		setAddress(evt.target.value)
 	}
 
+	return (
+		<div>
+			<h1>Existing</h1>
+			<div>
+				<label>Name:</label>
+				<input type="text" value={name || ''} onChange={onChangeName} />
+			</div>
+			<div>
+				<label>Age:</label>
+				<input type="number" defaultValue={age !== undefined ? `${age}` : ''} onBlur={onChangeAge} />
+			</div>
+			<div>
+				<label>Address:</label>
+				<input type="text" value={address || ''} onChange={onChangeAddress} />
+			</div>
+			<h2>Output</h2>
+			<div>Name: {name}</div>
+			<div>Age: {age}</div>
+			<div>Address: {address}</div>
+		</div>
+	)
 }
 ```
 
@@ -88,14 +80,14 @@ but that's more boiler-plate.
 
 Using the hook `useController` we create a `Controller` that reads and updates from the component's state.
 
-In the component we use the Formalities `Input` components to create a normal `<input>` element,
+In the component we use the Formalities components to create normal `<input>` elements,
 but bound to the value of one of the `Controller`'s properties, and reporting changes back 
 to the component state.
 
-The `Input` components supports all of the regular `<input>` properties.
+The `Formalities` components supports all of the regular `<input>` properties.
 
 ```typescript
-import { useController, Input } from 'formalities'
+import { useController, Formalities } from 'formalities'
 
 interface MyFormState {
 	name: string
@@ -104,7 +96,7 @@ interface MyFormState {
 }
 
 function MyForm() {
-	const controller = useController({
+	const controller = useController<MyFormState>({
 		name: '',
 		address: '',
 	})
@@ -113,11 +105,11 @@ function MyForm() {
 		<div>
 			<div>
 				<label>Name:</label>
-				<Input.Text controller={this.controller} prop="name" />
+				<Formalities.Text controller={this.controller} prop="name" />
 			</div>
 			<div>
 				<label>Address:</label>
-				<Input.Text controller={this.controller} prop="address" />
+				<Formalities.Text controller={this.controller} prop="address" />
 			</div>
 		</div>
 	)
@@ -127,7 +119,7 @@ function MyForm() {
 Formalities's `useController` returns a `Controller` with an initial value. The type of the `Controller` is
 determined from that initial value.
 
-The `<Input.String>` component specifies the `Controller` instance via the `controller` prop, and which property
+The `<Formalities.Text>` component specifies the `Controller` instance via the `controller` prop, and which property
 inside the controller via the `prop` prop. Due to the type-safety of the `Controller` the `prop` prop can only 
 accept appropriate value.
 
@@ -158,8 +150,8 @@ function MyFormSection(props: MyFormSectionProps) {
 		<div>
 			<div>
 				<label>Full name:</label>
-				<Input.String controller={controller} prop="givenName" placeholder="Given name" />
-				<Input.String controller={controller} prop="familyName" placeholder="Family name" />
+				<Formalities.Text controller={controller} prop="givenName" placeholder="Given name" />
+				<Formalities.Text controller={controller} prop="familyName" placeholder="Family name" />
 			</div>
 		</div>
 	)
@@ -168,7 +160,7 @@ function MyFormSection(props: MyFormSectionProps) {
 
 ### Custom components
 
-In the examples above we've used Formalities's `<Input.String>` component replacement for the standard `<input>`
+In the examples above we've used Formalities's `<Formalities.String>` component replacement for the standard `<input>`
 element. You can also create your own components that interact with the controller:
 
 ```typescript
@@ -195,7 +187,7 @@ export default wrapComponent(MyTextField)
 The last line above uses Formalities's to wrap `MyTextField`, which accepts props `value` and `setValue`, to create a component that instead accepts
 props `controller` and `prop`.
 
-It can then be used like `<Input.String>` in the examples above, as in:
+It can then be used like `<Formalities.Text>` in the examples above, as in:
 
 ```typescript
 import MyTextField from './MyTextField'
@@ -207,11 +199,11 @@ function MyForm() {
 		<div>
 			<div>
 				<label>Name:</label>
-				<MyTextField controller={this.controller} prop="name" />
+				<MyTextField controller={controller} prop="name" />
 			</div>
 			<div>
 				<label>Address:</label>
-				<MyTextField controller={this.controller} prop="address" />
+				<MyTextField controller={controller} prop="address" />
 			</div>
 		</div>
 	)

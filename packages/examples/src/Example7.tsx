@@ -9,11 +9,9 @@ interface MyFormState {
 	names?: string[]
 }
 
-const INITIAL_STATE: MyFormState = {}
-
 export default function Example7() {
 
-	const controller = useController(INITIAL_STATE)
+	const controller = useController<MyFormState>({})
 	const state = controller.snapshot().value
 
 	function renderChild(controller: Controller<string>, cursor: IndexedCursor, actions: IndexedActions<string>) {

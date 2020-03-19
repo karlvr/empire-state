@@ -11,11 +11,9 @@ interface MyFormState {
 	address?: string
 }
 
-const INITIAL_STATE: MyFormState = {}
-
 const Example1: React.FC = function() {
 
-	const controller = useController(INITIAL_STATE)
+	const controller = useController<MyFormState>({})
 	const state = controller.snapshot().value
 
 	return (

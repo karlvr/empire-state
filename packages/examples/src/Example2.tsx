@@ -30,10 +30,8 @@ interface Address {
 	country: string
 }
 
-const INITIAL_STATE: MyFormState = {}
-
 const Example2: React.FC = function() {
-	const controller = useController(INITIAL_STATE)
+	const controller = useController<MyFormState>({})
 	const state = controller.snapshot().value
 
 	function renderAddress(address: Address) {

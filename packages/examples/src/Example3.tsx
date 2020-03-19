@@ -11,10 +11,8 @@ interface MyFormState {
 	address?: string
 }
 
-const INITIAL_STATE: MyFormState = {}
-
 export default function Example3() {
-	const controller = useController(INITIAL_STATE)
+	const controller = useController<MyFormState>({})
 
 	const nameSnapshot = controller.snapshot('name')
 	const ageSnapshot = controller.snapshot('age')

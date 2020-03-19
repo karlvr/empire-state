@@ -9,11 +9,9 @@ interface MyFormState {
 	names?: string[]
 }
 
-const INITIAL_STATE: MyFormState = {}
-
 export default function Example6() {
 
-	const controller = useController(INITIAL_STATE)
+	const controller = useController<MyFormState>({})
 	const namesController = controller.controller('names')
 	const namesSnapshot = namesController.snapshot()
 

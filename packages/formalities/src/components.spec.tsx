@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Snapshot, withMutable } from 'immutable-state-controller'
-import { wrapComponent, Input } from './components'
+import { wrapComponent, Formalities } from './components'
 
 function TestComponent(props: Snapshot<number> & { name: string }) {
 	return (
@@ -25,15 +25,15 @@ const testController = withMutable(testState)
 test('components can be used', () => {
 	const all = (
 		<>
-			<Input.Text controller={testController} prop="d" />
-			<Input.Number controller={testController} prop="b" />
-			<Input.Checkable controller={testController} prop="c" checkedValue={true} />
-			<Input.TextArea controller={testController} prop="a" rows={40} />
-			<Input.Select controller={testController} prop="d" options={['aa', 'bb']} />
+			<Formalities.Text controller={testController} prop="d" />
+			<Formalities.Number controller={testController} prop="b" />
+			<Formalities.Checkable controller={testController} prop="c" checkedValue={true} />
+			<Formalities.TextArea controller={testController} prop="a" rows={40} />
+			<Formalities.Select controller={testController} prop="d" options={['aa', 'bb']} />
 			<WrappedTestComponent controller={testController} prop="b" name="horse" />
-			<Input.Indexed controller={testController} prop="e" />
-			<Input.Indexed controller={testController} prop="f" />
-			<Input.Generic controller={testController} prop="b" convert={value => parseInt(value)} display={value => `${value}`} />
+			<Formalities.Indexed controller={testController} prop="e" />
+			<Formalities.Indexed controller={testController} prop="f" />
+			<Formalities.Generic controller={testController} prop="b" convert={value => parseInt(value)} display={value => `${value}`} />
 		</>
 	)
 	expect(all).not.toBeUndefined()

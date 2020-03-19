@@ -1,4 +1,4 @@
-# `immutable-state-controller`
+# Immutable State Controller
 
 A small library to manage mutable and immutable state without a lot of boilerplate, but with a lot of type-safety.
 

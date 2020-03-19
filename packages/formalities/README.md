@@ -53,8 +53,11 @@ function MyForm() {
 * `<Formalities.Number>` an `<input>` element for `number` properties
 * `<Formalities.Checkable>` an `<input>` element for checkboxes
 * `<Formalities.MultiCheckable>` an `<input>` element for checkboxes for array properties
+* `<Formalities.TextArea>` a `<textarea>` element for `string` properties
 * `<Formalities.Select>` a `<select>` element
 * `<Formalities.Indexed>` a component for custom array properties
+
+See the [examples](https://github.com/karlvr/formalities/tree/master/packages/examples/src) for examples of using each of these components.
 
 ## The case for Formalities
 

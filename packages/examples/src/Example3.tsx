@@ -2,7 +2,7 @@
  * An example of using Changeling manually; without the helper React components.
  */
 
-import { useFormalities } from 'formalities'
+import { useController } from 'formalities'
 import * as React from 'react'
 
 interface MyFormState {
@@ -14,7 +14,7 @@ interface MyFormState {
 const INITIAL_STATE: MyFormState = {}
 
 export default function Example3() {
-	const controller = useFormalities(INITIAL_STATE)
+	const controller = useController(INITIAL_STATE)
 
 	const nameSnapshot = controller.snapshot('name')
 	const ageSnapshot = controller.snapshot('age')

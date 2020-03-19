@@ -33,10 +33,7 @@
     "webpack-dev-server": "^3.4.1"
   },
   "dependencies": {
-    "immutable-state-controller": "file:packages/immutable-state-controller",
-    "examples-hocs": "file:packages/examples-hocs",
-    "examples-hooks": "file:packages/examples-hooks",
-    "formalities": "file:packages/formalities",
-    "formalities-hocs": "file:packages/formalities-hocs"
+    "examples": "file:packages/examples",
+    "formalities": "file:packages/formalities"
   }
 }

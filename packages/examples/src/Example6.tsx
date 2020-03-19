@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react'
-import { useFormalities, Input } from 'formalities'
+import { useController, Input } from 'formalities'
 
 interface MyFormState {
 	names?: string[]
@@ -13,7 +13,7 @@ const INITIAL_STATE: MyFormState = {}
 
 export default function Example6() {
 
-	const controller = useFormalities(INITIAL_STATE)
+	const controller = useController(INITIAL_STATE)
 	const namesController = controller.controller('names')
 	const namesSnapshot = namesController.snapshot()
 

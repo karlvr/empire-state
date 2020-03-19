@@ -2,7 +2,7 @@
  * An example of using Changeling to manage a simple form state.
  */
 
-import { useFormalities, Input } from 'formalities'
+import { useController, Input } from 'formalities'
 import * as React from 'react'
 
 interface MyFormState {
@@ -15,7 +15,7 @@ const INITIAL_STATE: MyFormState = {}
 
 const Example1: React.FC = function() {
 
-	const controller = useFormalities(INITIAL_STATE)
+	const controller = useController(INITIAL_STATE)
 	const state = controller.snapshot().value
 
 	return (

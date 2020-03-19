@@ -2,7 +2,7 @@
  * An example of using Changeling with Checkable input elements.
  */
 
-import { Input, useFormalities } from 'formalities'
+import { Input, useController } from 'formalities'
 import * as React from 'react'
 
 interface MyFormState {
@@ -15,7 +15,7 @@ const INITIAL_STATE: MyFormState = {
 
 export default function Example4() {
 
-	const controller = useFormalities(INITIAL_STATE)
+	const controller = useController(INITIAL_STATE)
 	const state = controller.snapshot().value
 
 	return (

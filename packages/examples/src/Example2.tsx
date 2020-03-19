@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react'
-import { useFormalities, Input, wrapComponent, Snapshot } from 'formalities'
+import { useController, Input, wrapComponent, Snapshot } from 'formalities'
 
 interface MyFormState {
 	personalDetails?: PersonalDetails
@@ -33,7 +33,7 @@ interface Address {
 const INITIAL_STATE: MyFormState = {}
 
 const Example2: React.FC = function() {
-	const controller = useFormalities(INITIAL_STATE)
+	const controller = useController(INITIAL_STATE)
 	const state = controller.snapshot().value
 
 	function renderAddress(address: Address) {
@@ -72,7 +72,7 @@ export default Example2
 
 const AddressComponent = wrapComponent(function(props: Snapshot<Address | undefined>) {
 
-	const controller = useFormalities(props.value, props.setValue)
+	const controller = useController(props.value, props.setValue)
 
 	return (
 		<div>
@@ -102,7 +102,7 @@ const AddressComponent = wrapComponent(function(props: Snapshot<Address | undefi
 })
 
 const PersonalDetailsComponent = wrapComponent(function(props: Snapshot<PersonalDetails | undefined>) {
-	const controller = useFormalities(props.value, props.setValue)
+	const controller = useController(props.value, props.setValue)
 	return (
 		<div>
 			<h2>Personal details</h2>
@@ -120,7 +120,7 @@ const PersonalDetailsComponent = wrapComponent(function(props: Snapshot<Personal
 })
 
 const WorkDetailsComponent = wrapComponent(function(props: Snapshot<WorkDetails | undefined>) {
-	const controller = useFormalities(props.value, props.setValue)
+	const controller = useController(props.value, props.setValue)
 
 	return (
 		<div>

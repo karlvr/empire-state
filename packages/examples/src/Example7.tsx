@@ -2,7 +2,7 @@
  * An example of repeating fields using Indexed component.
  */
 
-import { useFormalities, Input, Controller, IndexedCursor, IndexedActions } from 'formalities'
+import { useController, Input, Controller, IndexedCursor, IndexedActions } from 'formalities'
 import * as React from 'react'
 
 interface MyFormState {
@@ -13,7 +13,7 @@ const INITIAL_STATE: MyFormState = {}
 
 export default function Example7() {
 
-	const controller = useFormalities(INITIAL_STATE)
+	const controller = useController(INITIAL_STATE)
 	const state = controller.snapshot().value
 
 	function renderChild(controller: Controller<string>, cursor: IndexedCursor, actions: IndexedActions<string>) {

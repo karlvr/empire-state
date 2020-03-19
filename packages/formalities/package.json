@@ -13,7 +13,8 @@
 	"keywords": [
 		"immer",
 		"forms",
-		"onChange"
+		"react",
+		"immutable"
 	],
 	"author": "Karl von Randow",
 	"license": "MIT",

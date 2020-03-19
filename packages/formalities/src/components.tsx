@@ -380,7 +380,7 @@ export function wrapComponent<V, P extends Snapshot<V>>(component: React.FC<Snap
 	}
 }
 
-export const Input = {
+export const Formalities = {
 	Text,
 	Number,
 	Generic,

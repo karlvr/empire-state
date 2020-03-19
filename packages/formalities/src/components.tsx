@@ -15,46 +15,66 @@ type CompatibleControllerProps<T, S> = ControllerProps<T, COMPATIBLEKEYS<T, S>>
 
 type HTMLInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
 
-interface BaseInputProps<S> extends HTMLInputProps, Snapshot<S> {
+interface BaseInputFunctionalityProps {
+	updateOnBlur?: boolean
+}
+
+interface BaseInputProps<S> extends HTMLInputProps, Snapshot<S>, BaseInputFunctionalityProps {
 	convert: (value: string) => S
 	display: (value: S) => string
 }
 
 function BaseInput<S>(props: BaseInputProps<S>) {
-	const { value, setValue, display, convert, ...rest } = props
-	const displayValue = display(props.value)
+	const { value, setValue, display, convert, updateOnBlur, ...rest } = props
+	const displayValue = display(value)
 
 	function onChange(evt: React.ChangeEvent<HTMLInputElement>) {
 		setValue(convert(evt.target.value))
 	}
 
-	return (
-		<input value={displayValue} onChange={onChange} {...rest} />
-	)
+	if (updateOnBlur) {
+		return (
+			<input defaultValue={displayValue} onBlur={onChange} {...rest} />
+		)
+	} else {
+		return (
+			<input value={displayValue} onChange={onChange} {...rest} />
+		)
+	}
 }
 
 type HTMLTextAreaProps = Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'value' | 'onChange'>
 
-interface BaseTextAreaProps<S> extends HTMLTextAreaProps, Snapshot<S> {
+interface BaseTextAreaFunctionalityProps {
+	updateOnBlur?: boolean
+}
+
+interface BaseTextAreaProps<S> extends HTMLTextAreaProps, Snapshot<S>, BaseTextAreaFunctionalityProps {
 	convert: (value: string) => S
 	display: (value: S) => string
 }
 
 function BaseTextArea<S>(props: BaseTextAreaProps<S>) {
-	const { value, setValue, display, convert, ...rest } = props
+	const { value, setValue, display, convert, updateOnBlur, ...rest } = props
 	const displayValue = display(props.value)
 
 	function onChange(evt: React.ChangeEvent<HTMLTextAreaElement>) {
 		setValue(convert(evt.target.value))
 	}
 
-	return (
-		<textarea value={displayValue} onChange={onChange} {...rest} />
-	)
+	if (updateOnBlur) {
+		return (
+			<textarea defaultValue={displayValue} onBlur={onChange} {...rest} />
+		)
+	} else {
+		return (
+			<textarea value={displayValue} onChange={onChange} {...rest} />
+		)
+	}
 }
 
 type TextType = string | undefined
-interface TextProps<T> extends HTMLInputProps, CompatibleControllerProps<T, TextType> {
+interface TextProps<T> extends HTMLInputProps, CompatibleControllerProps<T, TextType>, BaseInputFunctionalityProps {
 
 }
 
@@ -72,8 +92,8 @@ export function Text<T>(props: TextProps<T>) {
 }
 
 type NumberType = number | undefined
-interface NumberProps<T> extends HTMLInputProps, CompatibleControllerProps<T, NumberType> {
-
+interface NumberProps<T> extends HTMLInputProps, CompatibleControllerProps<T, NumberType>, BaseInputFunctionalityProps {
+	
 }
 
 export function Number<T>(props: NumberProps<T>) {
@@ -156,7 +176,7 @@ export function MultiCheckable<T, V>(props: MultiCheckableProps<T, V>) {
 	)
 }
 
-interface TextAreaProps<T> extends HTMLTextAreaProps, CompatibleControllerProps<T, TextType> {
+interface TextAreaProps<T> extends HTMLTextAreaProps, CompatibleControllerProps<T, TextType>, BaseTextAreaFunctionalityProps {
 
 }
 

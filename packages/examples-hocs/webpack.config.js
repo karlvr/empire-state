@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 module.exports = {
 	entry: './src/index',
 	resolve: {
-		extensions: [ '.tsx', '.ts', '.js' ],
+		extensions: ['.tsx', '.ts', '.js'],
 		symlinks: false,
 	},
 	output: {
@@ -15,7 +15,7 @@ module.exports = {
 		new CopyWebpackPlugin([
 			{
 				from: './public',
-				to: ''
+				to: '',
 			},
 		]),
 	],
@@ -36,14 +36,14 @@ module.exports = {
 							{
 								loader: 'file-loader',
 								options: {
-								  name: '[name].[ext]',
+									name: '[name].[ext]',
 								},
-							}
-						]
-					}
-				]
-			}
-		]
+							},
+						],
+					},
+				],
+			},
+		],
 	},
 	devServer: {
 		clientLogLevel: 'none',

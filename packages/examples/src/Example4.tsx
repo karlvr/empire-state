@@ -1,8 +1,8 @@
 /**
- * An example of using Changeling with Checkable input elements.
+ * An example of using Formalities with Checkable input elements.
  */
 
-import { useController, Input } from 'formalities'
+import { useController, Formalities } from 'formalities'
 import * as React from 'react'
 
 interface MyFormState {
@@ -26,7 +26,7 @@ export default function Example4() {
 		<div>
 			<h1>Example 4: Checkable</h1>
 			<div>
-				<label><Input.Checkable 
+				<label><Formalities.Checkable 
 					type="checkbox" 
 					name="likeAnimals" 
 					checkedValue={true} 
@@ -38,15 +38,15 @@ export default function Example4() {
 			<div>
 				<label>Favourite animal:</label>
 				<label>
-					<Input.Checkable type="radio" name="favouriteAnimal" checkedValue="Giraffe" controller={controller} prop="favouriteAnimal" />
+					<Formalities.Checkable type="radio" name="favouriteAnimal" checkedValue="Giraffe" controller={controller} prop="favouriteAnimal" />
 					Giraffe
 				</label>
 				<label>
-					<Input.Checkable type="radio" name="favouriteAnimal" checkedValue="Cat" controller={controller} prop="favouriteAnimal" />
+					<Formalities.Checkable type="radio" name="favouriteAnimal" checkedValue="Cat" controller={controller} prop="favouriteAnimal" />
 					Cat
 				</label>
 				<label>
-					<Input.Checkable type="radio" name="favouriteAnimal" checkedValue="Dog" controller={controller} prop="favouriteAnimal" />
+					<Formalities.Checkable type="radio" name="favouriteAnimal" checkedValue="Dog" controller={controller} prop="favouriteAnimal" />
 					Dog
 				</label>
 			</div>

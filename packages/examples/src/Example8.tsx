@@ -2,7 +2,7 @@
  * An example of using Changeling to manage undefined properties.
  */
 
-import { Input, Snapshot, wrapComponent, useController } from 'formalities'
+import { Formalities, Snapshot, wrapComponent, useController } from 'formalities'
 import * as React from 'react'
 
 interface MyFormState {
@@ -20,7 +20,7 @@ export default function Example8() {
 		<div>
 			<h1>Example 8: Undefined</h1>
 
-			<Input.Text controller={controller} prop="myValue" />
+			<Formalities.Text controller={controller} prop="myValue" />
 			<WrappedUndefinedSnapshot controller={controller} prop="myValue" /> 
 
 			<h2>Summary</h2>
@@ -33,7 +33,7 @@ function UndefinedSnapshot(props: Snapshot<string | undefined>) {
 	
 	const controller = useController(props.value, props.setValue)
 	return (
-		<Input.Text controller={controller} prop="this" />
+		<Formalities.Text controller={controller} prop="this" />
 	)
 
 }

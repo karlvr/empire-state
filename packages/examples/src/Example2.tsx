@@ -1,9 +1,9 @@
 /**
- * An example of using Changeling to manage a more complex form state.
+ * An example of using Formalities to manage a more complex form state.
  */
 
 import * as React from 'react'
-import { useController, Input, wrapComponent, Snapshot } from 'formalities'
+import { useController, Formalities, wrapComponent, Snapshot } from 'formalities'
 
 interface MyFormState {
 	personalDetails?: PersonalDetails
@@ -79,23 +79,23 @@ const AddressComponent = wrapComponent(function(props: Snapshot<Address | undefi
 			<h3>Address</h3>
 			<div>
 				<label>Line 1</label>
-				<Input.Text controller={controller} prop="line1" />
+				<Formalities.Text controller={controller} prop="line1" />
 			</div>
 			<div>
 				<label>Line 2</label>
-				<Input.Text controller={controller} prop="line2" />
+				<Formalities.Text controller={controller} prop="line2" />
 			</div>
 			<div>
 				<label>City</label>
-				<Input.Text controller={controller} prop="city" />
+				<Formalities.Text controller={controller} prop="city" />
 			</div>
 			<div>
 				<label>Postcode</label>
-				<Input.Number controller={controller} prop="postcode" />
+				<Formalities.Number controller={controller} prop="postcode" />
 			</div>
 			<div>
 				<label>Country</label>
-				<Input.Text controller={controller} prop="country" />
+				<Formalities.Text controller={controller} prop="country" />
 			</div>
 		</div>
 	)
@@ -108,11 +108,11 @@ const PersonalDetailsComponent = wrapComponent(function(props: Snapshot<Personal
 			<h2>Personal details</h2>
 			<div>
 				<label>Given name:</label>
-				<Input.Text controller={controller} prop="givenName" />
+				<Formalities.Text controller={controller} prop="givenName" />
 			</div>
 			<div>
 				<label>Family name:</label>
-				<Input.Text controller={controller} prop="familyName" />
+				<Formalities.Text controller={controller} prop="familyName" />
 			</div>
 			<AddressComponent controller={controller} prop="address" />
 		</div>
@@ -127,7 +127,7 @@ const WorkDetailsComponent = wrapComponent(function(props: Snapshot<WorkDetails 
 			<h2>Work details</h2>
 			<div>
 				<label>Business name:</label>
-				<Input.Text controller={controller} prop="businessName" />
+				<Formalities.Text controller={controller} prop="businessName" />
 			</div>
 			<AddressComponent controller={controller} prop="address" />
 		</div>

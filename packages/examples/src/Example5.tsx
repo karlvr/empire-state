@@ -1,9 +1,9 @@
 /**
- * An example of using Changeling with Select input elements.
+ * An example of using Formalities with Select input elements.
  */
 
 import * as React from 'react'
-import { useController, Input } from 'formalities'
+import { useController, Formalities } from 'formalities'
 
 interface MyFormState {
 	likeAnimals?: boolean
@@ -27,7 +27,7 @@ export default function Example4() {
 			<h1>Example 5: Select</h1>
 			<div>
 				<label>Like animals:</label>
-				<Input.Select controller={controller} prop="likeAnimals" options={[
+				<Formalities.Select controller={controller} prop="likeAnimals" options={[
 					undefined,
 					true,
 					false,
@@ -36,7 +36,7 @@ export default function Example4() {
 			</div>
 			<div>
 				<label>Like animals:</label>
-				<Input.Select controller={controller} prop="likeAnimals" options={[
+				<Formalities.Select controller={controller} prop="likeAnimals" options={[
 					{ value: undefined, text: '' },
 					{ value: true, text: 'Yes' },
 					{ value: false, text: 'No' },
@@ -45,7 +45,7 @@ export default function Example4() {
 			</div>
 			<div>
 				<label>Favourite animal:</label>
-				<Input.Select controller={controller} prop="favouriteAnimal" options={[
+				<Formalities.Select controller={controller} prop="favouriteAnimal" options={[
 					{ value: '' },
 					{ value: 'Kangaroo' },
 					{ value: 'Donkey' },
@@ -54,7 +54,7 @@ export default function Example4() {
 			</div>
 			<div>
 				<label>Favourite animal 2:</label>
-				<Input.Select controller={controller} prop="favouriteAnimal" options={['', 'Kangaroo', 'Donkey', 'Giraffe', 'Tuatara']} />
+				<Formalities.Select controller={controller} prop="favouriteAnimal" options={['', 'Kangaroo', 'Donkey', 'Giraffe', 'Tuatara']} />
 			</div>
 			<h2>Summary</h2>
 			<div>Like animals: {`${state.likeAnimals}`} ({typeof state.likeAnimals})</div>

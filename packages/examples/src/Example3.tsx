@@ -1,5 +1,5 @@
 /**
- * An example of using Changeling manually; without the helper React components.
+ * An example of using Formalities manually; without the helper React components.
  */
 
 import { useController } from 'formalities'

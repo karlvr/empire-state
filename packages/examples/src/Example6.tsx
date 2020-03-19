@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react'
-import { useController, Input } from 'formalities'
+import { useController, Formalities } from 'formalities'
 
 interface MyFormState {
 	names?: string[]
@@ -28,7 +28,7 @@ export default function Example6() {
 			<h1>Example 6: Repeating</h1>
 			{
 				(namesSnapshot.value || []).map((name, index) => (
-					<Input.Text key={index} controller={namesController.controller(index)} prop="this" />
+					<Formalities.Text key={index} controller={namesController.controller(index)} prop="this" />
 				))
 			}
 

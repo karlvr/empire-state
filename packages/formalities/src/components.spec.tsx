@@ -33,6 +33,7 @@ test('components can be used', () => {
 			<WrappedTestComponent controller={testController} prop="b" name="horse" />
 			<Input.Indexed controller={testController} prop="e" />
 			<Input.Indexed controller={testController} prop="f" />
+			<Input.Generic controller={testController} prop="b" convert={value => parseInt(value)} display={value => `${value}`} />
 		</>
 	)
 	expect(all).not.toBeUndefined()

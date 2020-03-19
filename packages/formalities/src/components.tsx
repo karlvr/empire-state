@@ -73,6 +73,25 @@ function BaseTextArea<S>(props: BaseTextAreaProps<S>) {
 	}
 }
 
+interface GenericInputProps<T, K extends KEYORTHIS<T>> extends HTMLInputProps, ControllerProps<T, K>, BaseInputFunctionalityProps {
+	convert: (value: string) => PROPERTYORTHIS<T, K>
+	display: (value: PROPERTYORTHIS<T, K>) => string
+}
+
+export function Generic<T, K extends KEYORTHIS<T>>(props: GenericInputProps<T, K>) {
+	const { controller, prop, convert, display, ...rest } = props
+	const snapshot = (prop !== 'this' ? controller.snapshot(prop as unknown as KEY<T>) : controller.snapshot()) as unknown as Snapshot<PROPERTYORTHIS<T, K>>
+	return (
+		<BaseInput
+			value={snapshot.value}
+			setValue={snapshot.setValue}
+			convert={convert}
+			display={display}
+			{...rest}
+		/>
+	)
+}
+
 type TextType = string | undefined
 interface TextProps<T> extends HTMLInputProps, CompatibleControllerProps<T, TextType>, BaseInputFunctionalityProps {
 
@@ -364,6 +383,7 @@ export function wrapComponent<V, P extends Snapshot<V>>(component: React.FC<Snap
 export const Input = {
 	Text,
 	Number,
+	Generic,
 	Checkable,
 	MultiCheckable,
 	TextArea,

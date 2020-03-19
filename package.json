@@ -33,7 +33,7 @@
     "webpack-dev-server": "^3.4.1"
   },
   "dependencies": {
-    "change-controller": "file:packages/change-controller",
+    "immutable-state-controller": "file:packages/immutable-state-controller",
     "examples-hocs": "file:packages/examples-hocs",
     "examples-hooks": "file:packages/examples-hooks",
     "formalities": "file:packages/formalities",

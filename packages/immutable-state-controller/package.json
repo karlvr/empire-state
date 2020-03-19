@@ -1,7 +1,7 @@
 {
-	"name": "change-controller",
+	"name": "immutable-state-controller",
 	"version": "0.2.0",
-	"description": "Immutable state change helper",
+	"description": "Immutable state change controller",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
@@ -12,9 +12,7 @@
 		"watch": "../../node_modules/.bin/tsc --watch"
 	},
 	"keywords": [
-		"immer",
-		"forms",
-		"onChange"
+		"immer"
 	],
 	"author": "Karl von Randow",
 	"license": "MIT",

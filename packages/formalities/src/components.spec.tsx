@@ -29,7 +29,11 @@ test('components can be used', () => {
 			<Formalities.Number controller={testController} prop="b" />
 			<Formalities.Checkable controller={testController} prop="c" checkedValue={true} />
 			<Formalities.TextArea controller={testController} prop="a" rows={40} />
-			<Formalities.Select controller={testController} prop="d" options={['aa', 'bb']} />
+			<Formalities.Select controller={testController} prop="d" options={['aa', 'bb']} display={o => o} />
+			<Formalities.Select controller={testController} prop="d" options={[
+				{ value: 'aa' }, 
+				{ value: 'bb' },
+			]} />
 			<WrappedTestComponent controller={testController} prop="b" name="horse" />
 			<Formalities.Indexed controller={testController} prop="e" />
 			<Formalities.Indexed controller={testController} prop="f" />

@@ -216,8 +216,6 @@ export function TextArea<T>(props: TextAreaProps<T>) {
 
 type HTMLSelectProps = Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'value' | 'onChange' | 'multiple'>
 
-export type OptionType<C> = C | OptionTypeObject<C>
-
 export interface OptionTypeObject<C> {
 	/** The label for this option */
 	label?: string
@@ -229,24 +227,36 @@ export interface OptionTypeObject<C> {
 	value: C | undefined
 }
 
-function isOptionTypeObject<C>(o: OptionType<C>): o is OptionTypeObject<C> {
-	return !isPrimitiveOptionType(o)
+function isOptionTypeObject<C>(o: C | OptionTypeObject<C>, props: SelectProps<any, any, any>): o is OptionTypeObject<C> {
+	return (props as any).display === undefined
 }
 
-function isPrimitiveOptionType<C>(o: OptionType<C>): o is C {
-	return typeof o !== 'object' 
+function isOptionTypeObjects<C>(o: OptionTypeObject<C>[] | C[], props: SelectProps<any, any, any>): o is OptionTypeObject<C>[] {
+	return (props as any).display === undefined
 }
 
-interface SelectProps<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>, O extends OptionType<S>> extends HTMLSelectProps, ControllerProps<T, K> {
-	options?: O[]
+interface SelectProps1<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>> extends HTMLSelectProps, ControllerProps<T, K> {
+	options?: OptionTypeObject<S>[]
+	display?: undefined
 }
 
-export function Select<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>, O extends OptionType<S>>(props: SelectProps<T, K, S, O>) {
-	const { controller, prop, options, ...rest } = props
+interface SelectProps2<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>> extends HTMLSelectProps, ControllerProps<T, K> {
+	options?: S[]
+	display: (value: S) => string
+}
+
+type SelectProps<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>> = SelectProps1<T, K, S> | SelectProps2<T, K, S>
+
+export function Select<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>>(props: SelectProps<T, K, S>) {
+	const { controller, prop, options, display, ...rest } = props
 	const snapshot = (prop !== 'this' ? controller.snapshot(prop as unknown as KEY<T>) : controller.snapshot()) as unknown as Snapshot<S>
 
 	const value = snapshot.value
-	const selectedIndex = options ? options.findIndex(o => isOptionTypeObject(o) ? o.value === value : isPrimitiveOptionType(o) ? o === value as any : false) : -1
+	const selectedIndex = options ? 
+		isOptionTypeObjects(options, props)
+			? options.findIndex(o => o.value === value)
+			: options.findIndex(o => o === value)
+		: undefined
 
 	function onChange(evt: React.ChangeEvent<HTMLSelectElement>) {
 		const selectedIndex = evt.target.selectedIndex
@@ -258,12 +268,10 @@ export function Select<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>
 		let newValue: S | undefined = undefined
 		if (selectedOptionIndex !== -1 && options) {
 			const selectedOption = options[selectedOptionIndex]
-			if (isOptionTypeObject(selectedOption)) {
+			if (isOptionTypeObject(selectedOption, props)) {
 				newValue = (selectedOption as OptionTypeObject<S>).value
-			} else if (isPrimitiveOptionType(selectedOption)) {
-				newValue = selectedOption as any
 			} else {
-				console.error('Select has unexpected option type')
+				newValue = selectedOption
 			}
 		}
 
@@ -271,18 +279,16 @@ export function Select<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>
 	}
 	return (
 		<select onChange={onChange} value={selectedIndex !== undefined ? selectedIndex : ''} {...rest}>
-			{(options || []).map((item, index) => {
-				if (isOptionTypeObject(item)) {
-					return (
+			{options ?
+				isOptionTypeObjects(options, props)
+					? options.map((item, index) => (
 						<option key={index} value={index} label={item.label}>{item.text || item.value}</option>
-					)
-				} else if (isPrimitiveOptionType(item)) {
-					return (
-						<option key={index} value={index}>{item !== undefined ? `${item}` : ''}</option>
-					)
-				} else {
-					throw new Error('Illegal state')
-				}
+					))
+					: options.map((item, index) => (
+						<option key={index} value={index}>{props.display!(item)}</option>
+					))
+				: null
+			}
 			})}
 		</select>
 	)

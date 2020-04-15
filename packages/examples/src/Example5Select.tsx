@@ -32,6 +32,7 @@ export default function Example4() {
 					true,
 					false,
 				]}
+				display={o => `${o}`}
 				/> (uses booleans)
 			</div>
 			<div>
@@ -54,7 +55,7 @@ export default function Example4() {
 			</div>
 			<div>
 				<label>Favourite animal 2:</label>
-				<Formalities.Select controller={controller} prop="favouriteAnimal" options={['', 'Kangaroo', 'Donkey', 'Giraffe', 'Tuatara']} />
+				<Formalities.Select controller={controller} prop="favouriteAnimal" options={['', 'Kangaroo', 'Donkey', 'Giraffe', 'Tuatara']} display={o => o} />
 			</div>
 			<h2>Summary</h2>
 			<div>Like animals: {`${state.likeAnimals}`} ({typeof state.likeAnimals})</div>

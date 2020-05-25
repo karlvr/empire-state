@@ -3,6 +3,7 @@ import * as React from 'react'
 import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY } from 'immutable-state-controller/dist/type-utils' // TODO change to an "spi" export
 import { Controller, Snapshot } from 'immutable-state-controller'
 import { Subtract } from 'immutable-state-controller/dist/utilities'
+import equal from 'fast-deep-equal'
 
 /** The component props containing the controller and property to choose. */
 interface ControllerProps<T, K extends KEYORTHIS<T>> {
@@ -158,7 +159,7 @@ export function Checkable<T, V>(props: CheckableProps<T, V>) {
 	}
 
 	return (
-		<input checked={snapshot.value === checkedValue} onChange={onChange} value={checkedValue !== undefined && checkedValue !== null ? `${checkedValue}` : ''} {...rest} />
+		<input checked={equal(snapshot.value, checkedValue)} onChange={onChange} value={checkedValue !== undefined && checkedValue !== null ? `${checkedValue}` : ''} {...rest} />
 	)
 }
 
@@ -254,8 +255,8 @@ export function Select<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>
 	const value = snapshot.value
 	const selectedIndex = options ? 
 		isOptionTypeObjects(options, props)
-			? options.findIndex(o => o.value === value)
-			: options.findIndex(o => o === value)
+			? options.findIndex(o => equal(o.value, value))
+			: options.findIndex(o => equal(o, value))
 		: undefined
 
 	function onChange(evt: React.ChangeEvent<HTMLSelectElement>) {

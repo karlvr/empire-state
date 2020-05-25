@@ -20,6 +20,7 @@
 	"author": "Karl von Randow",
 	"license": "MIT",
 	"dependencies": {
+		"fast-deep-equal": "^3.1.1",
 		"immutable-state-controller": "^0.1.2"
 	},
 	"peerDependencies": {

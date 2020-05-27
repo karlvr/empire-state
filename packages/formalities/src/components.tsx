@@ -168,15 +168,29 @@ interface MultiCheckableProps<T, V> extends HTMLInputProps, CompatibleController
 	uncheckedValue?: V
 }
 
+/**
+ * indexOf implementation using the custom `equal` function
+ * @param haystack 
+ * @param needle 
+ */
+function myIndexOf<T>(haystack: T[], needle: T): number {
+	for (let i = 0; i < haystack.length; i++) {
+		if (equal(needle, haystack[i])) {
+			return i
+		}
+	}
+	return -1
+}
+
 export function MultiCheckable<T, V>(props: MultiCheckableProps<T, V>) {
 	const { controller, prop, checkedValue, uncheckedValue, ...rest } = props
 	const snapshot = (prop !== 'this' ? controller.snapshot(prop as unknown as KEY<T>) : controller.snapshot()) as unknown as Snapshot<V[]>
 	const value = snapshot.value
-	const checked = value ? value.indexOf(checkedValue) !== -1 : false
+	const checked = value ? myIndexOf(value, checkedValue) !== -1 : false
 
 	function onChange(evt: React.ChangeEvent<HTMLInputElement>) {
 		const existing = value || []
-		const index = existing.indexOf(checkedValue)
+		const index = myIndexOf(existing, checkedValue)
 		if (evt.target.checked) {
 			if (index === -1) {
 				const newValue = [...existing, checkedValue]

@@ -4,6 +4,7 @@ module.exports = {
 		'node': true,
 		'jest': true,
 	},
+	'plugins': ['jest'],
 	'rules': {
 		'array-bracket-spacing': 'warn',
 		'arrow-spacing': 'warn',

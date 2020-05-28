@@ -180,4 +180,18 @@ describe('controller', () => {
 		expect(state.c.e).toEqual(['F', 'G'])
 	})
 
+	it('cant modify snapshot', () => {
+		const state = {
+			a: 'Hello world',
+		}
+		
+		const controller = withMutable(state)
+		try {
+			controller.snapshot().value.a = 'test'
+			fail('Should have failed to modify')
+		} catch (error) {
+			expect(error.name).toBe('TypeError')
+		}
+	})
+
 })

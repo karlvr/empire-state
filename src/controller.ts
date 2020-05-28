@@ -40,7 +40,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
 			return {
 				setValue: onChange,
-				value,
+				value: produce(value, (draft: any) => {}) as any,
 			}
 		} else if (nameOrIndex !== undefined && index !== undefined) {
 			return this.controller(nameOrIndex).snapshot(index)
@@ -55,12 +55,12 @@ export class ControllerImpl<T> implements Controller<T> {
 
 			return {
 				setValue: onChange,
-				value: value as PROPERTY<T, K>,
+				value: produce(value, (draft: any) => {}) as any,
 			}
 		} else {
 			return {
 				setValue: (newValue: T) => this.onChange(newValue),
-				value: this.value,
+				value: produce(this.value, draft => {}),
 			}
 		}
 	}

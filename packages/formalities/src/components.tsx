@@ -242,29 +242,29 @@ export interface OptionTypeObject<C> {
 	value: C | undefined
 }
 
-function isOptionTypeObject<C>(o: C | OptionTypeObject<C>, props: SelectProps<any, any, any>): o is OptionTypeObject<C> {
+function isOptionTypeObject<C>(o: C | OptionTypeObject<C>, props: SelectProps<any, any>): o is OptionTypeObject<C> {
 	return (props as any).display === undefined
 }
 
-function isOptionTypeObjects<C>(o: OptionTypeObject<C>[] | C[], props: SelectProps<any, any, any>): o is OptionTypeObject<C>[] {
+function isOptionTypeObjects<C>(o: OptionTypeObject<C>[] | C[], props: SelectProps<any, any>): o is OptionTypeObject<C>[] {
 	return (props as any).display === undefined
 }
 
-interface SelectProps1<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>> extends HTMLSelectProps, ControllerProps<T, K> {
-	options?: OptionTypeObject<S>[]
+interface SelectProps1<T, K extends KEYORTHIS<T>> extends HTMLSelectProps, ControllerProps<T, K> {
+	options?: OptionTypeObject<PROPERTYORTHIS<T, K>>[]
 	display?: undefined
 }
 
-interface SelectProps2<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>> extends HTMLSelectProps, ControllerProps<T, K> {
-	options?: S[]
-	display: (value: S) => string
+interface SelectProps2<T, K extends KEYORTHIS<T>> extends HTMLSelectProps, ControllerProps<T, K> {
+	options?: PROPERTYORTHIS<T, K>[]
+	display: (value: PROPERTYORTHIS<T, K>) => string
 }
 
-type SelectProps<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>> = SelectProps1<T, K, S> | SelectProps2<T, K, S>
+type SelectProps<T, K extends KEYORTHIS<T>> = SelectProps1<T, K> | SelectProps2<T, K>
 
-export function Select<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>>(props: SelectProps<T, K, S>) {
+export function Select<T, K extends KEYORTHIS<T>>(props: SelectProps<T, K>) {
 	const { controller, prop, options, display, ...rest } = props
-	const snapshot = (prop !== 'this' ? controller.snapshot(prop as unknown as KEY<T>) : controller.snapshot()) as unknown as Snapshot<S>
+	const snapshot = (prop !== 'this' ? controller.snapshot(prop as unknown as KEY<T>) : controller.snapshot()) as unknown as Snapshot<PROPERTYORTHIS<T, K>>
 
 	const value = snapshot.value
 	const selectedIndex = options ? 
@@ -280,11 +280,11 @@ export function Select<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>
 		const selectedItem = selectedIndex !== -1 ? evt.target.options.item(selectedIndex) : null
 		const selectedOptionIndex = selectedItem ? parseInt(selectedItem.value, 10) : -1
 
-		let newValue: S | undefined = undefined
+		let newValue: PROPERTYORTHIS<T, K> | undefined = undefined
 		if (selectedOptionIndex !== -1 && options) {
 			const selectedOption = options[selectedOptionIndex]
 			if (isOptionTypeObject(selectedOption, props)) {
-				newValue = (selectedOption as OptionTypeObject<S>).value
+				newValue = (selectedOption as OptionTypeObject<PROPERTYORTHIS<T, K>>).value
 			} else {
 				newValue = selectedOption
 			}

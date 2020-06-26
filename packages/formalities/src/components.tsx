@@ -304,7 +304,6 @@ export function Select<T, K extends KEYORTHIS<T>, S extends PROPERTYORTHIS<T, K>
 					))
 				: null
 			}
-			})}
 		</select>
 	)
 }

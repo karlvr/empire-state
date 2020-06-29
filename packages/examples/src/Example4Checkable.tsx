@@ -9,6 +9,7 @@ interface MyFormState {
 	likeAnimals: boolean
 	favouriteAnimal: string
 	favouriteBand: string
+	optionalLikeBirds?: boolean
 }
 
 const INITIAL_STATE: MyFormState = {
@@ -28,7 +29,6 @@ export default function Example4() {
 			<div>
 				<label><Formalities.Checkable 
 					type="checkbox" 
-					name="likeAnimals" 
 					checkedValue={true} 
 					uncheckedValue={false}
 					controller={controller} 
@@ -38,17 +38,26 @@ export default function Example4() {
 			<div>
 				<label>Favourite animal:</label>
 				<label>
-					<Formalities.Checkable type="radio" name="favouriteAnimal" checkedValue="Giraffe" controller={controller} prop="favouriteAnimal" />
+					<Formalities.Checkable type="radio" checkedValue="Giraffe" controller={controller} prop="favouriteAnimal" />
 					Giraffe
 				</label>
 				<label>
-					<Formalities.Checkable type="radio" name="favouriteAnimal" checkedValue="Cat" controller={controller} prop="favouriteAnimal" />
+					<Formalities.Checkable type="radio" checkedValue="Cat" controller={controller} prop="favouriteAnimal" />
 					Cat
 				</label>
 				<label>
-					<Formalities.Checkable type="radio" name="favouriteAnimal" checkedValue="Dog" controller={controller} prop="favouriteAnimal" />
+					<Formalities.Checkable type="radio" checkedValue="Dog" controller={controller} prop="favouriteAnimal" />
 					Dog
 				</label>
+			</div>
+			<div>
+				<label><Formalities.Checkable 
+					type="checkbox" 
+					checkedValue={true} 
+					uncheckedValue={false}
+					controller={controller} 
+					prop="optionalLikeBirds" 
+				/> Like animals</label>
 			</div>
 			<h2>Summary</h2>
 			<div>Like animals: {`${state.likeAnimals}`} ({typeof state.likeAnimals})</div>

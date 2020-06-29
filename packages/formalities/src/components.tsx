@@ -93,7 +93,7 @@ export function Generic<T, K extends KEYORTHIS<T>>(props: GenericInputProps<T, K
 	)
 }
 
-type TextType = string | undefined
+type TextType = string | undefined | null
 interface TextProps<T> extends HTMLInputProps, CompatibleControllerProps<T, TextType>, BaseInputFunctionalityProps {
 
 }
@@ -106,12 +106,12 @@ export function Text<T>(props: TextProps<T>) {
 		value={snapshot.value}
 		setValue={snapshot.setValue}
 		convert={value => value !== '' ? value : undefined} 
-		display={value => value !== undefined ? value : ''}
+		display={value => value !== undefined && value !== null ? value : ''}
 		{...rest}
 	/>
 }
 
-type NumberType = number | undefined
+type NumberType = number | undefined | null
 interface NumberProps<T> extends HTMLInputProps, CompatibleControllerProps<T, NumberType>, BaseInputFunctionalityProps {
 	
 }
@@ -131,7 +131,7 @@ export function Number<T>(props: NumberProps<T>) {
 			return undefined
 		}} 
 		display={value => {
-			if (value !== undefined) {
+			if (value !== undefined && value !== null) {
 				return `${value}`
 			} else {
 				return ''
@@ -141,7 +141,7 @@ export function Number<T>(props: NumberProps<T>) {
 	/>
 }
 
-interface CheckableProps<T, V> extends HTMLInputProps, CompatibleControllerProps<T, V> {
+interface CheckableProps<T, V> extends HTMLInputProps, CompatibleControllerProps<T, V | undefined | null> {
 	checkedValue: V
 	uncheckedValue?: V
 }
@@ -223,7 +223,7 @@ export function TextArea<T>(props: TextAreaProps<T>) {
 			value={snapshot.value}
 			setValue={snapshot.setValue}
 			convert={value => value !== '' ? value : undefined}
-			display={value => value !== undefined ? value : ''}
+			display={value => value !== undefined && value !== null ? value : ''}
 			{...rest}
 		/>
 	)

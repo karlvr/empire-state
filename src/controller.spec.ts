@@ -194,4 +194,14 @@ describe('controller', () => {
 		}
 	})
 
+	it('can work with primitive property snapshot', () => {
+		const state = {
+			a: 'Hello world',
+		}
+
+		const controller = withMutable(state)
+		controller.snapshot('a').setValue('Bye')
+		expect(state.a).toEqual('Bye')
+	})
+
 })

@@ -12,12 +12,14 @@ module.exports = {
 	},
 	mode: 'development',
 	plugins: [
-		new CopyWebpackPlugin([
-			{
-				from: './public',
-				to: '',
-			},
-		]),
+		new CopyWebpackPlugin({
+			patterns: [
+				{
+					from: './public',
+					to: '',
+				},
+			
+		]}),
 	],
 	module: {
 		rules: [

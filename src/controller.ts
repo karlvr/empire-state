@@ -85,6 +85,10 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 	}
 
+	public removeAllChangeListeners() {
+		this.changeListeners = []
+	}
+
 	public controller(index: number): Controller<INDEXPROPERTY<T>>
 	public controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
 	public controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>

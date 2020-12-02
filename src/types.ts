@@ -31,6 +31,7 @@ export interface Controller<T> {
 
 	addChangeListener(listener: ChangeListener<T>): void
 	removeChangeListener(listener: ChangeListener<T>): void
+	removeAllChangeListeners(): void
 }
 
 export type ChangeListener<T> = (value: T) => void

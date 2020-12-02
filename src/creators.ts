@@ -26,3 +26,13 @@ export function withMutable<T extends object>(value: T): Controller<T> {
 		value,
 	}))
 }
+
+export function withValue<T>(value: T): Controller<T> {
+	let myValue = value
+	return new ControllerImpl(() => ({
+		value: myValue,
+		setValue: (newValue: T) => {
+			myValue = newValue
+		},
+	}))
+}

@@ -1,6 +1,6 @@
 {
 	"name": "formalities",
-	"version": "0.3.7",
+	"version": "0.4.0",
 	"description": "React form helpers for immutable state",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

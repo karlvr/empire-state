@@ -107,10 +107,11 @@ export class ControllerImpl<T> implements Controller<T> {
 	}
 
 	private onChange(value: T) {
+		const oldValue = this.locator().value
 		this.locator().setValue(value)
 
 		for (const listener of this.changeListeners) {
-			listener(value)
+			listener(value, oldValue)
 		}
 	}
 

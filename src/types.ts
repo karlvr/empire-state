@@ -34,4 +34,4 @@ export interface Controller<T> {
 	removeAllChangeListeners(): void
 }
 
-export type ChangeListener<T> = (value: T) => void
+export type ChangeListener<T> = (value: T, oldValue: T) => void

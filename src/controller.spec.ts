@@ -262,6 +262,28 @@ describe('controller', () => {
 		expect(controller.snapshot().value.a).toEqual('Bye')
 	})
 
+	it('returns the same controller each time for properties', () => {
+		const state = {
+			a: 'Hello world',
+		}
+
+		const controller = withValue(state)
+		const aController = controller.controller('a')
+		const anotherController = controller.controller('a')
+		expect(aController).toBe(anotherController)
+	})
+
+	it('returns the same snapshot each time for properties', () => {
+		const state = {
+			a: 'Hello world',
+		}
+
+		const controller = withValue(state)
+		const aSnapshot = controller.snapshot('a')
+		const anotherSnapshot = controller.snapshot('a')
+		expect(aSnapshot).toBe(anotherSnapshot)
+	})
+
 	it('supports snapshot this', () => {
 		const state = {
 			a: 'Hello world',

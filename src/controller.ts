@@ -21,6 +21,8 @@ export class ControllerImpl<T> implements Controller<T> {
 	} = {}
 
 	private changeListeners: ChangeListener<T>[] = []
+	private memoisedSnapshots: { [prop: string]: Snapshot<any> } = {}
+	private memoisedControllers: { [prop: string]: Controller<any> } = {}
 
 	public constructor(locator: () => Snapshot<T>) {
 		this.locator = locator
@@ -69,7 +71,14 @@ export class ControllerImpl<T> implements Controller<T> {
 			}
 		}
 
-		return result
+		/* If the snapshot value hasn't changed, we return the memoised snapshot */
+		const memoisedSnapshot = this.memoisedSnapshots[`${nameOrIndex}`]
+		if (memoisedSnapshot && memoisedSnapshot.value === result.value) {
+			return memoisedSnapshot
+		} else {
+			this.memoisedSnapshots[`${nameOrIndex}`] = result
+			return result
+		}
 	}
 
 	public getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>) {
@@ -107,6 +116,11 @@ export class ControllerImpl<T> implements Controller<T> {
 			return this
 		}
 
+		const memoisedController = this.memoisedControllers[`${nameOrIndex}`]
+		if (memoisedController) {
+			return memoisedController
+		}
+
 		let result: Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 		if (typeof nameOrIndex === 'number') {
 			result = new ControllerImpl(() => this.snapshot(nameOrIndex))
@@ -114,6 +128,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			result = new ControllerImpl(() => this.snapshot(nameOrIndex))
 		}
 
+		this.memoisedControllers[`${nameOrIndex}`] = result
 		return result
 	}
 

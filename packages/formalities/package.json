@@ -30,5 +30,6 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/karlvr/formalities.git"
-	}
+	},
+	"gitHead": "8a31be2466980619ab663d1d7d1f836f48049d07"
 }

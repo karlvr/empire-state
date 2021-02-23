@@ -316,12 +316,12 @@ export interface IndexedCursor {
 
 export type IndexedOnPush<V> = (value: V) => void
 export type IndexedOnInsert<V> = (index: number, value: V) => void
-export type IndexedOnRemove<V> = (index: number) => void
+export type IndexedOnRemove = (index: number) => void
 
 export interface IndexedActions<V> {
 	onPush: IndexedOnPush<V>
 	onInsert: IndexedOnInsert<V>
-	onRemove: IndexedOnRemove<V>
+	onRemove: IndexedOnRemove
 }
 
 interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProps<T, K> {

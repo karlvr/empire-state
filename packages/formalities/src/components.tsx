@@ -5,14 +5,16 @@ import { Controller, Snapshot } from 'immutable-state-controller'
 import { Subtract } from 'immutable-state-controller/dist/utilities'
 import equal from 'fast-deep-equal'
 
-/** The component props containing the controller and property to choose. */
-interface ControllerProps<T, K extends KEYORTHIS<T>> {
+/** A ControllerProperty represents a controller property using a Controller and the name of a property it controls. */
+export interface ControllerProperty<T, K extends KEYORTHIS<T>> {
 	controller: Controller<T>
 	prop: K
 }
 
-/** The component props containing the controller and property to choose, but only properties that are compatible with S */
-type CompatibleControllerProps<T, S> = ControllerProps<T, COMPATIBLEKEYS<T, S>>
+export type AnyControllerProperty<T> = ControllerProperty<T, KEYORTHIS<T>>
+
+/** A ControllerPropertyOfType allows a controller of T and any property it controls that is compatible with the given type S */
+export type ControllerPropertyOfType<T, S> = ControllerProperty<T, COMPATIBLEKEYS<T, S>>
 
 type HTMLInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
 
@@ -74,7 +76,7 @@ function BaseTextArea<S>(props: BaseTextAreaProps<S>) {
 	}
 }
 
-interface GenericInputProps<T, K extends KEYORTHIS<T>> extends HTMLInputProps, ControllerProps<T, K>, BaseInputFunctionalityProps {
+interface GenericInputProps<T, K extends KEYORTHIS<T>> extends HTMLInputProps, ControllerProperty<T, K>, BaseInputFunctionalityProps {
 	convert: (value: string) => PROPERTYORTHIS<T, K>
 	display: (value: PROPERTYORTHIS<T, K>) => string
 }
@@ -94,7 +96,7 @@ export function Generic<T, K extends KEYORTHIS<T>>(props: GenericInputProps<T, K
 }
 
 type TextType = string | undefined | null
-interface TextProps<T> extends HTMLInputProps, CompatibleControllerProps<T, TextType>, BaseInputFunctionalityProps {
+interface TextProps<T> extends HTMLInputProps, ControllerPropertyOfType<T, TextType>, BaseInputFunctionalityProps {
 
 }
 
@@ -112,7 +114,7 @@ export function Text<T>(props: TextProps<T>) {
 }
 
 type NumberType = number | undefined | null
-interface NumberProps<T> extends HTMLInputProps, CompatibleControllerProps<T, NumberType>, BaseInputFunctionalityProps {
+interface NumberProps<T> extends HTMLInputProps, ControllerPropertyOfType<T, NumberType>, BaseInputFunctionalityProps {
 	
 }
 
@@ -141,7 +143,7 @@ export function Number<T>(props: NumberProps<T>) {
 	/>
 }
 
-interface CheckableProps<T, V> extends HTMLInputProps, CompatibleControllerProps<T, V | undefined | null> {
+interface CheckableProps<T, V> extends HTMLInputProps, ControllerPropertyOfType<T, V | undefined | null> {
 	checkedValue: V
 	uncheckedValue?: V
 }
@@ -163,7 +165,7 @@ export function Checkable<T, V>(props: CheckableProps<T, V>) {
 	)
 }
 
-interface MultiCheckableProps<T, V> extends HTMLInputProps, CompatibleControllerProps<T, V[]> {
+interface MultiCheckableProps<T, V> extends HTMLInputProps, ControllerPropertyOfType<T, V[]> {
 	checkedValue: V
 	uncheckedValue?: V
 }
@@ -210,7 +212,7 @@ export function MultiCheckable<T, V>(props: MultiCheckableProps<T, V>) {
 	)
 }
 
-interface TextAreaProps<T> extends HTMLTextAreaProps, CompatibleControllerProps<T, TextType>, BaseTextAreaFunctionalityProps {
+interface TextAreaProps<T> extends HTMLTextAreaProps, ControllerPropertyOfType<T, TextType>, BaseTextAreaFunctionalityProps {
 
 }
 
@@ -250,12 +252,12 @@ function isOptionTypeObjects<C>(o: OptionTypeObject<C>[] | C[], props: SelectPro
 	return (props as any).display === undefined
 }
 
-interface SelectProps1<T, K extends KEYORTHIS<T>> extends HTMLSelectProps, ControllerProps<T, K> {
+interface SelectProps1<T, K extends KEYORTHIS<T>> extends HTMLSelectProps, ControllerProperty<T, K> {
 	options?: OptionTypeObject<PROPERTYORTHIS<T, K>>[]
 	display?: undefined
 }
 
-interface SelectProps2<T, K extends KEYORTHIS<T>> extends HTMLSelectProps, ControllerProps<T, K> {
+interface SelectProps2<T, K extends KEYORTHIS<T>> extends HTMLSelectProps, ControllerProperty<T, K> {
 	options?: PROPERTYORTHIS<T, K>[]
 	display: (value: PROPERTYORTHIS<T, K>) => string
 }
@@ -324,7 +326,7 @@ export interface IndexedActions<V> {
 	onRemove: IndexedOnRemove
 }
 
-interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProps<T, K> {
+interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProperty<T, K> {
 	/* Optional so that autocomplete works for the prop field */
 	renderEach?: (
 		controller: Controller<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
@@ -387,7 +389,7 @@ export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined>>(props
  * @param component A component function that takes a Snapshot
  */
 export function wrapComponent<V, P extends Snapshot<V>>(component: React.FC<Snapshot<V> & P>) {
-	return <T, K extends COMPATIBLEKEYS<T, V>>(props: Subtract<P, Snapshot<V>> & ControllerProps<T, K>) => {
+	return <T, K extends COMPATIBLEKEYS<T, V>>(props: Subtract<P, Snapshot<V>> & ControllerProperty<T, K>) => {
 		const { controller, prop, ...rest } = props
 		// const snapshot = takeSnapshot(controller, prop) as Snapshot<V>
 		const snapshot = (prop !== 'this' ? controller.snapshot(prop as unknown as KEY<T>) : controller.snapshot()) as unknown as Snapshot<V>

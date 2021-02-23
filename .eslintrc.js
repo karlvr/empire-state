@@ -14,6 +14,7 @@ module.exports = {
 		'computed-property-spacing': 'warn',
 		'@typescript-eslint/explicit-function-return-type': 'off',
 		'@typescript-eslint/explicit-member-accessibility': 'warn',
+		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'func-call-spacing': 'warn',
 		'generator-star-spacing': ['warn', 'after'],
 		// https://github.com/typescript-eslint/typescript-eslint/blob/v1.6.0/packages/eslint-plugin/docs/rules/indent.md
@@ -21,7 +22,7 @@ module.exports = {
 		'@typescript-eslint/indent': ['warn', 'tab'],
 		'key-spacing': 'warn',
 		'keyword-spacing': 'warn',
-		'@typescript-eslint/member-delimiter-style': ['warn', { 'multiline': { 'delimiter': 'none' } } ],
+		'@typescript-eslint/member-delimiter-style': ['warn', { 'multiline': { 'delimiter': 'none' } }],
 		'@typescript-eslint/member-ordering': 'warn',
 		'@typescript-eslint/no-empty-interface': 'off',
 		'no-multi-spaces': 'warn',

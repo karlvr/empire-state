@@ -28,8 +28,15 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	public snapshot(): Snapshot<T>
 	public snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
+	public snapshot(name: 'this'): Snapshot<T>
 	public snapshot<K extends KEY<T>>(name?: K): Snapshot<PROPERTY<T, K>>
-	public snapshot<K extends KEY<T>>(nameOrIndex?: K | number, index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>> {
+	public snapshot<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>> {
+		if (index !== undefined) {
+			return this.controller(nameOrIndex as K).snapshot(index)
+		}
+
+		let result: Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>>
+		
 		if (typeof nameOrIndex === 'number') {
 			const onChange = (newValue: INDEXPROPERTY<T>) => {
 				const parentNewValue = produce(this.value, draft => {
@@ -38,31 +45,31 @@ export class ControllerImpl<T> implements Controller<T> {
 				this.onChange(parentNewValue)
 			}
 			const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
-			return {
+			result = {
 				setValue: onChange,
 				value: produce(value, (draft: any) => {}) as any,
 			}
-		} else if (nameOrIndex !== undefined && index !== undefined) {
-			return this.controller(nameOrIndex).snapshot(index)
-		} else if (nameOrIndex !== undefined) {
-			const onChange: any = this.propOnChange(nameOrIndex as any as keyof T)
-			let value: any = this.value !== undefined ? this.value[nameOrIndex as any as keyof T] : undefined
+		} else if (nameOrIndex === undefined || nameOrIndex === 'this') {
+			result = {
+				setValue: (newValue: T) => this.onChange(newValue),
+				value: produce(this.value, draft => {}),
+			}
+		} else {
+			const onChange: any = this.propOnChange(nameOrIndex as unknown as keyof T)
+			let value: any = this.value !== undefined ? this.value[nameOrIndex as unknown as keyof T] : undefined
 
 			const getter = this.getters[nameOrIndex as string]
 			if (getter) {
 				value = getter(value)
 			}
 
-			return {
+			result = {
 				setValue: onChange,
 				value: produce(value, (draft: any) => {}) as any,
 			}
-		} else {
-			return {
-				setValue: (newValue: T) => this.onChange(newValue),
-				value: produce(this.value, draft => {}),
-			}
 		}
+
+		return result
 	}
 
 	public getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>) {
@@ -91,15 +98,23 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	public controller(index: number): Controller<INDEXPROPERTY<T>>
 	public controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
+	public controller(name: 'this'): Controller<T>
 	public controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
-	public controller<K extends KEY<T>>(nameOrIndex: K | number, index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
-		if (typeof nameOrIndex === 'number') {
-			return new ControllerImpl(() => this.snapshot(nameOrIndex))
-		} else if (index !== undefined) {
-			return this.controller(nameOrIndex).controller(index)
-		} else {
-			return new ControllerImpl(() => this.snapshot(nameOrIndex))
+	public controller<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+		if (index !== undefined) {
+			return this.controller(nameOrIndex as K).controller(index)
+		} else if (nameOrIndex === 'this') {
+			return this
 		}
+
+		let result: Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+		if (typeof nameOrIndex === 'number') {
+			result = new ControllerImpl(() => this.snapshot(nameOrIndex))
+		} else {
+			result = new ControllerImpl(() => this.snapshot(nameOrIndex))
+		}
+
+		return result
 	}
 
 	private get value(): T {

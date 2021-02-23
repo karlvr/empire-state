@@ -17,13 +17,44 @@ export interface Snapshot<T> {
 
 /** A Controller is a way to access Snapshots of state. */
 export interface Controller<T> {
+	/**
+	 * Returns a controller for the value at the given index in this controller's value, assuming this controller has an array value.
+	 */
 	controller(index: number): Controller<INDEXPROPERTY<T>>
+	/**
+	 * Returns this controller.
+	 */
+	controller(name: 'this'): Controller<T>
+	/**
+	 * Returns a controller for the value of the given property in this controller's value, assuming this controller has an object value.
+	 */
 	controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
+	/**
+	 * Returns a controller for the value at the given index in the value of the given property in this controller's value, 
+	 * assuming this controller has an object value and the property value is an array value.
+	 */
 	controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 
+	/**
+	 * Returns a snapshot of the whole value in this controller.
+	 */
 	snapshot(): Snapshot<T>
+	/**
+	 * Returns a snapshot of the value at the given index in this controller's value, assuming this controller has an array value.
+	 */
 	snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
+	/**
+	 * Returns a snapshot of the whole value in this controller.
+	 */
+	snapshot(name: 'this'): Snapshot<T>
+	/**
+	 * Returns a snapshot of the value of the given property in this controller's value, assuming this controller has an object value.
+	 */
 	snapshot<K extends KEY<T>>(name: K): Snapshot<PROPERTY<T, K>>
+	/**
+	 * Returns a snapshot of the value at the given index in the value of the given property in this controller's value,
+	 * assuming this controller has an object value and the property value is an array value.
+	 */
 	snapshot<K extends KEY<T>>(name: K, index: number): Snapshot<INDEXPROPERTY<PROPERTY<T, K>>>
 	
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void

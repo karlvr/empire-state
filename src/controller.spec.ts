@@ -262,4 +262,24 @@ describe('controller', () => {
 		expect(controller.snapshot().value.a).toEqual('Bye')
 	})
 
+	it('supports snapshot this', () => {
+		const state = {
+			a: 'Hello world',
+		}
+
+		const controller = withValue(state)
+
+		const snapshot = controller.snapshot('this')
+		expect(snapshot.value).toBe(state)
+	})
+
+	it('supports controller this', () => {
+		const state = {
+			a: 'Hello world',
+		}
+
+		const controller = withValue(state)
+		expect(controller.controller('this')).toBe(controller)
+	})
+
 })

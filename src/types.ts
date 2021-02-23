@@ -1,4 +1,4 @@
-import { KEY, PROPERTY, INDEXPROPERTY } from './type-utils'
+import { KEY, PROPERTY, INDEXPROPERTY, COMPATIBLEKEYS } from './type-utils'
 
 /** A Snapshot represents an immutable view of state, and a means to change it. */
 export interface Snapshot<T> {
@@ -34,6 +34,8 @@ export interface Controller<T> {
 	 * assuming this controller has an object value and the property value is an array value.
 	 */
 	controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	controller<S>(name: COMPATIBLEKEYS<T, S>): Controller<S>
+	controller<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>): Controller<O>
 	controller<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 
 	/**
@@ -57,6 +59,11 @@ export interface Controller<T> {
 	 * assuming this controller has an object value and the property value is an array value.
 	 */
 	snapshot<K extends KEY<T>>(name: K, index: number): Snapshot<INDEXPROPERTY<PROPERTY<T, K>>>
+	/**
+	 * Convenience version for the COMPATIBLEKEYS utility to produce the right return type for the Snapshot.
+	 */
+	snapshot<S>(name: COMPATIBLEKEYS<T, S>): Snapshot<S>
+	snapshot<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>, index: number): Snapshot<O>
 	/**
 	 * The combination of all snapshot methods so you can call snapshot with arguments that can match some combination that
 	 * snapshot supports.

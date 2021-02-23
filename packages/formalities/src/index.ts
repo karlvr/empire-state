@@ -37,10 +37,8 @@ export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
 					currentSnapshotSetValue.current(newValue)
 				},
 			)
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const ignore = snapshot.value
 		},
-		[snapshot.value],
+		[],
 	)
 
 	/* Because we reuse the same Controller instance if the snapshot value is the same,

@@ -3,7 +3,7 @@ import { withFuncs, Controller, Snapshot } from 'immutable-state-controller'
 import { KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-utils'
 import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
 export * from './components'
-export { Controller, Snapshot } from 'immutable-state-controller'
+export { Controller, Snapshot, ChangeListener } from 'immutable-state-controller'
 
 export function useController<T>(initialState: T): Controller<T>
 export function useController<T>(value: T, setValue: (newValue: T) => void): Controller<T>

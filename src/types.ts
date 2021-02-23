@@ -34,6 +34,7 @@ export interface Controller<T> {
 	 * assuming this controller has an object value and the property value is an array value.
 	 */
 	controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	controller<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 
 	/**
 	 * Returns a snapshot of the whole value in this controller.
@@ -56,6 +57,11 @@ export interface Controller<T> {
 	 * assuming this controller has an object value and the property value is an array value.
 	 */
 	snapshot<K extends KEY<T>>(name: K, index: number): Snapshot<INDEXPROPERTY<PROPERTY<T, K>>>
+	/**
+	 * The combination of all snapshot methods so you can call snapshot with arguments that can match some combination that
+	 * snapshot supports.
+	 */
+	snapshot<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>>
 	
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void

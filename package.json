@@ -4,6 +4,7 @@
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna clean --yes && lerna run clean",
+    "link": "lerna run link",
     "release": "npm run clean && npm run build && npm test && lerna publish",
     "test": "lerna run test",
     "watch": "lerna run --parallel watch"

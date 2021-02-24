@@ -25,8 +25,8 @@ export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
 	currentSnapshotValue.current = snapshot.value
 	currentSnapshotSetValue.current = snapshot.setValue
 
-	/* We use useMemo so that the controller doesn't change unless the value changes,
-	   so it doesn't trigger a re-render when we use it in deps in a component.
+	/* We use useMemo so that the controller doesn't change, so it doesn't trigger a re-render when we use it in deps in a component.
+	   We rely on something else to trigger re-renders, like the state that backs the controller changing.
 	 */
 	const mainController = useMemo(
 		() => {

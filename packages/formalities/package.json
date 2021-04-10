@@ -22,11 +22,11 @@
 	"license": "MIT",
 	"dependencies": {
 		"fast-deep-equal": "^3.1.1",
-		"immutable-state-controller": "^0.3.0"
+		"immutable-state-controller": "^0.4.1"
 	},
 	"peerDependencies": {
-		"react": "^16.8",
-		"react-dom": "^16.8"
+		"react": ">=16.8",
+		"react-dom": ">=16.8"
 	},
 	"repository": {
 		"type": "git",

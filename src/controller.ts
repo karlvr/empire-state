@@ -44,7 +44,7 @@ export class ControllerImpl<T> implements Controller<T> {
 				const parentNewValue = produce(this.value, draft => {
 					(draft as any)[nameOrIndex] = newValue
 				})
-				this.onChange(parentNewValue)
+				this.setValue(parentNewValue)
 			}
 			const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
 			result = {
@@ -53,7 +53,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			}
 		} else if (nameOrIndex === undefined || nameOrIndex === 'this') {
 			result = {
-				setValue: (newValue: T) => this.onChange(newValue),
+				setValue: (newValue: T) => this.setValue(newValue),
 				value: produce(this.value, draft => {}),
 			}
 		} else {
@@ -132,11 +132,11 @@ export class ControllerImpl<T> implements Controller<T> {
 		return result
 	}
 
-	private get value(): T {
+	public get value(): T {
 		return this.locator().value
 	}
 
-	private onChange(value: T) {
+	public setValue(value: T) {
 		const oldValue = this.locator().value
 		this.locator().setValue(value)
 
@@ -161,7 +161,7 @@ export class ControllerImpl<T> implements Controller<T> {
 					[name]: subValue,
 				}
 
-			this.onChange(newValue as T)
+			this.setValue(newValue as T)
 		}
 
 		const setter = this.setters[name as string]

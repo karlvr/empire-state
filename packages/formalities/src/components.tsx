@@ -333,16 +333,27 @@ interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProperty<T, 
 		cursor: IndexedCursor, 
 		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
 	) => JSX.Element | null
+	RenderEach?: (props: {
+		controller: Controller<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>
+		cursor: IndexedCursor 
+		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>
+	}) => JSX.Element | null
 	renderBefore?: (
 		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
 	) => JSX.Element | null
+	RenderBefore?: (props: {
+		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>
+	}) => JSX.Element | null
 	renderAfter?: (
 		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
 	) => JSX.Element | null
+	RenderAfter?: (props: {
+		actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>
+	}) => JSX.Element | null
 }
 
 export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined>>(props: IndexedProps<T, K>) {
-	const { controller, prop, renderEach, renderBefore, renderAfter } = props
+	const { controller, prop, renderEach, renderBefore, renderAfter, RenderEach, RenderBefore, RenderAfter } = props
 	const actualController = prop !== 'this' ? controller.controller(prop as KEY<T>) : controller
 	const snapshot = actualController.snapshot() as any as Snapshot<any[] | undefined>
 	const arrayValue = snapshot.value || []
@@ -366,6 +377,7 @@ export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined>>(props
 	return (
 		<>
 			{renderBefore ? renderBefore(actions) : null}
+			{RenderBefore ? <RenderBefore actions={actions} /> : null}
 			{renderEach ? arrayValue.map((v, i) => {
 				const indexController = actualController.controller(i)
 				const cursor: IndexedCursor = {
@@ -379,7 +391,21 @@ export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined>>(props
 					actions,
 				)
 			}) : null}
+			{RenderEach ? arrayValue.map((v, i) => {
+				const indexController = actualController.controller(i)
+				const cursor: IndexedCursor = {
+					index: i,
+					first: i === 0,
+					last: i === arrayValue.length - 1,
+				}
+				return <RenderEach
+					controller={indexController as Controller<any>}
+					cursor={cursor}
+					actions={actions}
+				/>
+			}) : null}
 			{renderAfter ? renderAfter(actions) : null}
+			{RenderAfter ? <RenderAfter actions={actions} /> : null}
 		</>
 	)
 }

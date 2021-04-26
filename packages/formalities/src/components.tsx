@@ -399,6 +399,7 @@ export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined>>(props
 					last: i === arrayValue.length - 1,
 				}
 				return <RenderEach
+					key={i}
 					controller={indexController as Controller<any>}
 					cursor={cursor}
 					actions={actions}

@@ -6,7 +6,7 @@ import { Snapshot, Controller, ChangeListener } from './types'
 
 export class ControllerImpl<T> implements Controller<T> {
 
-	private locator: () => Snapshot<T>
+	private source: () => Snapshot<T>
 
 	private onChanges: {
 		[name: string]: (value: any) => void
@@ -24,8 +24,8 @@ export class ControllerImpl<T> implements Controller<T> {
 	private memoisedSnapshots: { [prop: string]: Snapshot<any> } = {}
 	private memoisedControllers: { [prop: string]: Controller<any> } = {}
 
-	public constructor(locator: () => Snapshot<T>) {
-		this.locator = locator
+	public constructor(source: () => Snapshot<T>) {
+		this.source = source
 	}
 
 	public snapshot(): Snapshot<T>
@@ -133,12 +133,12 @@ export class ControllerImpl<T> implements Controller<T> {
 	}
 
 	public get value(): T {
-		return this.locator().value
+		return this.source().value
 	}
 
 	public setValue(value: T) {
-		const oldValue = this.locator().value
-		this.locator().setValue(value)
+		const oldValue = this.source().value
+		this.source().setValue(value)
 
 		for (const listener of this.changeListeners) {
 			listener(value, oldValue)

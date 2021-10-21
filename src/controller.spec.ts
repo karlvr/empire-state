@@ -190,7 +190,7 @@ describe('controller', () => {
 			controller.snapshot().value.a = 'test'
 			fail('Should have failed to modify')
 		} catch (error) {
-			expect(error.name).toBe('TypeError')
+			expect((error as Error).name).toBe('TypeError')
 		}
 	})
 

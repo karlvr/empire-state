@@ -38,7 +38,7 @@ importers:
   packages/react:
     specifiers:
       '@types/react': ^17.0.31
-      immutable-state-controller: 0.4.1
+      immutable-state-controller: 0.4.2
       rimraf: ^3.0.2
     dependencies:
       immutable-state-controller: link:../immutable-state-controller

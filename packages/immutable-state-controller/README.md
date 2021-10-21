@@ -2,7 +2,7 @@
 
 A small library to manage mutable and immutable state without a lot of boilerplate, but with a lot of type-safety using TypeScript.
 
-`immutable-state-controller` lets you work with mutable state from the _Controller_, and immutable state from _Snapshots_. Each _Controller_ or _Snapshot_ provides a method to change the state. Changes are visible immediately in the _Controller_ as it represents mutable state, but changes are never visible in _Snapshots_ as they represent immutable state. To see changes in a _Snapshot_ you need to get a new _Snapshot_ from the _Controller_.
+`immutable-state-controller` lets you work with mutable state from the `Controller`, and immutable state from `Snapshot`s. Each `Controller` or `Snapshot` provides a method to change the state. Changes are visible immediately in the `Controller` as it represents mutable state, but changes are never visible in `Snapshot`s as they represent immutable state. To see changes in a `Snapshot` you need to get a new `Snapshot` from the `Controller`.
 
 ## Installation
 

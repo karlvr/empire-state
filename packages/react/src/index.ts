@@ -4,18 +4,11 @@ import { KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-uti
 import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
 export { Controller, Snapshot, ChangeListener, withFuncs, withMutable } from 'immutable-state-controller'
 
-export function useController<T>(initialState: T): Controller<T>
-export function useController<T>(value: T, onChange: (newValue: T) => void): Controller<T>
-export function useController<T>(value: T, onChange?: (newValue: T) => void): Controller<T> {
-	if (onChange === undefined) {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const [state, setState] = useState(value)
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		return useSnapshotController({ value: state, change: setState })
-	} else {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		return useSnapshotController({ value, change: onChange })
-	}
+export function useController<T>(initialState: T): Controller<T> {
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	const [state, setState] = useState(initialState)
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	return useSnapshotController({ value: state, change: setState })
 }
 
 export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {

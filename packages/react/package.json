@@ -1,0 +1,31 @@
+{
+  "name": "react-immutable-state-controller",
+  "version": "0.4.1",
+  "description": "React hooks for the Immutable state change controller",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --build tsconfig.prod.json",
+    "clean": "rimraf dist",
+    "watch": "tsc --watch"
+  },
+  "author": "Karl von Randow",
+  "license": "MIT",
+  "dependencies": {
+    "immutable-state-controller": "0.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.31",
+    "rimraf": "^3.0.2"
+  },
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karlvr/immutable-state-controller.git"
+  },
+  "bugs": {
+    "url": "https://github.com/karlvr/immutable-state-controller/issues"
+  },
+  "homepage": "https://github.com/karlvr/immutable-state-controller#readme"
+}

@@ -35,6 +35,17 @@ importers:
     devDependencies:
       rimraf: 3.0.2
 
+  packages/react:
+    specifiers:
+      '@types/react': ^17.0.31
+      immutable-state-controller: 0.4.1
+      rimraf: ^3.0.2
+    dependencies:
+      immutable-state-controller: link:../immutable-state-controller
+    devDependencies:
+      '@types/react': 17.0.31
+      rimraf: 3.0.2
+
 packages:
 
   /@babel/code-frame/7.15.8:
@@ -933,6 +944,22 @@ packages:
     resolution: {integrity: sha512-Fo79ojj3vdEZOHg3wR9ksAMRz4P3S5fDB5e/YWZiFnyFQI1WY2Vftu9XoXVVtJfxB7Bpce/QTqWSSntkz2Znrw==}
     dev: true
 
+  /@types/prop-types/15.7.4:
+    resolution: {integrity: sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==}
+    dev: true
+
+  /@types/react/17.0.31:
+    resolution: {integrity: sha512-MQSR5EL4JZtdWRvqDgz9kXhSDDoy2zMTYyg7UhP+FZ5ttUOocWyxiqFJiI57sUG0BtaEX7WDXYQlkCYkb3X9vQ==}
+    dependencies:
+      '@types/prop-types': 15.7.4
+      '@types/scheduler': 0.16.2
+      csstype: 3.0.9
+    dev: true
+
+  /@types/scheduler/0.16.2:
+    resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+    dev: true
+
   /@types/semver/6.2.3:
     resolution: {integrity: sha512-KQf+QAMWKMrtBMsB8/24w53tEsxllMj6TuA80TT/5igJalLI/zm0L3oXRbIAl4Ohfc85gyHX/jhMwsVkmhLU4A==}
     dev: true
@@ -1540,6 +1567,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       cssom: 0.3.8
+    dev: true
+
+  /csstype/3.0.9:
+    resolution: {integrity: sha512-rpw6JPxK6Rfg1zLOYCSwle2GFOOsnjmDYDaBwEcwoOg4qlsIVCN789VkBZDJAGi4T07gI4YSutR43t9Zz4Lzuw==}
     dev: true
 
   /csv-generate/3.4.3:

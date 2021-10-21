@@ -5,24 +5,24 @@ import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
 export { Controller, Snapshot, ChangeListener, withFuncs, withMutable } from 'immutable-state-controller'
 
 export function useController<T>(initialState: T): Controller<T>
-export function useController<T>(value: T, setValue: (newValue: T) => void): Controller<T>
-export function useController<T>(value: T, setValue?: (newValue: T) => void): Controller<T> {
-	if (setValue === undefined) {
+export function useController<T>(value: T, onChange: (newValue: T) => void): Controller<T>
+export function useController<T>(value: T, onChange?: (newValue: T) => void): Controller<T> {
+	if (onChange === undefined) {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const [state, setState] = useState(value)
 		// eslint-disable-next-line react-hooks/rules-of-hooks
-		return useSnapshotController({ value: state, setValue: setState })
+		return useSnapshotController({ value: state, change: setState })
 	} else {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
-		return useSnapshotController({ value, setValue })
+		return useSnapshotController({ value, change: onChange })
 	}
 }
 
 export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
 	const currentSnapshotValue = useRef(snapshot.value)
-	const currentSnapshotSetValue = useRef(snapshot.setValue)
+	const currentSnapshotSetValue = useRef(snapshot.change)
 	currentSnapshotValue.current = snapshot.value
-	currentSnapshotSetValue.current = snapshot.setValue
+	currentSnapshotSetValue.current = snapshot.change
 
 	/* We use useMemo so that the controller doesn't change, so it doesn't trigger a re-render when we use it in deps in a component.
 	   We rely on something else to trigger re-renders, like the state that backs the controller changing.
@@ -79,7 +79,7 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>>(component: ChangeableComponentWithProps<T> | ChangeableComponentWithPropsGeneral<T>, valueProperty?: K, onChangeProperty?: L): Controller<PROPERTY<T, K>> | Controller<T> {
 	if (onChangeProperty === undefined || valueProperty === undefined) {
 		const actualComponent = component as ChangeableComponentWithProps<T>
-		return withFuncs(() => actualComponent.props.value, actualComponent.props.setValue)
+		return withFuncs(() => actualComponent.props.value, actualComponent.props.change)
 	} else {
 		const actualComponent = component as ChangeableComponentWithPropsGeneral<T>
 		return withFuncs(

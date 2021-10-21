@@ -16,7 +16,7 @@ describe('controller', () => {
 				value = newValue
 			},
 		)
-		controller.snapshot('b').setValue(77)
+		controller.snapshot('b').change(77)
 		expect(value.b).toBe(77)
 	})
 
@@ -38,7 +38,7 @@ describe('controller', () => {
 		controller.getter('a', (value) => value + '!')
 
 		expect(controller.snapshot('a').value).toBe('Hello!')
-		controller.snapshot('a').setValue('World')
+		controller.snapshot('a').change('World')
 		expect(value.a).toBe('World')
 		expect(controller.snapshot('a').value).toBe('World!')
 	})
@@ -61,7 +61,7 @@ describe('controller', () => {
 		controller.setter('a', (value) => value + '!')
 
 		expect(controller.snapshot('a').value).toBe('Hello')
-		controller.snapshot('a').setValue('World')
+		controller.snapshot('a').change('World')
 		expect(value.a).toBe('World!')
 		expect(controller.snapshot('a').value).toBe('World!')
 	})
@@ -75,7 +75,7 @@ describe('controller', () => {
 		}
 
 		const controller = withMutable(value)
-		controller.snapshot('name').setValue('Modified')
+		controller.snapshot('name').change('Modified')
 		
 		expect(value.name).toBe('Modified')
 	})
@@ -92,12 +92,12 @@ describe('controller', () => {
 
 		const snap = controller.controller('names').snapshot(0)
 		expect(snap.value).toBe('Blake')
-		snap.setValue('Vila')
+		snap.change('Vila')
 		expect(value.names[0]).toBe('Vila')
 
 		const snap2 = controller.controller('names').snapshot(1)
 		expect(snap2.value).toBe('Avon')
-		snap2.setValue('Jenna')
+		snap2.change('Jenna')
 		expect(value.names[1]).toBe('Jenna')
 	})
 
@@ -112,12 +112,12 @@ describe('controller', () => {
 
 		const snap = controller.snapshot('names', 0)
 		expect(snap.value).toBe('Blake')
-		snap.setValue('Vila')
+		snap.change('Vila')
 		expect(value.names[0]).toBe('Vila')
 
 		const snap2 = controller.snapshot('names', 1)
 		expect(snap2.value).toBe('Avon')
-		snap2.setValue('Jenna')
+		snap2.change('Jenna')
 		expect(value.names[1]).toBe('Jenna')
 	})
 
@@ -133,13 +133,13 @@ describe('controller', () => {
 		const c = controller.controller('names', 0)
 		const snap = c.snapshot()
 		expect(snap.value).toBe('Blake')
-		snap.setValue('Vila')
+		snap.change('Vila')
 		expect(value.names[0]).toBe('Vila')
 
 		const c2 = controller.controller('names', 1)
 		const snap2 = c2.snapshot()
 		expect(snap2.value).toBe('Avon')
-		snap2.setValue('Jenna')
+		snap2.change('Jenna')
 		expect(value.names[1]).toBe('Jenna')
 	})
 
@@ -158,7 +158,7 @@ describe('controller', () => {
 		const a = controller.snapshot('a')
 		expect(a.value).toBe('Hello world')
 
-		a.setValue('Bye')
+		a.change('Bye')
 		expect(a.value).toBe('Hello world')
 		expect(state.a).toBe('Bye')
 
@@ -166,7 +166,7 @@ describe('controller', () => {
 		expect(aa.value).toBe('Bye')
 
 		const c = controller.snapshot('c')
-		c.setValue({
+		c.change({
 			d: 'Changed',
 			e: ['E'],
 		})
@@ -176,7 +176,7 @@ describe('controller', () => {
 		const e = controller.controller('c').snapshot('e')
 		expect(e.value).toEqual(['E'])
 
-		e.setValue(['F', 'G'])
+		e.change(['F', 'G'])
 		expect(state.c.e).toEqual(['F', 'G'])
 	})
 
@@ -200,7 +200,7 @@ describe('controller', () => {
 		}
 
 		const controller = withMutable(state)
-		controller.snapshot('a').setValue('Bye')
+		controller.snapshot('a').change('Bye')
 		expect(state.a).toEqual('Bye')
 	})
 
@@ -216,7 +216,7 @@ describe('controller', () => {
 			noticedChange = newValue.a
 		})
 
-		controller.snapshot('a').setValue('Bye')
+		controller.snapshot('a').change('Bye')
 		expect(noticedChange).toEqual('Bye')
 	})
 
@@ -235,7 +235,7 @@ describe('controller', () => {
 			noticedAnotherChange = newValue.b
 		})
 
-		controller.snapshot('a').setValue('Bye')
+		controller.snapshot('a').change('Bye')
 		expect(noticedChange).toEqual('Bye')
 		expect(noticedAnotherChange).toEqual('Another')
 	})
@@ -255,7 +255,7 @@ describe('controller', () => {
 			noticedOld = oldValue.a
 		})
 
-		controller.snapshot('a').setValue('Bye')
+		controller.snapshot('a').change('Bye')
 		expect(noticedChange).toEqual('Bye')
 		expect(noticedOld).toEqual('Hello world')
 		expect(state.a).toEqual('Hello world')

@@ -48,12 +48,12 @@ export class ControllerImpl<T> implements Controller<T> {
 			}
 			const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
 			result = {
-				setValue: onChange,
+				change: onChange,
 				value: produce(value, (draft: any) => {}) as any,
 			}
 		} else if (nameOrIndex === undefined || nameOrIndex === 'this') {
 			result = {
-				setValue: (newValue: T) => this.setValue(newValue),
+				change: (newValue: T) => this.setValue(newValue),
 				value: produce(this.value, draft => {}),
 			}
 		} else {
@@ -66,7 +66,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			}
 
 			result = {
-				setValue: onChange,
+				change: onChange,
 				value: produce(value, (draft: any) => {}) as any,
 			}
 		}
@@ -138,7 +138,7 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	public setValue(value: T) {
 		const oldValue = this.source().value
-		this.source().setValue(value)
+		this.source().change(value)
 
 		for (const listener of this.changeListeners) {
 			listener(value, oldValue)

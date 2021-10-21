@@ -8,11 +8,11 @@ export interface Snapshot<T> {
 	readonly value: T
 
 	/**
-	 * Request to change the value of the snapshot. This request will go back to the controller 
+	 * Request to update the value of the snapshot. This request will go back to the controller 
 	 * and to the original datasource, which will process and apply the change.
 	 * @param newValue The new snapshot value.
 	 */
-	readonly setValue: (newValue: T) => void
+	readonly change: (newValue: T) => void
 }
 
 /** A Controller is a way to access Snapshots of state. */

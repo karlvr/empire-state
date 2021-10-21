@@ -16,8 +16,14 @@ describe('controller', () => {
 				value = newValue
 			},
 		)
-		controller.snapshot('b').change(77)
-		expect(value.b).toBe(77)
+		expect(value.b).toBe(3)
+		const snapshot = controller.snapshot('b')
+		expect(controller.value.b).toBe(3)
+		expect(snapshot.value).toBe(3)
+		snapshot.change(77)
+		expect(value.b).toBe(77) /* Original value HAS changed */
+		expect(controller.value.b).toBe(77) /* Controller value HAS changed */
+		expect(snapshot.value).toBe(3) /* Snapshot value HASN'T changed */
 	})
 
 	it('can map values using a getter', () => {

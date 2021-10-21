@@ -15,7 +15,14 @@ export interface Snapshot<T> {
 	readonly change: (newValue: T) => void
 }
 
-/** A Controller is a way to access Snapshots of state. */
+/**
+ * The source used to create a new Controller. It MUST always return the current value after
+ * a call to `change`, to preserve the semantics of the Controller that it accesses mutable
+ * values.
+ */
+export type ControllerSource<T> = () => Snapshot<T>
+
+/** A Controller provides access to mutable state, and access to Snapshots of immutable state. */
 export interface Controller<T> {
 	/**
 	 * Returns a controller for the value at the given index in this controller's value, assuming this controller has an array value.
@@ -43,7 +50,7 @@ export interface Controller<T> {
 	 */
 	snapshot(): Snapshot<T>
 	/**
-	 * Returns a snapshot of the value at the given index in this controller's value, assuming this controller has an array value.
+	 * Returns a snapshot of the value at the given index in this controller's value, assuming this controller contains an array value.
 	 */
 	snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
 	/**
@@ -51,12 +58,12 @@ export interface Controller<T> {
 	 */
 	snapshot(name: 'this'): Snapshot<T>
 	/**
-	 * Returns a snapshot of the value of the given property in this controller's value, assuming this controller has an object value.
+	 * Returns a snapshot of the value of the given property in this controller's value, assuming this controller contains an object value.
 	 */
 	snapshot<K extends KEY<T>>(name: K): Snapshot<PROPERTY<T, K>>
 	/**
 	 * Returns a snapshot of the value at the given index in the value of the given property in this controller's value,
-	 * assuming this controller has an object value and the property value is an array value.
+	 * assuming this controller contains an object value and the property value is an array value.
 	 */
 	snapshot<K extends KEY<T>>(name: K, index: number): Snapshot<INDEXPROPERTY<PROPERTY<T, K>>>
 	/**

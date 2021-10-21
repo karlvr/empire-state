@@ -1,19 +1,13 @@
 # Immutable State Controller
 
-A small library to manage mutable and immutable state without a lot of boilerplate, but with a lot of type-safety.
+A small library to manage mutable and immutable state without a lot of boilerplate, but with a lot of type-safety using TypeScript.
 
-`immutable-state-controller` lets you work with immutable _snapshots_ of state, and provides a method to perform a change to that state, which only becomes visible in new snapshots.
+`immutable-state-controller` lets you work with mutable state from the _Controller_, and immutable state from _Snapshots_. Each _Controller_ or _Snapshot_ provides a method to change the state. Changes are visible immediately in the _Controller_ as it represents mutable state, but changes are never visible in _Snapshots_ as they represent immutable state. To see changes in a _Snapshot_ you need to get a new _Snapshot_ from the _Controller_.
 
 ## Installation
 
 ```shell
 npm install immutable-state-controller
-```
-
-Or if you're using it with React:
-
-```shell
-npm install react-immutable-state-controller
 ```
 
 ## Usage

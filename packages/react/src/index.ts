@@ -4,14 +4,37 @@ import { KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-uti
 import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
 export { Controller, Snapshot, ChangeListener, withFuncs, withMutable } from 'immutable-state-controller'
 
-export function useController<T>(initialState: T): Controller<T> {
-	// eslint-disable-next-line react-hooks/rules-of-hooks
+/**
+ * <p>Create a new controller with undefined initial state.</p>
+ * <p>This method uses React.useState to store the value, so components will re-render when the controller's
+ * value changes.</p>
+ */
+export function useController<T = undefined>(): Controller<T | undefined>
+
+/**
+ * <p>Create a new controller with the given initial state.</p>
+ * <p>This method uses React.useState to store the value, so components will re-render when the controller's
+ * value changes.</p>
+ * @param initialState 
+ * @returns 
+ */
+export function useController<T>(initialState: T): Controller<T>
+
+export function useController<T>(initialState?: T): Controller<T | undefined> {
 	const [state, setState] = useState(initialState)
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	return useSnapshotController({ value: state, change: setState })
+	return createMemoisedController({ value: state, change: setState })
 }
 
+/**
+ * <p>Create a new Controller with the given Snapshot.</p>
+ * @param snapshot 
+ * @returns 
+ */
 export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
+	return createMemoisedController(snapshot)
+}
+
+function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	const currentSnapshotValue = useRef(snapshot.value)
 	const currentSnapshotSetValue = useRef(snapshot.change)
 	currentSnapshotValue.current = snapshot.value
@@ -25,6 +48,7 @@ export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
 			return withFuncs(
 				() => currentSnapshotValue.current, 
 				(newValue) => {
+					/* Ensure that we always return the current value as per the required semantics of ControllerSource */
 					currentSnapshotValue.current = newValue
 					currentSnapshotSetValue.current(newValue)
 				},
@@ -42,7 +66,10 @@ export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
 
 /** Interface for component containing changeable props */
 interface ChangeableComponentWithProps<T> {
-	props: Snapshot<T>
+	props: {
+		value: T
+		onChange: (newValue: T) => void
+	}
 }
 
 interface ChangeableComponentWithPropsGeneral<T> {
@@ -56,7 +83,7 @@ interface ChangeableComponentWithState<T> {
 }
 
 /**
- * Create a Controller for a React component's props containing a `value` and `onChange` prop like `Changeable`.
+ * Create a Controller for a React component containing `value` and `onChange` props.
  * @param component A React component
  */
 export function forComponentProps<T>(component: ChangeableComponentWithProps<T>): Controller<T>
@@ -72,13 +99,26 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>>(component: ChangeableComponentWithProps<T> | ChangeableComponentWithPropsGeneral<T>, valueProperty?: K, onChangeProperty?: L): Controller<PROPERTY<T, K>> | Controller<T> {
 	if (onChangeProperty === undefined || valueProperty === undefined) {
 		const actualComponent = component as ChangeableComponentWithProps<T>
-		return withFuncs(() => actualComponent.props.value, actualComponent.props.change)
+		let currentValue = actualComponent.props.value
+		return withFuncs(
+			() => currentValue,
+			newValue => {
+				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
+				currentValue = newValue
+				actualComponent.props.onChange(newValue)
+			}
+		)
 	} else {
 		const actualComponent = component as ChangeableComponentWithPropsGeneral<T>
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let currentValue = (actualComponent.props as any)[valueProperty] as T
 		return withFuncs(
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			() => (actualComponent.props as any)[valueProperty] as T,
-			(newValue) => actualComponent.props[onChangeProperty](newValue),
+			() => currentValue,
+			(newValue) => {
+				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
+				currentValue = newValue
+				actualComponent.props[onChangeProperty](newValue)
+			}
 		)
 	}
 }
@@ -98,14 +138,22 @@ export function forComponentState<T, K extends KEY<T>>(component: ChangeableComp
 
 export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property?: K): Controller<PROPERTY<T, K>> | Controller<T> {
 	if (property === undefined) {
+		let currentValue = component.state
 		return withFuncs(
-			() => component.state,
-			(newValue) => component.setState(() => newValue),
+			() => currentValue,
+			(newValue) => {
+				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
+				currentValue = newValue
+				component.setState(() => newValue)
+			}
 		)
 	} else {
+		let currentValue = (component.state as KEYABLE<T>)[property]
 		return withFuncs(
-			() => (component.state as KEYABLE<T>)[property],
+			() => currentValue,
 			(newValue) => {
+				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
+				currentValue = newValue
 				component.setState(state => {
 					return {
 						...state,

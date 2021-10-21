@@ -2,7 +2,7 @@
 /* eslint-disable no-dupe-class-members */
 import { produce } from 'immer'
 import { KEY, PROPERTY, INDEXPROPERTY } from './type-utils'
-import { Snapshot, Controller, ChangeListener } from './types'
+import { Snapshot, Controller, ChangeListener, ControllerSource } from './types'
 
 export class ControllerImpl<T> implements Controller<T> {
 
@@ -24,7 +24,7 @@ export class ControllerImpl<T> implements Controller<T> {
 	private memoisedSnapshots: { [prop: string]: Snapshot<any> } = {}
 	private memoisedControllers: { [prop: string]: Controller<any> } = {}
 
-	public constructor(source: () => Snapshot<T>) {
+	public constructor(source: ControllerSource<T>) {
 		this.source = source
 	}
 

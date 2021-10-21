@@ -1,0 +1,33 @@
+{
+  "name": "immutable-state-controller",
+  "version": "0.4.1",
+  "description": "Immutable state change controller",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --build tsconfig.prod.json",
+    "clean": "rimraf dist",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "watch": "tsc --watch"
+  },
+  "keywords": [
+    "immer"
+  ],
+  "author": "Karl von Randow",
+  "license": "MIT",
+  "dependencies": {
+    "immer": ">=6"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karlvr/immutable-state-controller.git"
+  },
+  "bugs": {
+    "url": "https://github.com/karlvr/immutable-state-controller/issues"
+  },
+  "homepage": "https://github.com/karlvr/immutable-state-controller#readme"
+}

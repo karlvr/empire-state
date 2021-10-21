@@ -5,7 +5,6 @@ module.exports = {
 	entry: './src/index',
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],
-		symlinks: false,
 	},
 	output: {
 		filename: './index.js',
@@ -34,24 +33,20 @@ module.exports = {
 					},
 					{
 						exclude: [/\.js$/, /\.jsx$/],
-						use: [
-							{
-								loader: 'file-loader',
-								options: {
-									name: '[name].[ext]',
-								},
-							},
-						],
+						type: 'asset/resource',
+						generator: {
+							name: '[name][ext]',
+						},
 					},
 				],
 			},
 		],
 	},
 	devServer: {
-		clientLogLevel: 'none',
 		compress: true,
-		contentBase: path.join(__dirname, 'dist'),
 		open: true,
-		stats: 'minimal',
+		devMiddleware: {
+			stats: 'minimal',
+		},
 	},
 }

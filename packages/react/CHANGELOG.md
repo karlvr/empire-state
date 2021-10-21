@@ -1,5 +1,11 @@
 # react-immutable-state-controller
 
+## 0.5.1
+
+### Patch Changes
+
+- db11f0a: Add types property to package.json
+
 ## 0.5.0
 
 ### Minor Changes

@@ -74,4 +74,46 @@ describe('change listeners', () => {
 		expect(controller.value.a).toEqual('Bye!')
 	})
 
+	it('can notify parent controller listeners when the value changes from the child', () => {
+		const state = {
+			child: {
+				value: 'Hello',
+			},
+		}
+
+		let noticedChange = ''
+
+		const parent = withInitialValue(state)
+		parent.addChangeListener((newValue) => {
+			noticedChange = newValue.child.value
+		})
+
+		const child = parent.controller('child')
+		child.snapshot('value').change('World')
+
+		expect(noticedChange).toEqual('World')
+	})
+
+	it('can notify child controller listeners when their value changes in the parent', () => {
+		const state = {
+			child: {
+				value: 'Hello',
+			},
+		}
+
+		let noticedChange = ''
+
+		const parent = withInitialValue(state)
+
+		const child = parent.controller('child')
+		child.addChangeListener((newValue) => {
+			noticedChange = newValue.value
+		})
+
+		parent.snapshot().change({
+			child: { value: 'World' },
+		})
+
+		expect(noticedChange).toEqual('World')
+	})
 })

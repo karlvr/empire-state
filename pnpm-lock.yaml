@@ -4,6 +4,7 @@ importers:
 
   .:
     specifiers:
+      '@babel/core': ^7.15.8
       '@babel/eslint-parser': ^7.15.8
       '@changesets/cli': ^2.17.0
       '@types/jest': ^27.0.2
@@ -23,7 +24,8 @@ importers:
       ts-jest: ^27.0.7
       typescript: ^4.4.4
     devDependencies:
-      '@babel/eslint-parser': 7.15.8_eslint@7.32.0
+      '@babel/core': 7.15.8
+      '@babel/eslint-parser': 7.15.8_@babel+core@7.15.8+eslint@7.32.0
       '@changesets/cli': 2.17.0
       '@types/jest': 27.0.2
       '@types/node': 16.11.1
@@ -39,7 +41,7 @@ importers:
       eslint-plugin-react-hooks: 4.2.0_eslint@7.32.0
       jest: 27.3.1
       react: 17.0.2
-      ts-jest: 27.0.7_2c4ca6574207836d1023f54689cc81ac
+      ts-jest: 27.0.7_2f922f3a7b393b6257194064b7cba811
       typescript: 4.4.4
 
   packages/immutable-state-controller:
@@ -54,7 +56,7 @@ importers:
   packages/react:
     specifiers:
       '@types/react': ^17.0.31
-      immutable-state-controller: 0.5.0
+      immutable-state-controller: 0.6.0
       rimraf: ^3.0.2
     dependencies:
       immutable-state-controller: link:../immutable-state-controller
@@ -73,7 +75,7 @@ importers:
       copy-webpack-plugin: ^9.0.1
       react: ^17.0.2
       react-dom: ^17.0.2
-      react-immutable-state-controller: 0.5.1
+      react-immutable-state-controller: 0.6.0
       ts-loader: ^9.2.6
       webpack: ^5.59.1
       webpack-cli: ^4.9.1
@@ -138,13 +140,14 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/eslint-parser/7.15.8_eslint@7.32.0:
+  /@babel/eslint-parser/7.15.8_@babel+core@7.15.8+eslint@7.32.0:
     resolution: {integrity: sha512-fYP7QFngCvgxjUuw8O057SVH5jCXsbFFOoE77CFDcvzwBVgTOkMD/L4mIC5Ud1xf8chK/no2fRbSSn1wvNmKuQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || >=14.0.0}
     peerDependencies:
       '@babel/core': '>=7.11.0'
       eslint: '>=7.5.0'
     dependencies:
+      '@babel/core': 7.15.8
       eslint: 7.32.0
       eslint-scope: 5.1.1
       eslint-visitor-keys: 2.1.0
@@ -6906,7 +6909,7 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /ts-jest/27.0.7_2c4ca6574207836d1023f54689cc81ac:
+  /ts-jest/27.0.7_2f922f3a7b393b6257194064b7cba811:
     resolution: {integrity: sha512-O41shibMqzdafpuP+CkrOL7ykbmLh+FqQrXEmV9CydQ5JBk0Sj0uAEF5TNNe94fZWKm3yYvWa/IbyV4Yg1zK2Q==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     hasBin: true
@@ -6924,6 +6927,7 @@ packages:
       babel-jest:
         optional: true
     dependencies:
+      '@babel/core': 7.15.8
       '@types/jest': 27.0.2
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0

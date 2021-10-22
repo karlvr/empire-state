@@ -1,5 +1,19 @@
 # react-immutable-state-controller
 
+## 0.6.0
+
+### Minor Changes
+
+- 99679ca: Overhaul hooks to improve re-render semantics
+- 3f01c65: Remove withMutable as it didn't work if we used nested controllers and immer auto-froze our source
+
+### Patch Changes
+
+- Updated dependencies [a3fb6f2]
+- Updated dependencies [3f01c65]
+- Updated dependencies [8887471]
+  - immutable-state-controller@0.6.0
+
 ## 0.5.1
 
 ### Patch Changes

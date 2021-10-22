@@ -1,5 +1,13 @@
 # immutable-state-controller
 
+## 0.6.0
+
+### Minor Changes
+
+- a3fb6f2: All values from a Controller are now frozen using immer, which means that any input values to a Controller are also frozen
+- 3f01c65: Remove withMutable as it didn't work if we used nested controllers and immer auto-froze our source
+- 8887471: removeAllChangeListeners now removes all change listeners from sub controllers as well
+
 ## 0.5.0
 
 ### Minor Changes

@@ -58,4 +58,21 @@ describe('change listeners', () => {
 		expect(state.a).toEqual('Hello world')
 		expect(controller.snapshot().value.a).toEqual('Bye')
 	})
+
+	it('can make changes in a listener without infinite recursion', () => {
+		const state = {
+			a: 'Hello world',
+		}
+
+		const controller = withMutable(state)
+		controller.addChangeListener((newValue) => {
+			controller.setValue({
+				a: newValue.a + '!',
+			})
+		})
+
+		controller.snapshot('a').change('Bye')
+		expect(controller.value.a).toEqual('Bye!')
+	})
+	
 })

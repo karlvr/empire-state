@@ -1,28 +1,37 @@
-import { useMemo, useRef, useState } from 'react'
-import { withFuncs, Controller, Snapshot } from 'immutable-state-controller'
-import { KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-utils'
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { withFuncs, Controller, Snapshot, ChangeListener } from 'immutable-state-controller'
+import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-utils'
 import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
 export { Controller, Snapshot, ChangeListener, withFuncs, withInitialValue } from 'immutable-state-controller'
 
 /**
  * <p>Create a new controller with undefined initial state.</p>
- * <p>This method uses React.useState to store the value, so components will re-render when the controller's
- * value changes.</p>
+ * <p>The controller state is mutable and WILL NOT trigger component re-render when it changes.
+ * Use useSnapshot to get access to state and to re-render when state changes.</p>
  */
 export function useController<T = undefined>(): Controller<T | undefined>
 
 /**
  * <p>Create a new controller with the given initial state.</p>
- * <p>This method uses React.useState to store the value, so components will re-render when the controller's
- * value changes.</p>
+ * <p>Like React's useState, the initial state is just an initial state. The controller's state will
+ * NOT be changed if the value of the initial state changes. You should use a useEffect block to
+ * update the controller's value when you need to.</p>
+ * <p>The controller state is mutable and WILL NOT trigger component re-render when it changes.
+ * Use useSnapshot to get access to state and to re-render when state changes.</p>
  * @param initialState 
  * @returns 
  */
 export function useController<T>(initialState: T): Controller<T>
 
 export function useController<T>(initialState?: T): Controller<T | undefined> {
-	const [state, setState] = useState(initialState)
-	return createMemoisedController({ value: state, change: setState })
+	const value = useRef(initialState)
+	return createMemoisedController({
+		value: value.current,
+		change: (newValue) => {
+			value.current = newValue
+		},
+	})
 }
 
 /**
@@ -40,14 +49,15 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	currentSnapshotValue.current = snapshot.value
 	currentSnapshotSetValue.current = snapshot.change
 
-	/* We use useMemo so that the controller doesn't change, so it doesn't trigger a re-render when we use it in deps in a component.
-	   We rely on something else to trigger re-renders, like the state that backs the controller changing.
+	/* We use useMemo so that the controller in the calling component doesn't change and doesn't trigger a re-render when we use it in deps in a component.
+	   We rely on the useSnapshot hook to trigger re-renders. Or, if a controller is based on component state, then the component state changing
+	   will trigger the re-render.
 	 */
 	const mainController = useMemo(
 		() => {
 			return withFuncs(
-				() => currentSnapshotValue.current, 
-				(newValue) => {
+				() => currentSnapshotValue.current,
+				function(newValue) {
 					/* Ensure that we always return the current value as per the required semantics of ControllerSource */
 					currentSnapshotValue.current = newValue
 					currentSnapshotSetValue.current(newValue)
@@ -62,6 +72,52 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	 */
 	mainController.removeAllChangeListeners()
 	return mainController
+}
+
+/**
+ * Returns a snapshot of the whole value in the controller.
+ */
+export function useSnapshot<T>(controller: Controller<T>): Snapshot<T>
+/**
+ * Returns a snapshot of the value at the given index in the controller's value, assuming the controller contains an array value.
+ */
+export function useSnapshot<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Snapshot<S>
+/**
+ * Returns a snapshot of the whole value in the controller.
+ */
+// export function useSnapshot<T>(controller: Controller<T>, name: 'this'): Snapshot<T>
+/**
+ * Returns a snapshot of the value of the given property in the controller's value, assuming the controller contains an object value.
+ */
+export function useSnapshot<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): Snapshot<S>
+/**
+ * Returns a snapshot of the value at the given index in the value of the given property in the controller's value,
+ * assuming the controller contains an object value and the property value is an array value.
+ */
+export function useSnapshot<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Snapshot<S>
+/**
+ * The combination of all snapshot methods so you can call snapshot with arguments that can match some combination that
+ * snapshot supports.
+ */
+export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>> {
+	const [refresh, setRefresh] = useState(0)
+
+	const snapshotController = nameOrIndex !== undefined ? controller.controller(nameOrIndex, index) : controller
+	
+	/* Add and remove the change listener */
+	useEffect(function() {
+		const changeListener: ChangeListener<unknown> = function() {
+			setRefresh(refresh + 1)
+		}
+		snapshotController.addChangeListener(changeListener)
+
+		
+		return function() {
+			snapshotController.removeChangeListener(changeListener)
+		}
+	}, [refresh, snapshotController])
+
+	return snapshotController.snapshot()
 }
 
 /** Interface for component containing changeable props */
@@ -106,7 +162,7 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
 				currentValue = newValue
 				actualComponent.props.onChange(newValue)
-			}
+			},
 		)
 	} else {
 		const actualComponent = component as ChangeableComponentWithPropsGeneral<T>
@@ -118,7 +174,7 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
 				currentValue = newValue
 				actualComponent.props[onChangeProperty](newValue)
-			}
+			},
 		)
 	}
 }
@@ -145,7 +201,7 @@ export function forComponentState<T, K extends KEY<T>>(component: ChangeableComp
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
 				currentValue = newValue
 				component.setState(() => newValue)
-			}
+			},
 		)
 	} else {
 		let currentValue = (component.state as KEYABLE<T>)[property]

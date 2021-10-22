@@ -23,6 +23,7 @@ export class ControllerImpl<T> implements Controller<T> {
 	private changeListeners: ChangeListener<T>[] = []
 	private memoisedSnapshots: { [prop: string]: Snapshot<any> } = {}
 	private memoisedControllers: { [prop: string]: Controller<any> } = {}
+	private notifyingChangeListeners = false
 
 	public constructor(source: ControllerSource<T>) {
 		this.source = source
@@ -36,9 +37,7 @@ export class ControllerImpl<T> implements Controller<T> {
 		const oldValue = this.source().value
 		this.source().change(value)
 
-		for (const listener of this.changeListeners) {
-			listener(value, oldValue)
-		}
+		this.notifyChanges(oldValue)
 	}
 
 	public snapshot(): Snapshot<T>
@@ -143,6 +142,19 @@ export class ControllerImpl<T> implements Controller<T> {
 
 		this.memoisedControllers[`${nameOrIndex}`] = result
 		return result
+	}
+
+	private notifyChanges(oldValue: T) {
+		/* Handle value being changed by a change listener, we only notify each listener once in the reverse order of registration */
+		if (!this.notifyingChangeListeners) {
+			this.notifyingChangeListeners = true
+			for (const listener of this.changeListeners.reverse()) {
+				/* Always use the latest value from this controller, in case a listener has changed it, as we don't re-notify if a listener makes changes due to notifyingSetValue */
+				listener(this.value, oldValue)
+			}
+
+			this.notifyingChangeListeners = false
+		}
 	}
 
 	private propOnChange<K extends keyof T>(name: K): ((value: T[K]) => void) {

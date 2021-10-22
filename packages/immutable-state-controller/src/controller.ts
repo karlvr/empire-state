@@ -28,6 +28,19 @@ export class ControllerImpl<T> implements Controller<T> {
 		this.source = source
 	}
 
+	public get value(): T {
+		return this.source().value
+	}
+
+	public setValue(value: T) {
+		const oldValue = this.source().value
+		this.source().change(value)
+
+		for (const listener of this.changeListeners) {
+			listener(value, oldValue)
+		}
+	}
+
 	public snapshot(): Snapshot<T>
 	public snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
 	public snapshot(name: 'this'): Snapshot<T>
@@ -130,19 +143,6 @@ export class ControllerImpl<T> implements Controller<T> {
 
 		this.memoisedControllers[`${nameOrIndex}`] = result
 		return result
-	}
-
-	public get value(): T {
-		return this.source().value
-	}
-
-	public setValue(value: T) {
-		const oldValue = this.source().value
-		this.source().change(value)
-
-		for (const listener of this.changeListeners) {
-			listener(value, oldValue)
-		}
 	}
 
 	private propOnChange<K extends keyof T>(name: K): ((value: T[K]) => void) {

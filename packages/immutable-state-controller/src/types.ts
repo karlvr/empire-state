@@ -25,6 +25,17 @@ export type ControllerSource<T> = () => Snapshot<T>
 /** A Controller provides access to mutable state, and access to Snapshots of immutable state. */
 export interface Controller<T> {
 	/**
+	 * Get the current value from the controller.
+	 */
+	value: T
+	
+	/**
+	 * Set the current value of the controller.
+	 * @param newValue 
+	 */
+	setValue(newValue: T): void
+
+	/**
 	 * Returns a controller for the value at the given index in this controller's value, assuming this controller has an array value.
 	 */
 	controller(index: number): Controller<INDEXPROPERTY<T>>
@@ -76,9 +87,6 @@ export interface Controller<T> {
 	 * snapshot supports.
 	 */
 	snapshot<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>>
-	
-	value: T
-	setValue(newValue: T): void
 
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void

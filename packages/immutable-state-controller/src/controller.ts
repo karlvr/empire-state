@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-dupe-class-members */
 import { produce } from 'immer'
 import { KEY, PROPERTY, INDEXPROPERTY } from './type-utils'
 import { Snapshot, Controller, ChangeListener, ControllerSource } from './types'
@@ -159,7 +158,7 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	private notifyIfChanged() {
 		const value = this.source().value
-			const oldValue = this.lastKnownValue
+		const oldValue = this.lastKnownValue
 		if (value !== oldValue) {
 			this.lastKnownValue = produce(value, draft => draft)
 

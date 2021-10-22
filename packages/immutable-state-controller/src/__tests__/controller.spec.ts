@@ -1,4 +1,4 @@
-import { withFuncs, withMutable, withValue } from '../creators'
+import { withFuncs, withInitialValue } from '../creators'
 
 describe('controller', () => {
 	it('can work with functions', () => {
@@ -76,97 +76,91 @@ describe('controller', () => {
 		interface TestInterface {
 			name: string
 		}
-		const value: TestInterface = {
-			name: 'Original',
-		}
 
-		const controller = withMutable(value)
+		const controller = withInitialValue<TestInterface>({
+			name: 'Original',
+		})
 		controller.snapshot('name').change('Modified')
 		
-		expect(value.name).toBe('Modified')
+		expect(controller.value.name).toBe('Modified')
 	})
 
 	it('can work with indexed property snapshots', () => {
 		interface TestInterface {
 			names: string[]
 		}
-		const value: TestInterface = {
+		const controller = withInitialValue<TestInterface>({
 			names: ['Blake', 'Avon'],
-		}
-		const controller = withMutable(value)
+		})
 		expect(controller.snapshot('names').value).toEqual(['Blake', 'Avon'])
 
 		const snap = controller.controller('names').snapshot(0)
 		expect(snap.value).toBe('Blake')
 		snap.change('Vila')
-		expect(value.names[0]).toBe('Vila')
+		expect(controller.value.names[0]).toBe('Vila')
 
 		const snap2 = controller.controller('names').snapshot(1)
 		expect(snap2.value).toBe('Avon')
 		snap2.change('Jenna')
-		expect(value.names[1]).toBe('Jenna')
+		expect(controller.value.names[1]).toBe('Jenna')
 	})
 
 	it('can work with direct indexed properties snapshots', () => {
 		interface TestInterface {
 			names: string[]
 		}
-		const value: TestInterface = {
+		const controller = withInitialValue<TestInterface>({
 			names: ['Blake', 'Avon'],
-		}
-		const controller = withMutable(value)
+		})
 
 		const snap = controller.snapshot('names', 0)
 		expect(snap.value).toBe('Blake')
 		snap.change('Vila')
-		expect(value.names[0]).toBe('Vila')
+		expect(controller.value.names[0]).toBe('Vila')
 
 		const snap2 = controller.snapshot('names', 1)
 		expect(snap2.value).toBe('Avon')
 		snap2.change('Jenna')
-		expect(value.names[1]).toBe('Jenna')
+		expect(controller.value.names[1]).toBe('Jenna')
 	})
 
 	it('can work with direct indexed property controllers', () => {
 		interface TestInterface {
 			names: string[]
 		}
-		const value: TestInterface = {
+		const controller = withInitialValue<TestInterface>({
 			names: ['Blake', 'Avon'],
-		}
-		const controller = withMutable(value)
+		})
 
 		const c = controller.controller('names', 0)
 		const snap = c.snapshot()
 		expect(snap.value).toBe('Blake')
 		snap.change('Vila')
-		expect(value.names[0]).toBe('Vila')
+		expect(controller.value.names[0]).toBe('Vila')
 
 		const c2 = controller.controller('names', 1)
 		const snap2 = c2.snapshot()
 		expect(snap2.value).toBe('Avon')
 		snap2.change('Jenna')
-		expect(value.names[1]).toBe('Jenna')
+		expect(controller.value.names[1]).toBe('Jenna')
 	})
 
 	it('example works', () => {
-		const state = {
+		const controller = withInitialValue({
 			a: 'Hello world',
 			b: 42,
 			c: {
 				d: 'Nested okay',
 				e: ['A', 'B', 'C', 'D'],
 			},
-		}
-		
-		const controller = withMutable(state)
+		})
 
 		const a = controller.snapshot('a')
 		expect(a.value).toBe('Hello world')
 
 		a.change('Bye')
 		expect(a.value).toBe('Hello world')
-		expect(state.a).toBe('Bye')
+		expect(controller.value.a).toBe('Bye')
 
 		const aa = controller.snapshot('a')
 		expect(aa.value).toBe('Bye')
@@ -177,13 +171,13 @@ describe('controller', () => {
 			e: ['E'],
 		})
 
-		expect(state.c.d).toBe('Changed')
+		expect(controller.value.c.d).toBe('Changed')
 
 		const e = controller.controller('c').snapshot('e')
 		expect(e.value).toEqual(['E'])
 
 		e.change(['F', 'G'])
-		expect(state.c.e).toEqual(['F', 'G'])
+		expect(controller.value.c.e).toEqual(['F', 'G'])
 	})
 
 	it('cant modify snapshot', () => {
@@ -191,7 +185,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 		
-		const controller = withMutable(state)
+		const controller = withInitialValue(state)
 		try {
 			controller.snapshot().value.a = 'test'
 			fail('Should have failed to modify')
@@ -201,13 +195,11 @@ describe('controller', () => {
 	})
 
 	it('can work with primitive property snapshot', () => {
-		const state = {
+		const controller = withInitialValue({
 			a: 'Hello world',
-		}
-
-		const controller = withMutable(state)
+		})
 		controller.snapshot('a').change('Bye')
-		expect(state.a).toEqual('Bye')
+		expect(controller.value.a).toEqual('Bye')
 	})
 
 	it('returns the same controller each time for properties', () => {
@@ -215,7 +207,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withValue(state)
+		const controller = withInitialValue(state)
 		const aController = controller.controller('a')
 		const anotherController = controller.controller('a')
 		expect(aController).toBe(anotherController)
@@ -226,7 +218,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withValue(state)
+		const controller = withInitialValue(state)
 		const aSnapshot = controller.snapshot('a')
 		const anotherSnapshot = controller.snapshot('a')
 		expect(aSnapshot).toBe(anotherSnapshot)
@@ -237,7 +229,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withValue(state)
+		const controller = withInitialValue(state)
 
 		const snapshot = controller.snapshot('this')
 		expect(snapshot.value).toBe(state)
@@ -248,7 +240,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withValue(state)
+		const controller = withInitialValue(state)
 		expect(controller.controller('this')).toBe(controller)
 	})
 

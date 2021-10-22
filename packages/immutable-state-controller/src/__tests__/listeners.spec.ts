@@ -1,4 +1,4 @@
-import { withMutable, withValue } from '../creators'
+import { withInitialValue } from '../creators'
 
 describe('change listeners', () => {
 	it('can report changes', () => {
@@ -8,7 +8,7 @@ describe('change listeners', () => {
 
 		let noticedChange = ''
 
-		const controller = withMutable(state)
+		const controller = withInitialValue(state)
 		controller.addChangeListener((newValue) => {
 			noticedChange = newValue.a
 		})
@@ -26,7 +26,7 @@ describe('change listeners', () => {
 		let noticedChange = ''
 		let noticedAnotherChange = ''
 
-		const controller = withMutable(state)
+		const controller = withInitialValue(state)
 		controller.addChangeListener((newValue) => {
 			noticedChange = newValue.a
 			noticedAnotherChange = newValue.b
@@ -45,8 +45,7 @@ describe('change listeners', () => {
 		let noticedChange = ''
 		let noticedOld = ''
 
-		/* Note that it's withValue not withMutable, as oldValue doesn't report accurately if the source is mutable */
-		const controller = withValue(state)
+		const controller = withInitialValue(state)
 		controller.addChangeListener((newValue, oldValue) => {
 			noticedChange = newValue.a
 			noticedOld = oldValue.a
@@ -64,7 +63,7 @@ describe('change listeners', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withMutable(state)
+		const controller = withInitialValue(state)
 		controller.addChangeListener((newValue) => {
 			controller.setValue({
 				a: newValue.a + '!',
@@ -74,5 +73,5 @@ describe('change listeners', () => {
 		controller.snapshot('a').change('Bye')
 		expect(controller.value.a).toEqual('Bye!')
 	})
-	
+
 })

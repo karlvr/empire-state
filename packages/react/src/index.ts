@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react'
 import { withFuncs, Controller, Snapshot } from 'immutable-state-controller'
 import { KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-utils'
 import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
-export { Controller, Snapshot, ChangeListener, withFuncs, withMutable } from 'immutable-state-controller'
+export { Controller, Snapshot, ChangeListener, withFuncs, withInitialValue } from 'immutable-state-controller'
 
 /**
  * <p>Create a new controller with undefined initial state.</p>

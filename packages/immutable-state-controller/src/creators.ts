@@ -8,31 +8,12 @@ export function withFuncs<T>(value: () => T, onChange: (newValue: T) => void): C
 	}))
 }
 
-export function withMutable<T extends object>(value: T): Controller<T> {
+export function withInitialValue<T>(initialValue: T): Controller<T> {
+	let value = initialValue
 	return new ControllerImpl(() => ({
-		change: (newValue: T) => {
-			for (const i in value) {
-				if (Object.prototype.hasOwnProperty.call(value, i)) {
-					delete value[i]
-				}
-			}
-
-			for (const i in newValue) {
-				if (Object.prototype.hasOwnProperty.call(newValue, i)) {
-					value[i] = newValue[i]
-				}
-			}
-		},
 		value,
-	}))
-}
-
-export function withValue<T>(value: T): Controller<T> {
-	let myValue = value
-	return new ControllerImpl(() => ({
-		value: myValue,
 		change: (newValue: T) => {
-			myValue = newValue
+			value = newValue
 		},
 	}))
 }

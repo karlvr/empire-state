@@ -1,5 +1,5 @@
 module.exports = {
-	'extends': ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+	'extends': ['react-app', 'eslint:recommended', 'plugin:@typescript-eslint/recommended'],
 	'env': {
 		'node': true,
 		'jest': true,
@@ -22,7 +22,7 @@ module.exports = {
 		'@typescript-eslint/indent': ['warn', 'tab'],
 		'key-spacing': 'warn',
 		'keyword-spacing': 'warn',
-		'@typescript-eslint/member-delimiter-style': ['warn', { 'multiline': { 'delimiter': 'none' } } ],
+		'@typescript-eslint/member-delimiter-style': ['warn', { 'multiline': { 'delimiter': 'none' } }],
 		'@typescript-eslint/member-ordering': 'warn',
 		'@typescript-eslint/no-empty-interface': 'off',
 		'no-multi-spaces': 'warn',

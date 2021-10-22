@@ -28,11 +28,18 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	public constructor(source: ControllerSource<T>) {
 		this.source = source
-		this.lastKnownValue = this.value
+		this.lastKnownValue = produce(this.value, draft => draft)
 	}
 
 	public get value(): T {
-		return this.source().value
+		const value = this.source().value
+		if (value === this.lastKnownValue) {
+			return this.lastKnownValue
+		}
+
+		const frozenValue = produce(value, draft => draft)
+		this.lastKnownValue = frozenValue
+		return frozenValue
 	}
 
 	public setValue(value: T) {
@@ -148,10 +155,10 @@ export class ControllerImpl<T> implements Controller<T> {
 	}
 
 	private notifyIfChanged() {
-		const value = this.value
-		if (value !== this.lastKnownValue) {
+		const value = this.source().value
 			const oldValue = this.lastKnownValue
-			this.lastKnownValue = value
+		if (value !== oldValue) {
+			this.lastKnownValue = produce(value, draft => draft)
 
 			this.notifyChanges(oldValue)
 		}

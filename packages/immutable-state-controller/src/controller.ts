@@ -7,6 +7,7 @@ import { Snapshot, Controller, ChangeListener, ControllerSource } from './types'
 export class ControllerImpl<T> implements Controller<T> {
 
 	private source: () => Snapshot<T>
+	private lastKnownValue: T
 
 	private onChanges: {
 		[name: string]: (value: any) => void
@@ -27,6 +28,7 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	public constructor(source: ControllerSource<T>) {
 		this.source = source
+		this.lastKnownValue = this.value
 	}
 
 	public get value(): T {
@@ -36,6 +38,7 @@ export class ControllerImpl<T> implements Controller<T> {
 	public setValue(value: T) {
 		const oldValue = this.source().value
 		this.source().change(value)
+		this.lastKnownValue = value
 
 		this.notifyChanges(oldValue)
 	}
@@ -144,10 +147,27 @@ export class ControllerImpl<T> implements Controller<T> {
 		return result
 	}
 
+	private notifyIfChanged() {
+		const value = this.value
+		if (value !== this.lastKnownValue) {
+			const oldValue = this.lastKnownValue
+			this.lastKnownValue = value
+
+			this.notifyChanges(oldValue)
+		}
+	}
+
 	private notifyChanges(oldValue: T) {
 		/* Handle value being changed by a change listener, we only notify each listener once in the reverse order of registration */
 		if (!this.notifyingChangeListeners) {
 			this.notifyingChangeListeners = true
+
+			/* Notify any sub-controllers */
+			for (const sub of Object.values(this.memoisedControllers)) {
+				(sub as ControllerImpl<T>).notifyIfChanged()
+			}
+
+			/* Notify our change listeners */
 			for (const listener of this.changeListeners.reverse()) {
 				/* Always use the latest value from this controller, in case a listener has changed it, as we don't re-notify if a listener makes changes due to notifyingSetValue */
 				listener(this.value, oldValue)

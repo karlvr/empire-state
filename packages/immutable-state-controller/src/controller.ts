@@ -22,7 +22,7 @@ export class ControllerImpl<T> implements Controller<T> {
 	} = {}
 
 	private changeListeners: ChangeListener<T>[] = []
-	private memoisedSnapshots: { [prop: string]: Snapshot<any> } = {}
+	private memoisedSnapshot: Snapshot<T> | undefined
 	private memoisedControllers: { [prop: string]: Controller<any> } = {}
 	private notifyingChangeListeners = false
 
@@ -48,50 +48,21 @@ export class ControllerImpl<T> implements Controller<T> {
 	public snapshot(name: 'this'): Snapshot<T>
 	public snapshot<K extends KEY<T>>(name?: K): Snapshot<PROPERTY<T, K>>
 	public snapshot<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>> {
-		if (index !== undefined) {
-			return this.controller(nameOrIndex as K).snapshot(index)
-		}
-
-		let result: Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>>
-		
-		if (typeof nameOrIndex === 'number') {
-			const onChange = (newValue: INDEXPROPERTY<T>) => {
-				const parentNewValue = produce(this.value, draft => {
-					(draft as any)[nameOrIndex] = newValue
-				})
-				this.setValue(parentNewValue)
-			}
-			const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
-			result = {
-				change: onChange,
-				value: produce(value, (draft: any) => {}) as any,
-			}
-		} else if (nameOrIndex === undefined || nameOrIndex === 'this') {
-			result = {
-				change: (newValue: T) => this.setValue(newValue),
-				value: produce(this.value, draft => {}),
-			}
-		} else {
-			const onChange: any = this.propOnChange(nameOrIndex as unknown as keyof T)
-			let value: any = this.value !== undefined ? this.value[nameOrIndex as unknown as keyof T] : undefined
-
-			const getter = this.getters[nameOrIndex as string]
-			if (getter) {
-				value = getter(value)
-			}
-
-			result = {
-				change: onChange,
-				value: produce(value, (draft: any) => {}) as any,
-			}
+		if (nameOrIndex !== undefined) {
+			return this.internalController(nameOrIndex, index).snapshot()
 		}
 
 		/* If the snapshot value hasn't changed, we return the memoised snapshot */
-		const memoisedSnapshot = this.memoisedSnapshots[`${nameOrIndex}`]
-		if (memoisedSnapshot && memoisedSnapshot.value === result.value) {
+		const memoisedSnapshot = this.memoisedSnapshot
+		if (memoisedSnapshot && memoisedSnapshot.value === this.value) {
 			return memoisedSnapshot
 		} else {
-			this.memoisedSnapshots[`${nameOrIndex}`] = result
+			const result: Snapshot<T> = {
+				change: (newValue: T) => this.setValue(newValue),
+				value: produce(this.value, draft => draft),
+			}
+
+			this.memoisedSnapshot = result
 			return result
 		}
 	}
@@ -125,6 +96,10 @@ export class ControllerImpl<T> implements Controller<T> {
 	public controller(name: 'this'): Controller<T>
 	public controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 	public controller<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+		return this.internalController(nameOrIndex, index)
+	}
+	
+	private internalController<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
 		if (index !== undefined) {
 			return this.controller(nameOrIndex as K).controller(index)
 		} else if (nameOrIndex === 'this') {
@@ -138,9 +113,34 @@ export class ControllerImpl<T> implements Controller<T> {
 
 		let result: Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 		if (typeof nameOrIndex === 'number') {
-			result = new ControllerImpl(() => this.snapshot(nameOrIndex))
+			result = new ControllerImpl(() => {
+				const onChange = (newValue: INDEXPROPERTY<T>) => {
+					const parentNewValue = produce(this.value, draft => {
+						(draft as any)[nameOrIndex] = newValue
+					})
+					this.setValue(parentNewValue)
+				}
+				const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
+				return {
+					change: onChange,
+					value: produce(value, (draft: any) => draft) as any,
+				}
+			})
 		} else {
-			result = new ControllerImpl(() => this.snapshot(nameOrIndex))
+			result = new ControllerImpl(() => {
+				const onChange: any = this.propOnChange(nameOrIndex as unknown as keyof T)
+				let value: any = this.value !== undefined ? this.value[nameOrIndex as unknown as keyof T] : undefined
+
+				const getter = this.getters[nameOrIndex as string]
+				if (getter) {
+					value = getter(value)
+				}
+
+				return {
+					change: onChange,
+					value: produce(value, (draft: any) => draft) as any,
+				}
+			})
 		}
 
 		this.memoisedControllers[`${nameOrIndex}`] = result

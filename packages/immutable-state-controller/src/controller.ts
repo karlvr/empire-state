@@ -96,6 +96,9 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	public removeAllChangeListeners() {
 		this.changeListeners = []
+		for (const sub of Object.values(this.memoisedControllers)) {
+			sub.removeAllChangeListeners()
+		}
 	}
 
 	public controller(index: number): Controller<INDEXPROPERTY<T>>

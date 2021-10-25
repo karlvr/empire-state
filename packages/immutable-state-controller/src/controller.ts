@@ -107,6 +107,17 @@ export class ControllerImpl<T> implements Controller<T> {
 	public controller<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
 		return this.internalController(nameOrIndex, index)
 	}
+
+	public map<K extends KEY<T>, U>(name: K, callback: (controller: Controller<INDEXPROPERTY<PROPERTY<T, K>>>, index: number) => U): U[] {
+		const value: unknown[] = this.value !== undefined ? (this.value as any)[name] : undefined
+		if (!value) {
+			return []
+		}
+		return value.map((nestedValue, nestedValueIndex) => {
+			const nestedController = this.internalController(name, nestedValueIndex) as Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+			return callback(nestedController, nestedValueIndex)
+		})
+	}
 	
 	private internalController<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
 		if (index !== undefined) {
@@ -147,7 +158,7 @@ export class ControllerImpl<T> implements Controller<T> {
 
 				return {
 					change: onChange,
-					value: produce(value, (draft: any) => draft) as any,
+					value: produce(value, (draft: any) => draft) as any as PROPERTY<T, K>,
 				}
 			})
 		}

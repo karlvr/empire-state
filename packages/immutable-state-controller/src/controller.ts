@@ -41,12 +41,12 @@ export class ControllerImpl<T> implements Controller<T> {
 		return frozenValue
 	}
 
-	public setValue(value: T) {
+	public setValue(value: T, fromSubController = false) {
 		const oldValue = this.source().value
 		this.source().change(value)
 		this.lastKnownValue = value
 
-		this.notifyChanges(oldValue)
+		this.notifyChanges(oldValue, fromSubController)
 	}
 
 	public snapshot(): Snapshot<T>
@@ -177,14 +177,16 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 	}
 
-	private notifyChanges(oldValue: T) {
+	private notifyChanges(oldValue: T, fromSubController = false) {
 		/* Handle value being changed by a change listener, we only notify each listener once in the reverse order of registration */
 		if (!this.notifyingChangeListeners) {
 			this.notifyingChangeListeners = true
 
-			/* Notify any sub-controllers */
-			for (const sub of Object.values(this.memoisedControllers)) {
-				(sub as ControllerImpl<T>).notifyIfChanged()
+			if (!fromSubController) {
+				/* Notify any sub-controllers */
+				for (const sub of Object.values(this.memoisedControllers)) {
+					(sub as ControllerImpl<T>).notifyIfChanged()
+				}
 			}
 
 			/* Notify our change listeners */
@@ -213,7 +215,7 @@ export class ControllerImpl<T> implements Controller<T> {
 					[name]: subValue,
 				}
 
-			this.setValue(newValue as T)
+			this.setValue(newValue as T, true)
 		}
 
 		const setter = this.setters[name as string]

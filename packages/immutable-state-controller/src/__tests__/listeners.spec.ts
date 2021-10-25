@@ -116,4 +116,32 @@ describe('change listeners', () => {
 
 		expect(noticedChange).toEqual('World')
 	})
+
+	it('doesn\'t fire child controller listeners multiple times when the value changes from the child', () => {
+		const state = {
+			child: {
+				value: 'Hello',
+			},
+		}
+
+		let noticedChange = ''
+		let parentFired = 0
+		let childFired = 0
+
+		const parent = withInitialValue(state)
+		parent.addChangeListener((newValue) => {
+			noticedChange = newValue.child.value
+			parentFired += 1
+		})
+
+		const child = parent.controller('child')
+		child.addChangeListener((newValue) => {
+			childFired += 1
+		})
+		child.snapshot('value').change('World')
+
+		expect(noticedChange).toEqual('World')
+		expect(parentFired).toEqual(1)
+		expect(childFired).toEqual(1)
+	})
 })

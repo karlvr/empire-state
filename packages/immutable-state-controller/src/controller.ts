@@ -135,12 +135,23 @@ export class ControllerImpl<T> implements Controller<T> {
 		if (typeof nameOrIndex === 'number') {
 			result = new ControllerImpl(() => {
 				const onChange = (newValue: INDEXPROPERTY<T>) => {
-					const parentNewValue = produce(this.value, draft => {
-						(draft as any)[nameOrIndex] = newValue
-					})
+					const currentValue = this.value
+					const parentNewValue = currentValue !== undefined && currentValue !== null
+						? produce(this.value, draft => {
+							(draft as any)[nameOrIndex] = newValue
+						})
+						: (function() {
+							const result = []
+							for (let i = 0; i < nameOrIndex; i++) {
+								result[i] = undefined
+							}
+							result[nameOrIndex] = newValue
+							return produce(result, draft => draft) as any as T
+						})()
 					this.setValue(parentNewValue)
 				}
-				const value: any = this.value !== undefined ? (this.value as any)[nameOrIndex] : undefined
+				const currentValue = this.value
+				const value: any = currentValue !== undefined && currentValue !== null ? (currentValue as any)[nameOrIndex] : undefined
 				return {
 					change: onChange,
 					value: produce(value, (draft: any) => draft) as any,
@@ -149,7 +160,8 @@ export class ControllerImpl<T> implements Controller<T> {
 		} else {
 			result = new ControllerImpl(() => {
 				const onChange: any = this.propOnChange(nameOrIndex as unknown as keyof T)
-				let value: any = this.value !== undefined ? this.value[nameOrIndex as unknown as keyof T] : undefined
+				const currentValue = this.value
+				let value: any = currentValue !== undefined && currentValue !== null ? currentValue[nameOrIndex as unknown as keyof T] : undefined
 
 				const getter = this.getters[nameOrIndex as string]
 				if (getter) {
@@ -206,9 +218,9 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 
 		let func = (subValue: T[K]): void => {
-			const value = this.value
-			const newValue = value !== undefined ?
-				produce(value, (draft) => {
+			const currentValue = this.value
+			const newValue = currentValue !== undefined && currentValue !== null ?
+				produce(currentValue, (draft) => {
 					(draft as any)[name] = subValue as any
 				})
 				: {

@@ -1,5 +1,11 @@
 # immutable-state-controller
 
+## 0.7.1
+
+### Patch Changes
+
+- f66a4de: Fix behaviour with null objects and undefined or null arrays
+
 ## 0.7.0
 
 ### Minor Changes

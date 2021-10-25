@@ -1,6 +1,6 @@
 {
   "name": "react-immutable-state-controller",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "React hooks for the Immutable state change controller",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
   "author": "Karl von Randow",
   "license": "MIT",
   "dependencies": {
-    "immutable-state-controller": "0.6.0"
+    "immutable-state-controller": "0.7.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.31",

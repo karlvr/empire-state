@@ -1,5 +1,15 @@
 # immutable-state-controller
 
+## 0.7.0
+
+### Minor Changes
+
+- 678b19d: Add map function to Controller
+
+### Patch Changes
+
+- 64c214b: Fix child change listener firing multiple times [#15]
+
 ## 0.6.0
 
 ### Minor Changes

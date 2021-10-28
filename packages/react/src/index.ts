@@ -107,7 +107,8 @@ export function useSnapshot<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K
 export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): SnapshotHookResult<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
 	const [refresh, setRefresh] = useState(0)
 
-	const snapshotController = nameOrIndex !== undefined ? controller.get(nameOrIndex, index) : controller
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const snapshotController = nameOrIndex !== undefined ? controller.get(nameOrIndex as any, index as any) : controller
 	
 	/* Add and remove the change listener */
 	useEffect(function() {

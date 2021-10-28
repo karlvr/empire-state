@@ -7,4 +7,5 @@ export type CompatibleKeys<T, R> = NonNullable<{
 	[P in keyof T]: T[P] extends R ? P : never
 }[keyof T]>
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type FunctionKeys<T> = CompatibleKeys<T, Function>

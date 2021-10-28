@@ -60,8 +60,8 @@ const SubCom2 = function(props: { name: string; valueName: string; controller: C
 
 const App = function() {
 	const controller = useController<Data>()
-	const one = controller.controller('one')
-	const two = controller.controller('two')
+	const one = controller.get('one')
+	const two = controller.get('two')
 	const [forceRender, setForceRender] = useState(0)
 
 	const renders = useRef(0)
@@ -76,11 +76,11 @@ const App = function() {
 	})
 
 	const handleAddOne = useCallback(function() {
-		one.controller('d').setValue(one.value !== undefined ? one.value.d + 1 : 1)
+		one.get('d').setValue(one.value !== undefined ? one.value.d + 1 : 1)
 	}, [one])
 
 	const handleAddTwo = useCallback(function() {
-		two.controller('d').setValue(two.value !== undefined ? two.value.d + 1 : 1)
+		two.get('d').setValue(two.value !== undefined ? two.value.d + 1 : 1)
 	}, [two])
 
 	const handleForceRender = useCallback(function(evt: React.MouseEvent) {
@@ -103,9 +103,9 @@ const App = function() {
 			<button onClick={handleAddTwo}>Increment Two</button>
 			<p><small>{renders.current} renders (<a href="/" onClick={handleForceRender}>Force re-render</a>)</small></p>
 
-			<SubCom name="One (using snapshot)" valueName="one" controller={controller.controller('one')} />
+			<SubCom name="One (using snapshot)" valueName="one" controller={controller.get('one')} />
 			<SubCom2 name="One (using snapshot, alternative approach)" valueName="one" controller={controller} prop="one" />
-			<SubCom name="Two (using snapshot)" valueName="two" controller={controller.controller('two')} />
+			<SubCom name="Two (using snapshot)" valueName="two" controller={controller.get('two')} />
 			<SubCom2 name="Two (using snapshot, alternative approach)" valueName="two" controller={controller} prop="two" />
 		</div>
 	)

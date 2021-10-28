@@ -94,12 +94,12 @@ describe('controller', () => {
 		})
 		expect(controller.snapshot('names').value).toEqual(['Blake', 'Avon'])
 
-		const snap = controller.controller('names').snapshot(0)
+		const snap = controller.get('names').snapshot(0)
 		expect(snap.value).toBe('Blake')
 		snap.change('Vila')
 		expect(controller.value.names[0]).toBe('Vila')
 
-		const snap2 = controller.controller('names').snapshot(1)
+		const snap2 = controller.get('names').snapshot(1)
 		expect(snap2.value).toBe('Avon')
 		snap2.change('Jenna')
 		expect(controller.value.names[1]).toBe('Jenna')
@@ -132,13 +132,13 @@ describe('controller', () => {
 			names: ['Blake', 'Avon'],
 		})
 
-		const c = controller.controller('names', 0)
+		const c = controller.get('names', 0)
 		const snap = c.snapshot()
 		expect(snap.value).toBe('Blake')
 		snap.change('Vila')
 		expect(controller.value.names[0]).toBe('Vila')
 
-		const c2 = controller.controller('names', 1)
+		const c2 = controller.get('names', 1)
 		const snap2 = c2.snapshot()
 		expect(snap2.value).toBe('Avon')
 		snap2.change('Jenna')
@@ -173,7 +173,7 @@ describe('controller', () => {
 
 		expect(controller.value.c.d).toBe('Changed')
 
-		const e = controller.controller('c').snapshot('e')
+		const e = controller.get('c').snapshot('e')
 		expect(e.value).toEqual(['E'])
 
 		e.change(['F', 'G'])
@@ -208,8 +208,8 @@ describe('controller', () => {
 		}
 
 		const controller = withInitialValue(state)
-		const aController = controller.controller('a')
-		const anotherController = controller.controller('a')
+		const aController = controller.get('a')
+		const anotherController = controller.get('a')
 		expect(aController).toBe(anotherController)
 	})
 
@@ -241,7 +241,7 @@ describe('controller', () => {
 		}
 
 		const controller = withInitialValue(state)
-		expect(controller.controller('this')).toBe(controller)
+		expect(controller.get('this')).toBe(controller)
 	})
 
 })

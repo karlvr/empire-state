@@ -65,7 +65,7 @@ cSnapshot.setValue({
 You can also create controllers for nested objects in order to access further nested snapshots:
 
 ```typescript
-const eSnapshot = controller.controller('c').snapshot('e') // Snapshot<string[]>
+const eSnapshot = controller.get('c').snapshot('e') // Snapshot<string[]>
 
 // eSnapshot.value == ['E']
 

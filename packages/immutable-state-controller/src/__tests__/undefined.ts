@@ -12,10 +12,10 @@ describe('undefined', () => {
 			child: undefined,
 		})
 
-		const childController = controller.controller('child')
+		const childController = controller.get('child')
 		expect(childController.value).toBeUndefined()
 		
-		const childNameController = childController.controller('name')
+		const childNameController = childController.get('name')
 		expect(childNameController.value).toBeUndefined()
 
 		childNameController.setValue('Patrick')
@@ -34,10 +34,10 @@ describe('undefined', () => {
 			child: null,
 		})
 
-		const childController = controller.controller('child')
+		const childController = controller.get('child')
 		expect(childController.value).toBeNull()
 		
-		const childNameController = childController.controller('name')
+		const childNameController = childController.get('name')
 		expect(childNameController.value).toBeUndefined()
 
 		childNameController.setValue('Patrick')
@@ -56,10 +56,10 @@ describe('undefined', () => {
 			child: undefined,
 		})
 
-		const childController = controller.controller('child', 0)
+		const childController = controller.get('child', 0)
 		expect(childController.value).toBeUndefined()
 		
-		const childNameController = childController.controller('name')
+		const childNameController = childController.get('name')
 		expect(childNameController.value).toBeUndefined()
 
 		childNameController.setValue('Patrick')
@@ -78,10 +78,10 @@ describe('undefined', () => {
 			child: null,
 		})
 
-		const childController = controller.controller('child', 0)
+		const childController = controller.get('child', 0)
 		expect(childController.value).toBeUndefined()
 		
-		const childNameController = childController.controller('name')
+		const childNameController = childController.get('name')
 		expect(childNameController.value).toBeUndefined()
 
 		childNameController.setValue('Patrick')
@@ -100,10 +100,10 @@ describe('undefined', () => {
 			child: undefined,
 		})
 
-		const childController = controller.controller('child', 1)
+		const childController = controller.get('child', 1)
 		expect(childController.value).toBeUndefined()
 		
-		const childNameController = childController.controller('name')
+		const childNameController = childController.get('name')
 		expect(childNameController.value).toBeUndefined()
 
 		childNameController.setValue('Patrick')
@@ -124,10 +124,10 @@ describe('undefined', () => {
 			child: null,
 		})
 
-		const childController = controller.controller('child', 1)
+		const childController = controller.get('child', 1)
 		expect(childController.value).toBeUndefined()
 		
-		const childNameController = childController.controller('name')
+		const childNameController = childController.get('name')
 		expect(childNameController.value).toBeUndefined()
 
 		childNameController.setValue('Patrick')

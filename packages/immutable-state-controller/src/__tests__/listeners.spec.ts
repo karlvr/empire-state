@@ -88,7 +88,7 @@ describe('change listeners', () => {
 			noticedChange = newValue.child.value
 		})
 
-		const child = parent.controller('child')
+		const child = parent.get('child')
 		child.snapshot('value').change('World')
 
 		expect(noticedChange).toEqual('World')
@@ -105,7 +105,7 @@ describe('change listeners', () => {
 
 		const parent = withInitialValue(state)
 
-		const child = parent.controller('child')
+		const child = parent.get('child')
 		child.addChangeListener((newValue) => {
 			noticedChange = newValue.value
 		})
@@ -134,7 +134,7 @@ describe('change listeners', () => {
 			parentFired += 1
 		})
 
-		const child = parent.controller('child')
+		const child = parent.get('child')
 		child.addChangeListener((newValue) => {
 			childFired += 1
 		})

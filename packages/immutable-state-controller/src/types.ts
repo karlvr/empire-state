@@ -36,25 +36,25 @@ export interface Controller<T> {
 	setValue(newValue: T): void
 
 	/**
-	 * Returns a controller for the value at the given index in this controller's value, assuming this controller has an array value.
+	 * Returns a sub-controller for the value at the given index in this controller's value, assuming this controller has an array value.
 	 */
-	controller(index: number): Controller<INDEXPROPERTY<T>>
+	get(index: number): Controller<INDEXPROPERTY<T>>
 	/**
 	 * Returns this controller.
 	 */
-	controller(name: 'this'): Controller<T>
+	get(name: 'this'): Controller<T>
 	/**
-	 * Returns a controller for the value of the given property in this controller's value, assuming this controller has an object value.
+	 * Returns a sub-controller for the value of the given property in this controller's value, assuming this controller has an object value.
 	 */
-	controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
+	get<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
 	/**
-	 * Returns a controller for the value at the given index in the value of the given property in this controller's value, 
+	 * Returns a sub-controller for the value at the given index in the value of the given property in this controller's value, 
 	 * assuming this controller has an object value and the property value is an array value.
 	 */
-	controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
-	controller<S>(name: COMPATIBLEKEYS<T, S>): Controller<S>
-	controller<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>): Controller<O>
-	controller<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	get<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	get<S>(name: COMPATIBLEKEYS<T, S>): Controller<S>
+	get<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>): Controller<O>
+	get<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 
 	/**
 	 * Returns a snapshot of the whole value in this controller.

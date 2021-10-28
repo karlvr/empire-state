@@ -53,8 +53,8 @@ function EditPersonComponent({ person: Person; onChange: (newPerson: Person) => 
 
 	return (
 		<>
-		<EditName controller={controller.controller('name')} />
-		<EditAddress controller={controller.controller('address')} />
+		<EditName controller={controller.get('name')} />
+		<EditAddress controller={controller.get('address')} />
 		<button onClick={handleSave}>Save</button>
 		</>
 	)
@@ -128,7 +128,7 @@ When a controller contains an array value, these methods are applicable:
 
 |Method|Description|
 |------|-----------|
-|`sub(index: number)`|Returns a sub-controller for the value at the given index.|
+|`get(index: number)`|Returns a sub-controller for the value at the given index.|
 |`map(callback)`|Map over the values. The callback receives a controller for each value as its first argument and an index as its second.|
 
 #### Object controllers
@@ -137,8 +137,8 @@ When a controller contains an object value, these methods are applicable:
 
 |Method|Description|
 |------|-----------|
-|`sub(prop: string)`|Return a sub-controller for the value of the given property.|
-|`sub(prop: string, index: number)`|Returns a sub-controller for the value at the given index of the array in the given property.|
+|`get(prop: string)`|Return a sub-controller for the value of the given property.|
+|`get(prop: string, index: number)`|Returns a sub-controller for the value at the given index of the array in the given property.|
 |`map(prop: string, callback)`|Map over the values in the given property. The callback receives a controller for each value as its first argument and an index as its second.|
 
 ### Listening for changes

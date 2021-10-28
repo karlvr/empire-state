@@ -117,11 +117,11 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 	}
 
-	public controller(index: number): Controller<INDEXPROPERTY<T>>
-	public controller<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
-	public controller(name: 'this'): Controller<T>
-	public controller<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
-	public controller<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+	public get(index: number): Controller<INDEXPROPERTY<T>>
+	public get<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
+	public get(name: 'this'): Controller<T>
+	public get<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	public get<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
 		return this.internalController(nameOrIndex, index)
 	}
 
@@ -144,7 +144,7 @@ export class ControllerImpl<T> implements Controller<T> {
 	
 	private internalController<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
 		if (index !== undefined) {
-			return this.controller(nameOrIndex as K).controller(index)
+			return this.get(nameOrIndex as K).get(index)
 		} else if (nameOrIndex === 'this') {
 			return this
 		}

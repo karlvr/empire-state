@@ -54,7 +54,6 @@ export interface Controller<T> {
 	get<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 	get<S>(name: COMPATIBLEKEYS<T, S>): Controller<S>
 	get<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>): Controller<O>
-	get<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 
 	/**
 	 * Returns a snapshot of the whole value in this controller.

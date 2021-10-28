@@ -1,5 +1,8 @@
 # Immutable State Controller
 
+[![npm version](https://badge.fury.io/js/immutable-state-controller.svg)](https://badge.fury.io/js/immutable-state-controller)
+[![Node CI](https://github.com/karlvr/immutable-state-controller/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/immutable-state-controller/actions/workflows/github-actions-build.yml)
+
 A small library to work with immutable state without a lot of boilerplate, but with a lot of type-safety using TypeScript.
 
 `immutable-state-controller` lets you view and mutate state using a `Controller`, while also providing access to immutable copies of state using `Snapshot`s.

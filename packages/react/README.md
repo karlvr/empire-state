@@ -1,6 +1,6 @@
 # React Immutable State Controller
 
-A small library to manage immutable state in React without a lot of boilerplate, but with a lot of type-safety.
+A small library to manage immutable state in a tree of React components without a lot of boilerplate, but with a lot of type-safety.
 
 ## Installation
 
@@ -13,6 +13,10 @@ npm install react-immutable-state-controller
 A difficulty with React’s `useState` (or component state in pre-hooks world) is that changes to state are not visible to code until the component re-renders. This is a _difficulty_ because it can lead to mistakes due to misunderstandings — it’s odd that `value` isn’t immediately changed after you’ve called `setValue` — and a strength because _immutability_ makes code safer and is fundamental to React.
 
 Another difficulty with React’s `useState` is that the entire component subtree re-renders when the state changes. This is annoying if you have a component managing a large state object and delegating the modification of parts of that state to child components.
+
+### Compared to Redux
+
+[Redux](https://redux.js.org) provides a similar capability to `react-immutable-state-controller`, however with a lot more complexity and boilerplate. Also Redux is designed to manage global state in an application, where you really benefit from using reducers, selectors and actions, whereas `react-immutable-state-controller` is designed to improve the managing of local state in a tree of components.
 
 ## Solution
 

@@ -1,5 +1,8 @@
 # React Immutable State Controller
 
+[![npm version](https://badge.fury.io/js/react-immutable-state-controller.svg)](https://badge.fury.io/js/react-immutable-state-controller)
+[![Node CI](https://github.com/karlvr/immutable-state-controller/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/immutable-state-controller/actions/workflows/github-actions-build.yml)
+
 A small library to manage immutable state in a tree of React components without a lot of boilerplate, but with a lot of type-safety.
 
 ## Installation

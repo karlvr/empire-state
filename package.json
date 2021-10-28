@@ -7,7 +7,8 @@
 		"clean": "pnpm clean --recursive",
 		"clean:node": "pnpm --recursive exec rm -rf node_modules",
 		"link": "pnpm --recursive --workspace-concurrency=1 exec pnpm link --global",
-		"release": "pnpm clean && pnpm build && pnpm test && pnpx changeset publish && pnpm install",
+		"lint": "pnpm lint --recursive",
+		"release": "pnpm clean && pnpm build && pnpm lint && pnpm test && pnpx changeset publish && pnpm install",
 		"release:version": "pnpm changeset version && pnpm install",
 		"test": "pnpm test --recursive --workspace-concurrency 1",
 		"watch": "pnpm watch --parallel"

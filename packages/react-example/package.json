@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "lint": "eslint",
     "start": "webpack-dev-server"
   },
   "devDependencies": {

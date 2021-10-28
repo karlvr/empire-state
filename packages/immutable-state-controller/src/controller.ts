@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { produce } from 'immer'
+import { DEFAULT_CHANGE_LISTENER_TAG } from './constants'
 import { KEY, PROPERTY, INDEXPROPERTY } from './type-utils'
 import { Snapshot, Controller, ChangeListener, ControllerSource } from './types'
 
+interface ChangeListenerInfo<T> {
+	listener: ChangeListener<T>
+	tag: string
+}
 export class ControllerImpl<T> implements Controller<T> {
 
 	private source: () => Snapshot<T>
@@ -20,7 +25,7 @@ export class ControllerImpl<T> implements Controller<T> {
 		[name: string]: (value: any) => PROPERTY<T, KEY<T>>
 	} = {}
 
-	private changeListeners: ChangeListener<T>[] = []
+	private changeListeners: ChangeListenerInfo<T>[] = []
 	private memoisedSnapshot: Snapshot<T> | undefined
 	private memoisedControllers: { [prop: string]: Controller<any> } = {}
 	private notifyingChangeListeners = false
@@ -82,21 +87,33 @@ export class ControllerImpl<T> implements Controller<T> {
 		delete this.onChanges[name as string]
 	}
 
-	public addChangeListener(listener: ChangeListener<T>) {
-		this.changeListeners.push(listener)
+	public addChangeListener(listener: ChangeListener<T>, tag?: string) {
+		this.changeListeners.push({
+			listener,
+			tag: tag !== undefined ? tag : DEFAULT_CHANGE_LISTENER_TAG,
+		})
 	}
 
 	public removeChangeListener(listener: ChangeListener<T>) {
-		const index = this.changeListeners.indexOf(listener)
+		const index = this.changeListeners.findIndex(info => info.listener === listener)
 		if (index !== -1) {
 			this.changeListeners.splice(index, 1)
 		}
 	}
 
-	public removeAllChangeListeners() {
-		this.changeListeners = []
+	public removeAllChangeListeners(tag?: string) {
+		if (tag !== undefined) {
+			for (let i = this.changeListeners.length - 1; i >= 0; i--) {
+				if (this.changeListeners[i].tag === tag) {
+					this.changeListeners.splice(i, 1)
+				}
+			}
+		} else {
+			this.changeListeners = []
+		}
+
 		for (const sub of Object.values(this.memoisedControllers)) {
-			sub.removeAllChangeListeners()
+			sub.removeAllChangeListeners(tag)
 		}
 	}
 
@@ -204,7 +221,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			/* Notify our change listeners */
 			for (const listener of this.changeListeners.reverse()) {
 				/* Always use the latest value from this controller, in case a listener has changed it, as we don't re-notify if a listener makes changes due to notifyingSetValue */
-				listener(this.value, oldValue)
+				listener.listener(this.value, oldValue)
 			}
 
 			this.notifyingChangeListeners = false

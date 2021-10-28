@@ -93,9 +93,9 @@ export interface Controller<T> {
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 
-	addChangeListener(listener: ChangeListener<T>): void
+	addChangeListener(listener: ChangeListener<T>, tag?: string): void
 	removeChangeListener(listener: ChangeListener<T>): void
-	removeAllChangeListeners(): void
+	removeAllChangeListeners(tag?: string): void
 }
 
 export type ChangeListener<T> = (value: T, oldValue: T) => void

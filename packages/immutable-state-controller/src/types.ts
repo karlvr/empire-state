@@ -56,6 +56,27 @@ export interface Controller<T> {
 	get<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>): Controller<O>
 
 	/**
+	 * Set the value at the given index in this controller's array value.
+	 * @param index 
+	 * @param newValue 
+	 */
+	set(index: number, newValue: INDEXPROPERTY<T>): void
+	
+	/**
+	 * Set the value of this controller.
+	 * @param name 
+	 * @param newValue 
+	 */
+	set(name: 'this', newValue: T): void
+
+	/**
+	 * Set the value in the given named property in this controller's object value
+	 * @param name 
+	 * @param newValue 
+	 */
+	set<K extends KEY<T>>(name: K, newValue: PROPERTY<T, K>): void
+
+	/**
 	 * Returns a snapshot of the whole value in this controller.
 	 */
 	snapshot(): Snapshot<T>

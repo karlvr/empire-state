@@ -125,6 +125,13 @@ export class ControllerImpl<T> implements Controller<T> {
 		return this.internalController(nameOrIndex, index)
 	}
 
+	public set(index: number, newValue: INDEXPROPERTY<T>): void
+	public set(name: 'this', newValue: T): void
+	public set<K extends KEY<T>>(name: K, newValue: PROPERTY<T, K>): void
+	public set<K extends KEY<T>>(nameOrIndex: K | number | 'this', newValue: PROPERTY<T, K> | INDEXPROPERTY<T> | T): void {
+		this.internalController(nameOrIndex).setValue(newValue as any)
+	}
+
 	public map<U>(callback: (controller: Controller<INDEXPROPERTY<T>>, index: number) => U): U[]
 	public map<U>(name: 'this', callback: (controller: Controller<INDEXPROPERTY<T>>, index: number) => U): U[]
 	public map<K extends KEY<T>, U>(name: K, callback: (controller: Controller<INDEXPROPERTY<PROPERTY<T, K>>>, index: number) => U): U[]

@@ -133,6 +133,7 @@ When a controller contains an array value, these methods are applicable:
 |Method|Description|
 |------|-----------|
 |`get(index: number)`|Returns a sub-controller for the value at the given index.|
+|`set(index: number, newValue)`|Set the value at the given index.|
 |`map(callback)`|Map over the values. The callback receives a controller for each value as its first argument and an index as its second.|
 
 #### Object controllers
@@ -142,6 +143,7 @@ When a controller contains an object value, these methods are applicable:
 |Method|Description|
 |------|-----------|
 |`get(prop: string)`|Return a sub-controller for the value of the given property.|
+|`set(prop: string, newValue)`|Set the value of the given property.|
 |`get(prop: string, index: number)`|Returns a sub-controller for the value at the given index of the array in the given property.|
 |`map(prop: string, callback)`|Map over the values in the given property. The callback receives a controller for each value as its first argument and an index as its second.|
 

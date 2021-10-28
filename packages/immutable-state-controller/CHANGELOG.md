@@ -1,5 +1,12 @@
 # immutable-state-controller
 
+## 0.9.0
+
+### Minor Changes
+
+- 8bb9e60: Add set convenience method to Controller
+- 01715cb: We shouldn't include the overloaded function definition in the interface as it ruins the enforcement of the relationships in the preceding function prototypes
+
 ## 0.8.0
 
 ### Minor Changes

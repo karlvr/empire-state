@@ -1,9 +1,9 @@
 {
   "name": "examples",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "dependencies": {
-    "react-immutable-state-controller": "0.8.0",
+    "react-immutable-state-controller": "0.9.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },

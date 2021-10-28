@@ -20,7 +20,7 @@ Another difficulty with React’s `useState` is that the entire component subtre
 
 ## Solution
 
-With `react-immutable-state-controller` you create a _controller_ to manage a piece of state in a component. Using that _controller_ you can get and set parts of that state, with re-renders limited to components that use the part of the state that has changed.
+With `react-immutable-state-controller` you create one or more _controllers_ to contain some state in a component, or at the root of a tree of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useSnapshot`).
 
 ## Example
 

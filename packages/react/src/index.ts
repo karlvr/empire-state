@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { withFuncs, Controller, Snapshot, ChangeListener } from 'immutable-state-controller'
+import { withFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'immutable-state-controller'
 import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-utils'
 import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
 export { Controller, Snapshot, ChangeListener, withFuncs, withInitialValue } from 'immutable-state-controller'
@@ -69,8 +69,11 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 
 	/* Because we reuse the same Controller instance if the snapshot value is the same,
 	   we must remove all of the change listeners as the render pass will add them again.
+
+	   We only remove the _default_ change listeners so we don't remove the change listeners
+	   that are added by `useSnapshot` below, as they manage their own lifecycle using `useEffect`.
 	 */
-	mainController.removeAllChangeListeners()
+	mainController.removeAllChangeListeners(DEFAULT_CHANGE_LISTENER_TAG)
 	return mainController
 }
 
@@ -111,7 +114,7 @@ export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, name
 		const changeListener: ChangeListener<unknown> = function() {
 			setRefresh(refresh + 1)
 		}
-		snapshotController.addChangeListener(changeListener)
+		snapshotController.addChangeListener(changeListener, 'snapshot')
 
 		
 		return function() {

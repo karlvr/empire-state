@@ -1,7 +1,7 @@
 import { withInitialValue } from '../creators'
 
 describe('map', () => {
-	it('can map', () => {
+	it('can map an array property', () => {
 		interface TestInterface {
 			children: {
 				name: string
@@ -26,6 +26,16 @@ describe('map', () => {
 
 		expect(names.length).toEqual(7)
 		expect(names[3]).toEqual('Barbara')
+	})
+
+	it('can map an array controller', () => {
+		const controller = withInitialValue(['Julian', 'Dick', 'Anne', 'George', 'Timmy'])
+
+		const names = controller.map((controller, index) => {
+			return controller.value
+		})
+		expect(names.length).toEqual(5)
+		expect(names[4]).toEqual('Timmy')
 	})
 
 })

@@ -74,14 +74,16 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	return mainController
 }
 
+type SnapshotHookResult<S> = [S, (newValue: S) => void]
+
 /**
  * Returns a snapshot of the whole value in the controller.
  */
-export function useSnapshot<T>(controller: Controller<T>): Snapshot<T>
+export function useSnapshot<T>(controller: Controller<T>): SnapshotHookResult<T>
 /**
  * Returns a snapshot of the value at the given index in the controller's value, assuming the controller contains an array value.
  */
-export function useSnapshot<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Snapshot<S>
+export function useSnapshot<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): SnapshotHookResult<S>
 /**
  * Returns a snapshot of the whole value in the controller.
  */
@@ -89,17 +91,17 @@ export function useSnapshot<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, 
 /**
  * Returns a snapshot of the value of the given property in the controller's value, assuming the controller contains an object value.
  */
-export function useSnapshot<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): Snapshot<S>
+export function useSnapshot<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): SnapshotHookResult<S>
 /**
  * Returns a snapshot of the value at the given index in the value of the given property in the controller's value,
  * assuming the controller contains an object value and the property value is an array value.
  */
-export function useSnapshot<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Snapshot<S>
+export function useSnapshot<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): SnapshotHookResult<S>
 /**
  * The combination of all snapshot methods so you can call snapshot with arguments that can match some combination that
  * snapshot supports.
  */
-export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>> {
+export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): SnapshotHookResult<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
 	const [refresh, setRefresh] = useState(0)
 
 	const snapshotController = nameOrIndex !== undefined ? controller.controller(nameOrIndex, index) : controller
@@ -117,7 +119,9 @@ export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, name
 		}
 	}, [refresh, snapshotController])
 
-	return snapshotController.snapshot()
+	const snapshot = snapshotController.snapshot()
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	return [snapshot.value, snapshot.change] as unknown as any
 }
 
 /** Interface for component containing changeable props */

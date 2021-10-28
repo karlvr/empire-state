@@ -1,5 +1,20 @@
 # react-immutable-state-controller
 
+## 0.8.0
+
+### Minor Changes
+
+- f7083bc: Change useSnapshot to return an array
+- c893ed4: Change Controller.controller to Controller.get
+
+### Patch Changes
+
+- b640d3e: Fix fault where change listeners for snapshots were removed when the component containing the controller re-rendered
+- Updated dependencies [5b200f0]
+- Updated dependencies [4f37f09]
+- Updated dependencies [c893ed4]
+  - immutable-state-controller@0.8.0
+
 ## 0.7.1
 
 ### Patch Changes

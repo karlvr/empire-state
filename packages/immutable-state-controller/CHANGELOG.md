@@ -1,5 +1,13 @@
 # immutable-state-controller
 
+## 0.8.0
+
+### Minor Changes
+
+- 5b200f0: Add map function for array controllers
+- 4f37f09: Add tags to change listeners so we can remove a set of change listeners without touching others
+- c893ed4: Change Controller.controller to Controller.get
+
 ## 0.7.1
 
 ### Patch Changes

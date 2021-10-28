@@ -23,7 +23,9 @@ Another difficulty with React’s `useState` is that the entire component subtre
 
 ## Solution
 
-With `react-immutable-state-controller` you create one or more _controllers_ to contain some state in a component, or at the root of a tree of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useSnapshot`).
+With `react-immutable-state-controller` you create one or more _controllers_ to contain state in a component, or at the root of a _tree_ of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useSnapshot`).
+
+The `useSnapshot` hook works a little like React’s `useState`, except instead of creating a state value that’s local to the component, it always reflects and updates the value in the controller, where that controller has possibly been created in the current component or passed as `props` from a parent component.
 
 ## Example
 
@@ -88,6 +90,8 @@ Controllers use [`immer`](https://github.com/immerjs/immer) to ensure the immuta
 `useController(initialValue)` returns a `Controller` that controls access to the state; whatever type that is.
 
 The `Controller` has a `value` property to access the current state, and a `setValue` function to change that state. Changes to the `Controller`’s `value` are _immediately_ visible in code, but they _DO NOT_ trigger a re-render in React.
+
+`useController` always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useSnapshot` to re-render when state changes...
 
 ### `useSnapshot`
 

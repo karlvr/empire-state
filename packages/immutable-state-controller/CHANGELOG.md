@@ -1,5 +1,11 @@
 # immutable-state-controller
 
+## 0.10.0
+
+### Minor Changes
+
+- 403cc22: Improve the behaviour of Controllers using disjunctions
+
 ## 0.9.0
 
 ### Minor Changes

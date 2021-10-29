@@ -1,5 +1,12 @@
 # react-immutable-state-controller
 
+## 0.10.0
+
+### Patch Changes
+
+- Updated dependencies [403cc22]
+  - immutable-state-controller@0.10.0
+
 ## 0.9.1
 
 ### Patch Changes

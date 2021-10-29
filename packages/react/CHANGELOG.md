@@ -1,5 +1,11 @@
 # react-immutable-state-controller
 
+## 0.9.1
+
+### Patch Changes
+
+- ce58adf: Export SnapshotHookResult
+
 ## 0.9.0
 
 ### Patch Changes

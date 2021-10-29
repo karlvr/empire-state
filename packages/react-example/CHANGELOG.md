@@ -1,5 +1,12 @@
 # examples
 
+## 0.9.2
+
+### Patch Changes
+
+- Updated dependencies [ce58adf]
+  - react-immutable-state-controller@0.9.1
+
 ## 0.9.1
 
 ### Patch Changes

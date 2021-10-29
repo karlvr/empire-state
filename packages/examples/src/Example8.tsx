@@ -1,18 +1,29 @@
 /**
- * An example of using Changeling to manage undefined properties.
+ * An example of using Formalities to manage undefined properties.
  */
 
-import { Formalities, Snapshot, wrapComponent, useController } from 'formalities'
-import * as React from 'react'
+import { Formalities, Snapshot, wrapComponent, useController, useSnapshotController, useSnapshot } from 'formalities'
+import React from 'react'
 
 interface MyFormState {
 	myValue?: string
 }
 
+function UndefinedSnapshot(props: Snapshot<string | undefined>) {
+	
+	const controller = useSnapshotController(props)
+	return (
+		<Formalities.Text controller={controller} prop="this" />
+	)
+
+}
+
+const WrappedUndefinedSnapshot = wrapComponent(UndefinedSnapshot)
+
 export default function Example8() {
 
 	const controller = useController<MyFormState>({})
-	const state = controller.snapshot().value
+	const [state] = useSnapshot(controller)
 
 	return (
 		<div>
@@ -26,14 +37,3 @@ export default function Example8() {
 		</div>
 	)
 }
-
-function UndefinedSnapshot(props: Snapshot<string | undefined>) {
-	
-	const controller = useController(props.value, props.setValue)
-	return (
-		<Formalities.Text controller={controller} prop="this" />
-	)
-
-}
-
-const WrappedUndefinedSnapshot = wrapComponent(UndefinedSnapshot)

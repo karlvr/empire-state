@@ -2,8 +2,8 @@
  * An example of using Formalities to manage a simple form state.
  */
 
-import { useController, Formalities } from 'formalities'
-import * as React from 'react'
+import { useController, useSnapshot, Formalities } from 'formalities'
+import React from 'react'
 
 interface MyFormState {
 	name?: string
@@ -14,7 +14,7 @@ interface MyFormState {
 const Example1: React.FC = function() {
 
 	const controller = useController<MyFormState>({})
-	const state = controller.snapshot().value
+	const [state] = useSnapshot(controller)
 
 	return (
 		<div>

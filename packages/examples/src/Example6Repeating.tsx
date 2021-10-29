@@ -2,8 +2,8 @@
  * An example of repeating fields.
  */
 
-import * as React from 'react'
-import { useController, Formalities } from 'formalities'
+import React from 'react'
+import { useController, Formalities, useSnapshot } from 'formalities'
 
 interface MyFormState {
 	names?: string[]
@@ -12,28 +12,28 @@ interface MyFormState {
 export default function Example6() {
 
 	const controller = useController<MyFormState>({})
-	const namesController = controller.controller('names')
-	const namesSnapshot = namesController.snapshot()
+	const namesController = controller.get('names')
+	const [names] = useSnapshot(namesController)
 
 	function addNew(evt: React.MouseEvent) {
 		const namesSnapshot = namesController.snapshot()
 
-		namesSnapshot.setValue([...(namesSnapshot.value || []), ''])
+		namesSnapshot.change([...(namesSnapshot.value || []), ''])
 	}
 
 	return (
 		<div>
 			<h1>Example 6: Repeating</h1>
 			{
-				(namesSnapshot.value || []).map((name, index) => (
-					<Formalities.Text key={index} controller={namesController.controller(index)} prop="this" />
+				(names || []).map((name, index) => (
+					<Formalities.Text key={index} controller={namesController.get(index)} prop="this" />
 				))
 			}
 
 			<button onClick={addNew}>Add New</button>
 
 			<h2>Summary</h2>
-			<p>{namesSnapshot.value && namesSnapshot.value.join(', ')}</p>
+			<p>{names && names.join(', ')}</p>
 		</div>
 	)
 

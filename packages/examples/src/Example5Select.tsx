@@ -2,8 +2,8 @@
  * An example of using Formalities with Select input elements.
  */
 
-import * as React from 'react'
-import { useController, Formalities } from 'formalities'
+import React from 'react'
+import { useController, Formalities, useSnapshot } from 'formalities'
 
 interface MyFormState {
 	likeAnimals?: boolean
@@ -20,7 +20,7 @@ const INITIAL_STATE: MyFormState = {
 export default function Example4() {
 
 	const controller = useController(INITIAL_STATE)
-	const state = controller.snapshot().value
+	const [state] = useSnapshot(controller)
 
 	return (
 		<div>

@@ -3,7 +3,7 @@
  */
 
 import { useState } from 'react'
-import * as React from 'react'
+import React from 'react'
 
 export default function MyForm() {
 	const [name, setName] = useState<string | undefined>(undefined)

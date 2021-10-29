@@ -2,8 +2,8 @@
  * An example of using Formalities with Checkable input elements.
  */
 
-import { useController, Formalities } from 'formalities'
-import * as React from 'react'
+import { useController, Formalities, useSnapshot } from 'formalities'
+import React from 'react'
 
 interface MyFormState {
 	likeAnimals: boolean
@@ -21,7 +21,7 @@ const INITIAL_STATE: MyFormState = {
 export default function Example4() {
 
 	const controller = useController(INITIAL_STATE)
-	const state = controller.snapshot().value
+	const [state] = useSnapshot(controller)
 
 	return (
 		<div>
@@ -57,11 +57,12 @@ export default function Example4() {
 					uncheckedValue={false}
 					controller={controller} 
 					prop="optionalLikeBirds" 
-				/> Like animals</label>
+				/> Like birds</label>
 			</div>
 			<h2>Summary</h2>
 			<div>Like animals: {`${state.likeAnimals}`} ({typeof state.likeAnimals})</div>
 			<div>Favourite animal: {state.favouriteAnimal}</div>
+			<div>Like birds: {`${state.optionalLikeBirds}`}</div>
 		</div>
 	)
 }

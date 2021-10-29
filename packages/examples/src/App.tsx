@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 import Example1 from './Example1Text'
 import Example2 from './Example2CustomComponents'

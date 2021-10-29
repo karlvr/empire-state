@@ -77,7 +77,7 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	return mainController
 }
 
-type SnapshotHookResult<S> = [S, (newValue: S) => void]
+export type SnapshotHookResult<S> = [S, (newValue: S) => void]
 
 /**
  * Returns a snapshot of the whole value in the controller.

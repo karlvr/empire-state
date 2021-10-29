@@ -2,7 +2,7 @@
 
 A small library to build React forms with immutable state, type-safety and not a lot of boilerplate.
 
-Formalities makes use of [Immer](https://github.com/immerjs/immer) and [Immutable State Controller](https://github.com/karlvr/immutable-state-controller) to create immutable state updates.
+Formalities makes use of [`immer`](https://github.com/immerjs/immer) and [`react-immutable-state-controller`](https://github.com/karlvr/immutable-state-controller/tree/main/packages/react) to create immutable state updates.
 
 ## Install
 
@@ -13,7 +13,7 @@ npm install formalities
 ## Usage
 
 ```typescript
-import { useController, Formalities } from 'formalities'
+import { useController, useSnapshot, Formalities } from 'formalities'
 
 function MyForm() {
 	const controller = useController({
@@ -22,15 +22,18 @@ function MyForm() {
 		address: '',
 	})
 
-	function save() {
-		const values = controller.snapshot().value
-		...
-	}
+	const handleSave = useCallback(function(evt: React.MouseEvent) {
+		evt.preventDefault()
+
+		const value = controller.value
+		// send the value to the server
+	}, [controller])
 
 	return (
 		<div>
 			<div>
 				<label>Name:</label>
+				{/* Note that VS Code will autocomplete and type-check the prop attribute */}
 				<Formalities.Text type="text" controller={controller} prop="name" />
 			</div>
 			<div>
@@ -41,7 +44,7 @@ function MyForm() {
 				<label>Address:</label>
 				<Formalities.Text type="text" controller={controller} prop="address" />
 			</div>
-			<button onClick={save} />
+			<button onClick={handleSave} />
 		</div>
 	)
 }
@@ -70,11 +73,11 @@ function MyForm() {
 	const [age, setAge] = useState<number | undefined>(undefined)
 	const [address, setAddress] = useState<string | undefined>(undefined)
 
-	function onChangeName(evt: React.ChangeEvent<HTMLInputElement>) {
+	const onChangeName = useCallback(function(evt: React.ChangeEvent<HTMLInputElement>) {
 		setName(evt.target.value)
-	}
+	}, [])
 
-	function onChangeAge(evt: React.FocusEvent<HTMLInputElement>) {
+	const onChangeAge = useCallback(function(evt: React.FocusEvent<HTMLInputElement>) {
 		const newAge = parseInt(evt.target.value, 10)
 		if (isNaN(newAge)) {
 			evt.target.value = age !== undefined ? `${age}` : ''
@@ -82,11 +85,11 @@ function MyForm() {
 		} else {
 			setAge(newAge)
 		}
-	}
+	}, [])
 
-	function onChangeAddress(evt: React.ChangeEvent<HTMLInputElement>) {
+	const onChangeAddress = useCallback(function(evt: React.ChangeEvent<HTMLInputElement>) {
 		setAddress(evt.target.value)
-	}
+	}, [])
 
 	return (
 		<div>
@@ -107,8 +110,8 @@ function MyForm() {
 }
 ```
 
-And we could be using [Immer](https://github.com/immerjs/immer) so we have immutable state,
-but that's more boiler-plate.
+And we could be using [`immer`](https://github.com/immerjs/immer) so we have immutable state,
+but that's even more boiler-plate.
 
 ## Examples
 
@@ -141,11 +144,11 @@ function MyForm() {
 		<div>
 			<div>
 				<label>Name:</label>
-				<Formalities.Text controller={this.controller} prop="name" />
+				<Formalities.Text controller={controller} prop="name" />
 			</div>
 			<div>
 				<label>Address:</label>
-				<Formalities.Text controller={this.controller} prop="address" />
+				<Formalities.Text controller={controller} prop="address" />
 			</div>
 		</div>
 	)
@@ -157,7 +160,7 @@ determined from that initial value.
 
 The `<Formalities.Text>` component specifies the `Controller` instance via the `controller` prop, and which property
 inside the controller via the `prop` prop. Due to the type-safety of the `Controller` the `prop` prop can only 
-accept appropriate value.
+accept appropriate value, and VS Code will autocomplete valid `prop` values for you.
 
 ### Component props
 
@@ -180,7 +183,7 @@ interface MyFormSectionProps {
 }
 
 function MyFormSection(props: MyFormSectionProps) {
-	const controller = useController(props.value, props.onChange)
+	const controller = useSnapshotController({ value: props.value, change: props.onChange })
 
 	return (
 		<div>
@@ -205,22 +208,23 @@ import { Snapshot, wrapComponent } from 'formalities'
 interface MyTextFieldProps extends Snapshot<string> {}
 
 function MyTextField(props: MyTextFieldProps) {
-	function onChange(evt: React.ChangeEvent<HTMLInputElement>) {
-		props.setValue(evt.target.value)
-	}
+	const { value, change } = props
+
+	const onChange = useCallback(function(evt: React.ChangeEvent<HTMLInputElement>) {
+		change(evt.target.value)
+	}, [change])
 
 	return (
 		<div>
-			<input type="text" value={props.value} onChange={onChange} />
+			<input type="text" value={value} onChange={onChange} />
 		</div>
 	)
-
 }
 
 export default wrapComponent(MyTextField)
 ```
 
-The last line above uses Formalities's to wrap `MyTextField`, which accepts props `value` and `setValue`, to create a component that instead accepts
+The last line above uses Formalities's to wrap `MyTextField`, which accepts props `value` and `change`, to create a component that instead accepts
 props `controller` and `prop`.
 
 It can then be used like `<Formalities.Text>` in the examples above, as in:
@@ -247,7 +251,7 @@ function MyForm() {
 
 ```
 
-Now when the `MyTextField` component wants to change its value, it calls the `setValue` function in its
+Now when the `MyTextField` component wants to change its value, it calls the `change` function in its
 props, which invokes the controller, which updates the state on the `MyForm` component, triggering React
 to update, which updates the form.
 

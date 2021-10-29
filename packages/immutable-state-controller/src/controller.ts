@@ -163,7 +163,7 @@ export class ControllerImpl<T> implements Controller<T> {
 
 		let result: Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 		if (typeof nameOrIndex === 'number') {
-			result = new ControllerImpl(() => {
+			result = new ControllerImpl<INDEXPROPERTY<T>>(() => {
 				const onChange = (newValue: INDEXPROPERTY<T>) => {
 					const currentValue = this.value
 					const parentNewValue = currentValue !== undefined && currentValue !== null
@@ -184,12 +184,12 @@ export class ControllerImpl<T> implements Controller<T> {
 				const value: any = currentValue !== undefined && currentValue !== null ? (currentValue as any)[nameOrIndex] : undefined
 				return {
 					change: onChange,
-					value: produce(value, (draft: any) => draft) as any,
+					value: produce(value, (draft: any) => draft) as INDEXPROPERTY<T>,
 				}
 			})
 		} else {
-			result = new ControllerImpl(() => {
-				const onChange: any = this.propOnChange(nameOrIndex as unknown as keyof T)
+			result = new ControllerImpl<PROPERTY<T, K>>(() => {
+				const onChange = this.propOnChange(nameOrIndex)
 				const currentValue = this.value
 				let value: any = currentValue !== undefined && currentValue !== null ? currentValue[nameOrIndex as unknown as keyof T] : undefined
 
@@ -241,13 +241,13 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 	}
 
-	private propOnChange<K extends keyof T>(name: K): ((value: T[K]) => void) {
+	private propOnChange<K extends KEY<T>>(name: K): ((value: PROPERTY<T, K>) => void) {
 		const PROPERTY = this.onChanges[name as string]
 		if (PROPERTY) {
 			return PROPERTY
 		}
 
-		let func = (subValue: T[K]): void => {
+		let func = (subValue: PROPERTY<T, K>): void => {
 			const currentValue = this.value
 			const newValue = currentValue !== undefined && currentValue !== null ?
 				produce(currentValue, (draft) => {
@@ -263,7 +263,7 @@ export class ControllerImpl<T> implements Controller<T> {
 		const setter = this.setters[name as string]
 		if (setter) {
 			const existingNewFunc = func
-			const newFunc = (subValue: T[K]): void => {
+			const newFunc = (subValue: PROPERTY<T, K>): void => {
 				const subValue2 = setter(subValue) as PROPERTY<T, K>
 				existingNewFunc(subValue2)
 			}

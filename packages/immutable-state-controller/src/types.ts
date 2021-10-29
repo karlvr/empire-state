@@ -12,7 +12,7 @@ export interface Snapshot<T> {
 	 * and to the original datasource, which will process and apply the change.
 	 * @param newValue The new snapshot value.
 	 */
-	readonly change: (newValue: T) => void
+	readonly change: <V extends T>(newValue: V) => void /* The V extends T is so this works with disjunctions, see disjunctions.spec.ts */
 }
 
 /**

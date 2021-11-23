@@ -2,7 +2,7 @@
 import { produce } from 'immer'
 import { DEFAULT_CHANGE_LISTENER_TAG } from './constants'
 import { KEY, PROPERTY, INDEXPROPERTY } from './type-utils'
-import { Snapshot, Controller, ChangeListener, ControllerSource } from './types'
+import { Snapshot, Controller, ChangeListener, ControllerSource, SetValueFunc } from './types'
 
 interface ChangeListenerInfo<T> {
 	listener: ChangeListener<T>
@@ -46,12 +46,16 @@ export class ControllerImpl<T> implements Controller<T> {
 		return frozenValue
 	}
 
-	public setValue(value: T, fromSubController = false) {
+	public setValue(value: T): void
+	public setValue(func: SetValueFunc<T>): void
+	public setValue(value: T | SetValueFunc<T>): void {
 		const oldValue = this.source().value
-		this.source().change(value)
-		this.lastKnownValue = value
 
-		this.notifyChanges(oldValue, fromSubController)
+		if (typeof value === 'function') {
+			this.internalSetValue((value as SetValueFunc<T>)(oldValue))
+		} else {
+			return this.internalSetValue(value as T)
+		}
 	}
 
 	public snapshot(): Snapshot<T>
@@ -177,6 +181,14 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 		return name === 'this' ? this.get(index) : this.get(name).get(index) as any
 	}
+
+	private internalSetValue(value: T, fromSubController = false): void {
+		const oldValue = this.source().value
+		this.source().change(value as T)
+		this.lastKnownValue = value as T
+
+		this.notifyChanges(oldValue, fromSubController)
+	}
 	
 	private internalController<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
 		if (index !== undefined) {
@@ -286,7 +298,7 @@ export class ControllerImpl<T> implements Controller<T> {
 					[name]: subValue,
 				}
 
-			this.setValue(newValue as T, true)
+			this.internalSetValue(newValue as T, true)
 		}
 
 		const setter = this.setters[name as string]

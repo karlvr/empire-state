@@ -1,4 +1,4 @@
-import { withInitialValue } from '../creators'
+import { controllerWithInitialValue } from '../creators'
 
 describe('change listeners', () => {
 	it('can report changes', () => {
@@ -8,7 +8,7 @@ describe('change listeners', () => {
 
 		let noticedChange = ''
 
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 		controller.addChangeListener((newValue) => {
 			noticedChange = newValue.a
 		})
@@ -26,7 +26,7 @@ describe('change listeners', () => {
 		let noticedChange = ''
 		let noticedAnotherChange = ''
 
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 		controller.addChangeListener((newValue) => {
 			noticedChange = newValue.a
 			noticedAnotherChange = newValue.b
@@ -45,7 +45,7 @@ describe('change listeners', () => {
 		let noticedChange = ''
 		let noticedOld = ''
 
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 		controller.addChangeListener((newValue, oldValue) => {
 			noticedChange = newValue.a
 			noticedOld = oldValue.a
@@ -63,7 +63,7 @@ describe('change listeners', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 		controller.addChangeListener((newValue) => {
 			controller.setValue({
 				a: newValue.a + '!',
@@ -83,7 +83,7 @@ describe('change listeners', () => {
 
 		let noticedChange = ''
 
-		const parent = withInitialValue(state)
+		const parent = controllerWithInitialValue(state)
 		parent.addChangeListener((newValue) => {
 			noticedChange = newValue.child.value
 		})
@@ -103,7 +103,7 @@ describe('change listeners', () => {
 
 		let noticedChange = ''
 
-		const parent = withInitialValue(state)
+		const parent = controllerWithInitialValue(state)
 
 		const child = parent.get('child')
 		child.addChangeListener((newValue) => {
@@ -128,7 +128,7 @@ describe('change listeners', () => {
 		let parentFired = 0
 		let childFired = 0
 
-		const parent = withInitialValue(state)
+		const parent = controllerWithInitialValue(state)
 		parent.addChangeListener((newValue) => {
 			noticedChange = newValue.child.value
 			parentFired += 1

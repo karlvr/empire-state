@@ -1,4 +1,4 @@
-import { withInitialValue } from '../creators'
+import { controllerWithInitialValue } from '../creators'
 
 describe('map', () => {
 	it('can map an array property', () => {
@@ -8,7 +8,7 @@ describe('map', () => {
 			}[]
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			children: [
 				{ name: 'Peter' },
 				{ name: 'Janet' },
@@ -29,7 +29,7 @@ describe('map', () => {
 	})
 
 	it('can map an array controller', () => {
-		const controller = withInitialValue(['Julian', 'Dick', 'Anne', 'George', 'Timmy'])
+		const controller = controllerWithInitialValue(['Julian', 'Dick', 'Anne', 'George', 'Timmy'])
 
 		const names = controller.map((controller, index) => {
 			return controller.value

@@ -18,9 +18,9 @@ npm install immutable-state-controller
 ## Usage
 
 ```typescript
-import { withInitialValue } from 'immutable-state-controller'
+import { controllerWithInitialValue } from 'immutable-state-controller'
 
-const controller = withInitialValue({
+const controller = controllerWithInitialValue({
 	a: 'Hello world',
 	b: 42,
 	c: {

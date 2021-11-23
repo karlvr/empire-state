@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { withFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'immutable-state-controller'
+import { controllerWithFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'immutable-state-controller'
 import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-utils'
 import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
-export { Controller, Snapshot, ChangeListener, withFuncs, withInitialValue } from 'immutable-state-controller'
+export { Controller, Snapshot, ChangeListener, controllerWithFuncs, controllerWithInitialValue } from 'immutable-state-controller'
 
 /**
  * <p>Create a new controller with undefined initial state.</p>
@@ -55,7 +55,7 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	 */
 	const mainController = useMemo(
 		() => {
-			return withFuncs(
+			return controllerWithFuncs(
 				() => currentSnapshotValue.current,
 				function(newValue) {
 					/* Ensure that we always return the current value as per the required semantics of ControllerSource */
@@ -164,7 +164,7 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 	if (onChangeProperty === undefined || valueProperty === undefined) {
 		const actualComponent = component as ChangeableComponentWithProps<T>
 		let currentValue = actualComponent.props.value
-		return withFuncs(
+		return controllerWithFuncs(
 			() => currentValue,
 			newValue => {
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
@@ -176,7 +176,7 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 		const actualComponent = component as ChangeableComponentWithPropsGeneral<T>
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let currentValue = (actualComponent.props as any)[valueProperty] as T
-		return withFuncs(
+		return controllerWithFuncs(
 			() => currentValue,
 			(newValue) => {
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
@@ -203,7 +203,7 @@ export function forComponentState<T, K extends KEY<T>>(component: ChangeableComp
 export function forComponentState<T, K extends KEY<T>>(component: ChangeableComponentWithState<T>, property?: K): Controller<PROPERTY<T, K>> | Controller<T> {
 	if (property === undefined) {
 		let currentValue = component.state
-		return withFuncs(
+		return controllerWithFuncs(
 			() => currentValue,
 			(newValue) => {
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
@@ -213,7 +213,7 @@ export function forComponentState<T, K extends KEY<T>>(component: ChangeableComp
 		)
 	} else {
 		let currentValue = (component.state as KEYABLE<T>)[property]
-		return withFuncs(
+		return controllerWithFuncs(
 			() => currentValue,
 			(newValue) => {
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */

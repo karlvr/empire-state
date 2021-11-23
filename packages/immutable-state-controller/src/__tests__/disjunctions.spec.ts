@@ -1,5 +1,5 @@
 import { Controller } from '..'
-import { withInitialValue } from '../creators'
+import { controllerWithInitialValue } from '../creators'
 
 describe('disjunctions', () => {
 
@@ -22,7 +22,7 @@ describe('disjunctions', () => {
 	}
 
 	it('can assign a specific controller to a disjunction', () => {
-		const controller = withInitialValue<A>({
+		const controller = controllerWithInitialValue<A>({
 			name: 'A',
 		})
 		expect(isA(controller.value)).toBeTruthy()

@@ -1,4 +1,4 @@
-import { withInitialValue } from '../creators'
+import { controllerWithInitialValue } from '../creators'
 
 describe('undefined', () => {
 	it('can handle undefined parent', () => {
@@ -8,7 +8,7 @@ describe('undefined', () => {
 			}
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			child: undefined,
 		})
 
@@ -30,7 +30,7 @@ describe('undefined', () => {
 			} | null
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			child: null,
 		})
 
@@ -52,7 +52,7 @@ describe('undefined', () => {
 			}[]
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			child: undefined,
 		})
 
@@ -74,7 +74,7 @@ describe('undefined', () => {
 			}[] | null
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			child: null,
 		})
 
@@ -96,7 +96,7 @@ describe('undefined', () => {
 			}[]
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			child: undefined,
 		})
 
@@ -120,7 +120,7 @@ describe('undefined', () => {
 			}[] | null
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			child: null,
 		})
 

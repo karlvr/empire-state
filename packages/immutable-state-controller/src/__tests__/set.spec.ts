@@ -1,15 +1,15 @@
-import { withInitialValue } from '../creators'
+import { controllerWithInitialValue } from '../creators'
 
 describe('set', () => {
 	it('can set array value', () => {
-		const controller = withInitialValue([1, 2, 3])
+		const controller = controllerWithInitialValue([1, 2, 3])
 		expect(controller.value[2]).toEqual(3)
 		controller.set(2, 9)
 		expect(controller.value[2]).toEqual(9)
 	})
 
 	it('can set object value', () => {
-		const controller = withInitialValue({
+		const controller = controllerWithInitialValue({
 			a: 'cat',
 			b: 'dog',
 			c: 'mouse',
@@ -20,7 +20,7 @@ describe('set', () => {
 	})
 
 	it('can set whole array value', () => {
-		const controller = withInitialValue([1, 2, 3])
+		const controller = controllerWithInitialValue([1, 2, 3])
 		expect(controller.value[2]).toEqual(3)
 		controller.set('this', [9])
 		expect(controller.value.length).toEqual(1)
@@ -28,7 +28,7 @@ describe('set', () => {
 	})
 
 	it('can set whole object value', () => {
-		const controller = withInitialValue({
+		const controller = controllerWithInitialValue({
 			a: 'cat',
 			b: 'dog',
 			c: 'mouse',

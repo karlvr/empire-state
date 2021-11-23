@@ -1,4 +1,4 @@
-import { withInitialValue } from '../creators'
+import { controllerWithInitialValue } from '../creators'
 
 describe('map', () => {
 	it('can find a value in an array property', () => {
@@ -8,7 +8,7 @@ describe('map', () => {
 			}[]
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			children: [
 				{ name: 'Peter' },
 				{ name: 'Janet' },
@@ -34,7 +34,7 @@ describe('map', () => {
 			}[]
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			children: [
 				{ name: 'Peter' },
 				{ name: 'Janet' },
@@ -54,7 +54,7 @@ describe('map', () => {
 	})
 
 	it('can find a value in an array controller', () => {
-		const controller = withInitialValue(['Julian', 'Dick', 'Anne', 'George', 'Timmy'])
+		const controller = controllerWithInitialValue(['Julian', 'Dick', 'Anne', 'George', 'Timmy'])
 
 		const name = controller.find((value, index) => {
 			return value === 'George'
@@ -63,7 +63,7 @@ describe('map', () => {
 	})
 
 	it('works when the value doesn\'t exist in an array controller', () => {
-		const controller = withInitialValue(['Julian', 'Dick', 'Anne', 'George', 'Timmy'])
+		const controller = controllerWithInitialValue(['Julian', 'Dick', 'Anne', 'George', 'Timmy'])
 
 		const name = controller.find((value, index) => {
 			return value === 'Chuck'

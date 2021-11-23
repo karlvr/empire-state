@@ -1,4 +1,4 @@
-import { withFuncs, withInitialValue } from '../creators'
+import { controllerWithFuncs, controllerWithInitialValue } from '../creators'
 
 describe('controller', () => {
 	it('can work with functions', () => {
@@ -10,7 +10,7 @@ describe('controller', () => {
 			b: 3,
 		}
 
-		const controller = withFuncs(
+		const controller = controllerWithFuncs(
 			() => value,
 			(newValue: TestInterface) => {
 				value = newValue
@@ -35,7 +35,7 @@ describe('controller', () => {
 			a: 'Hello',
 		}
 
-		const controller = withFuncs(
+		const controller = controllerWithFuncs(
 			() => value,
 			(newValue: TestInterface) => {
 				value = newValue
@@ -58,7 +58,7 @@ describe('controller', () => {
 			a: 'Hello',
 		}
 
-		const controller = withFuncs(
+		const controller = controllerWithFuncs(
 			() => value,
 			(newValue: TestInterface) => {
 				value = newValue
@@ -77,7 +77,7 @@ describe('controller', () => {
 			name: string
 		}
 
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			name: 'Original',
 		})
 		controller.snapshot('name').change('Modified')
@@ -89,7 +89,7 @@ describe('controller', () => {
 		interface TestInterface {
 			names: string[]
 		}
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			names: ['Blake', 'Avon'],
 		})
 		expect(controller.snapshot('names').value).toEqual(['Blake', 'Avon'])
@@ -109,7 +109,7 @@ describe('controller', () => {
 		interface TestInterface {
 			names: string[]
 		}
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			names: ['Blake', 'Avon'],
 		})
 
@@ -128,7 +128,7 @@ describe('controller', () => {
 		interface TestInterface {
 			names: string[]
 		}
-		const controller = withInitialValue<TestInterface>({
+		const controller = controllerWithInitialValue<TestInterface>({
 			names: ['Blake', 'Avon'],
 		})
 
@@ -146,7 +146,7 @@ describe('controller', () => {
 	})
 
 	it('example works', () => {
-		const controller = withInitialValue({
+		const controller = controllerWithInitialValue({
 			a: 'Hello world',
 			b: 42,
 			c: {
@@ -185,7 +185,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 		
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 		try {
 			controller.snapshot().value.a = 'test'
 			fail('Should have failed to modify')
@@ -195,7 +195,7 @@ describe('controller', () => {
 	})
 
 	it('can work with primitive property snapshot', () => {
-		const controller = withInitialValue({
+		const controller = controllerWithInitialValue({
 			a: 'Hello world',
 		})
 		controller.snapshot('a').change('Bye')
@@ -207,7 +207,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 		const aController = controller.get('a')
 		const anotherController = controller.get('a')
 		expect(aController).toBe(anotherController)
@@ -218,7 +218,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 		const aSnapshot = controller.snapshot('a')
 		const anotherSnapshot = controller.snapshot('a')
 		expect(aSnapshot).toBe(anotherSnapshot)
@@ -229,7 +229,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 
 		const snapshot = controller.snapshot('this')
 		expect(snapshot.value).toBe(state)
@@ -240,7 +240,7 @@ describe('controller', () => {
 			a: 'Hello world',
 		}
 
-		const controller = withInitialValue(state)
+		const controller = controllerWithInitialValue(state)
 		expect(controller.get('this')).toBe(controller)
 	})
 

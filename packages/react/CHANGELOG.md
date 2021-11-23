@@ -1,5 +1,13 @@
 # react-immutable-state-controller
 
+## 1.0.1
+
+### Patch Changes
+
+- 38a270b: Rename useNewSnapshotController back to useSnapshotController
+
+  Even though this is a breaking change, I've snuck it in as a patch as I only released 1.0.0 a minute ago.
+
 ## 1.0.0
 
 ### Major Changes

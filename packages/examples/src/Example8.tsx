@@ -2,7 +2,7 @@
  * An example of using Formalities to manage undefined properties.
  */
 
-import { Formalities, Snapshot, wrapComponent, useController, useSnapshotController, useSnapshot } from 'formalities'
+import { Formalities, Snapshot, wrapComponent, useNewController, useSnapshotController, useSnapshot } from 'formalities'
 import React from 'react'
 
 interface MyFormState {
@@ -22,7 +22,7 @@ const WrappedUndefinedSnapshot = wrapComponent(UndefinedSnapshot)
 
 export default function Example8() {
 
-	const controller = useController<MyFormState>({})
+	const controller = useNewController<MyFormState>({})
 	const [state] = useSnapshot(controller)
 
 	return (

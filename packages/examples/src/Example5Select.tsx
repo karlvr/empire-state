@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useController, Formalities, useSnapshot } from 'formalities'
+import { useNewController, Formalities, useSnapshot } from 'formalities'
 
 interface MyFormState {
 	likeAnimals?: boolean
@@ -19,7 +19,7 @@ const INITIAL_STATE: MyFormState = {
 
 export default function Example4() {
 
-	const controller = useController(INITIAL_STATE)
+	const controller = useNewController(INITIAL_STATE)
 	const [state] = useSnapshot(controller)
 
 	return (

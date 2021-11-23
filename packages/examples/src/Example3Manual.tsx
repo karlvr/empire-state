@@ -2,7 +2,7 @@
  * An example of using Formalities manually; without the helper React components.
  */
 
-import { useController, useSnapshot } from 'formalities'
+import { useNewController, useSnapshot } from 'formalities'
 import React from 'react'
 
 interface MyFormState {
@@ -12,7 +12,7 @@ interface MyFormState {
 }
 
 export default function Example3() {
-	const controller = useController<MyFormState>({})
+	const controller = useNewController<MyFormState>({})
 
 	const nameSnapshot = controller.snapshot('name')
 	const ageSnapshot = controller.snapshot('age')

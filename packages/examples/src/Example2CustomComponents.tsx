@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useController, Formalities, wrapComponent, Snapshot, useSnapshotController, useSnapshot } from 'formalities'
+import { useNewController, Formalities, wrapComponent, Snapshot, useSnapshotController, useSnapshot } from 'formalities'
 
 interface MyFormState {
 	personalDetails?: PersonalDetails
@@ -95,7 +95,7 @@ const WorkDetailsComponent = wrapComponent(function(props: Snapshot<WorkDetails 
 })
 
 const Example2: React.FC = function() {
-	const controller = useController<MyFormState>({})
+	const controller = useNewController<MyFormState>({})
 	const [state] = useSnapshot(controller)
 
 	function renderAddress(address: Address) {

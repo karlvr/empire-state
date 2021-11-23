@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useController, Formalities, useSnapshot } from 'formalities'
+import { useNewController, Formalities, useSnapshot } from 'formalities'
 
 interface MyFormState {
 	names?: string[]
@@ -11,7 +11,7 @@ interface MyFormState {
 
 export default function Example6() {
 
-	const controller = useController<MyFormState>({})
+	const controller = useNewController<MyFormState>({})
 	const namesController = controller.get('names')
 	const [names] = useSnapshot(namesController)
 

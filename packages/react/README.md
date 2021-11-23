@@ -46,7 +46,7 @@ interface Address {
 }
 
 function EditPersonComponent({ person: Person; onChange: (newPerson: Person) => void }) {
-	const controller = useController(person)
+	const controller = useNewController(person)
 
 	const handleSave = useCallback(function(evt: React.MouseEvent) {
 		evt.preventDefault()
@@ -85,78 +85,28 @@ Controllers use [`immer`](https://github.com/immerjs/immer) to ensure the immuta
 
 ## Hooks
 
-### `useController`
+### `useNewController`
 
-`useController(initialValue)` returns a `Controller` that controls access to the state; whatever type that is.
+`useNewController(initialValue)` returns a new `Controller` that controls access to the state; whatever type that is.
 
 The `Controller` has a `value` property to access the current state, and a `setValue` function to change that state. Changes to the `Controller`’s `value` are _immediately_ visible in code, but they _DO NOT_ trigger a re-render in React.
 
-`useController` always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useSnapshot` to re-render when state changes...
+A `useNewController` hook always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useSnapshot` to re-render when state changes...
+
+### `useController`
+
+`useController(controller)` simply returns the given controller, but it will trigger re-renders when the value in the controller changes.
+`useController` is useful if you're using the `Controller`'s `map`, `find` or `findIndex` methods and therefore need to re-render if the
+controller's value changes.
 
 ### `useSnapshot`
 
 `useSnapshot(controller)` and `useSnapshot(controller, property)` returns an array containing the current value (immutable) and a function to change the value (exactly like React’s `useState`).
 
-The value originates from the `controller`; either the whole value of the controller or one of its properties.
+The value originates from the `Controller`; either the whole value of the controller or one of its properties.
 
-If the value is changed, either using `useSnapshot`’s change value function, or any other snapshot’s change value function, or even using the `controller`’s own `setValue` function, the component _WILL_ re-render.
+If the value is changed, either using `useSnapshot`’s `change` function, or any other snapshot’s `change` function, or even using the `Controller`’s own `setValue` function, the component _WILL_ re-render.
 
-## Controllers
+## Reference
 
-A `Controller` manages a value. It is a generic type, where its type represents the type of value it contains.
-
-Some examples of controllers:
-
-* `Controller<string>` for a controller that simply contains a string value
-* `Controller<Person>` for a controller that contains an object
-* `Controller<Person[]>` for a controller that contains an array
-
-### Accessing the value
-
-You can get the value from the controller using the `value` property, and set it using the `setValue` method.
-
-|Property / Method|Description|
-|--------|-----------|
-|`value`|The value in the controller.|
-|`setValue(newValue: T)`|Set the value in the controller.|
-
-Note that the value in the controller is _live_, ie. it is independent of React’s render cycle.
-
-### Nested values
-
-When the controller contains an array or an object, you can create sub-controllers to access specific parts of the controller. Changes in sub-controllers are immediately reflected in the parent controller.
-
-#### Array controllers
-
-When a controller contains an array value, these methods are applicable:
-
-|Method|Description|
-|------|-----------|
-|`get(index: number)`|Returns a sub-controller for the value at the given index.|
-|`set(index: number, newValue)`|Set the value at the given index.|
-|`map(callback)`|Map over the values. The callback receives a controller for each value as its first argument and an index as its second.|
-
-#### Object controllers
-
-When a controller contains an object value, these methods are applicable:
-
-|Method|Description|
-|------|-----------|
-|`get(prop: string)`|Return a sub-controller for the value of the given property.|
-|`set(prop: string, newValue)`|Set the value of the given property.|
-|`get(prop: string, index: number)`|Returns a sub-controller for the value at the given index of the array in the given property.|
-|`map(prop: string, callback)`|Map over the values in the given property. The callback receives a controller for each value as its first argument and an index as its second.|
-
-### Listening for changes
-
-You can add change listeners to a controller. The change listener will be called when the value in the controller is changed.
-
-```typescript
-controller.addChangeListener(function(newValue: T) {
-
-})
-```
-
-## Links
-
-`react-immutable-state-controller` is based upon [`immutable-state-controller`](../immutable-state-controller), which you may wish to read about to understand more about `Controller`s and `Snapshot`s.
+See [`immutable-state-controller`](../immutable-state-controller) for more information and an API reference for `Controller`s and `Snapshot`s.

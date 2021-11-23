@@ -3,28 +3,31 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { controllerWithFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'immutable-state-controller'
 import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-utils'
 import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
-export { Controller, Snapshot, ChangeListener, controllerWithFuncs, controllerWithInitialValue } from 'immutable-state-controller'
+export * from 'immutable-state-controller'
 
 /**
- * <p>Create a new controller with undefined initial state.</p>
- * <p>The controller state is mutable and WILL NOT trigger component re-render when it changes.
- * Use useSnapshot to get access to state and to re-render when state changes.</p>
+ * Create a new controller with undefined initial state.
+ * 
+ * The controller state is mutable and WILL NOT trigger component re-render when it changes.
+ * Use useSnapshot to get access to state and to re-render when state changes.
  */
-export function useController<T = undefined>(): Controller<T | undefined>
+export function useNewController<T = undefined>(): Controller<T | undefined>
 
 /**
- * <p>Create a new controller with the given initial state.</p>
- * <p>Like React's useState, the initial state is just an initial state. The controller's state will
+ * Create a new controller with the given initial state.
+ * 
+ * Like React's useState, the initial state is just an initial state. The controller's state will
  * NOT be changed if the value of the initial state changes. You should use a useEffect block to
- * update the controller's value when you need to.</p>
- * <p>The controller state is mutable and WILL NOT trigger component re-render when it changes.
- * Use useSnapshot to get access to state and to re-render when state changes.</p>
+ * update the controller's value when you need to.
+ * 
+ * The controller state is mutable and WILL NOT trigger component re-render when it changes.
+ * Use useSnapshot to get access to state and to re-render when state changes.
  * @param initialState 
  * @returns 
  */
-export function useController<T>(initialState: T): Controller<T>
+export function useNewController<T>(initialState: T): Controller<T>
 
-export function useController<T>(initialState?: T): Controller<T | undefined> {
+export function useNewController<T>(initialState?: T): Controller<T | undefined> {
 	const value = useRef(initialState)
 	return createMemoisedController({
 		value: value.current,
@@ -35,11 +38,36 @@ export function useController<T>(initialState?: T): Controller<T | undefined> {
 }
 
 /**
+ * Register that you're using the given controller in this component. The component will now re-render when the value
+ * in the controller changes.
+ * @param controller 
+ * @returns 
+ */
+export function useController<T>(controller: Controller<T>): Controller<T> {
+	const [refresh, setRefresh] = useState(0)
+
+	/* Add and remove the change listener */
+	useEffect(function() {
+		const changeListener: ChangeListener<unknown> = function() {
+			setRefresh(refresh + 1)
+		}
+		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
+		controller.addChangeListener(changeListener, 'useController')
+		
+		return function() {
+			controller.removeChangeListener(changeListener)
+		}
+	}, [refresh, controller])
+
+	return controller
+}
+
+/**
  * <p>Create a new Controller with the given Snapshot.</p>
  * @param snapshot 
  * @returns 
  */
-export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
+export function useNewSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
 	return createMemoisedController(snapshot)
 }
 
@@ -115,8 +143,8 @@ export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, name
 		const changeListener: ChangeListener<unknown> = function() {
 			setRefresh(refresh + 1)
 		}
-		snapshotController.addChangeListener(changeListener, 'snapshot')
-
+		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
+		snapshotController.addChangeListener(changeListener, 'useSnapshot')
 		
 		return function() {
 			snapshotController.removeChangeListener(changeListener)

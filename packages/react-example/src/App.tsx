@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Controller, useController, useSnapshot } from 'react-immutable-state-controller'
+import { Controller, useNewController, useSnapshot } from 'react-immutable-state-controller'
 
 interface Data {
 	one?: Data2
@@ -59,7 +59,7 @@ const SubCom2 = function(props: { name: string; valueName: string; controller: C
 }
 
 const App = function() {
-	const controller = useController<Data>()
+	const controller = useNewController<Data>()
 	const one = controller.get('one')
 	const two = controller.get('two')
 	const [forceRender, setForceRender] = useState(0)

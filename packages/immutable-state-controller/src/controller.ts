@@ -132,10 +132,10 @@ export class ControllerImpl<T> implements Controller<T> {
 		this.internalController(nameOrIndex).setValue(newValue as any)
 	}
 
-	public map<U>(callback: (controller: Controller<INDEXPROPERTY<T>>, index: number) => U): U[]
-	public map<U>(name: 'this', callback: (controller: Controller<INDEXPROPERTY<T>>, index: number) => U): U[]
-	public map<K extends KEY<T>, U>(name: K, callback: (controller: Controller<INDEXPROPERTY<PROPERTY<T, K>>>, index: number) => U): U[]
-	public map<K extends KEY<T>, U>(name: K | 'this' | ((controller: Controller<INDEXPROPERTY<T>>, index: number) => U), callback?: (controller: Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>, index: number) => U): U[] {
+	public map<U>(callback: (controller: Controller<INDEXPROPERTY<T>>, index: number, array: T) => U): U[]
+	public map<U>(name: 'this', callback: (controller: Controller<INDEXPROPERTY<T>>, index: number, array: T) => U): U[]
+	public map<K extends KEY<T>, U>(name: K, callback: (controller: Controller<INDEXPROPERTY<PROPERTY<T, K>>>, index: number, array: PROPERTY<T, K>) => U): U[]
+	public map<K extends KEY<T>, U>(name: K | 'this' | ((controller: Controller<INDEXPROPERTY<T>>, index: number, array: T) => U), callback?: (controller: Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>, index: number, array: PROPERTY<T, K>) => U): U[] {
 		if (typeof name === 'function') {
 			return this.map('this', name)
 		}
@@ -145,8 +145,34 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 		return value.map((nestedValue, nestedValueIndex) => {
 			const nestedController = this.internalController(name, nestedValueIndex) as Controller<INDEXPROPERTY<PROPERTY<T, K>>>
-			return callback(nestedController, nestedValueIndex)
+			return callback(nestedController, nestedValueIndex, value as any)
 		})
+	}
+
+	public findIndex(predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): number
+	public findIndex(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): number
+	public findIndex<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): number
+	public findIndex<K extends KEY<T>>(name: K | 'this' | ((value: INDEXPROPERTY<T>, index: number, array: T) => boolean), predicate?: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): number {
+		if (typeof name === 'function') {
+			return this.findIndex('this', name)
+		}
+		const value: unknown[] = name === 'this' ? this.value : this.value !== undefined ? (this.value as any)[name] : undefined
+		return value.findIndex(predicate as any)
+	}
+
+	public find(predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): Controller<INDEXPROPERTY<T>> | undefined
+	public find(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): Controller<INDEXPROPERTY<T>> | undefined
+	public find<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): Controller<INDEXPROPERTY<PROPERTY<T, K>>> | undefined
+	public find<K extends KEY<T>>(name: K | 'this' | ((value: INDEXPROPERTY<T>, index: number, obj: T) => boolean), predicate?: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): Controller<INDEXPROPERTY<T>> | undefined {
+		if (typeof name === 'function') {
+			return this.find('this', name)
+		}
+		const value: unknown[] = name === 'this' ? this.value : this.value !== undefined ? (this.value as any)[name] : undefined
+		const index = value.findIndex(predicate as any)
+		if (index === -1) {
+			return undefined
+		}
+		return name === 'this' ? this.get(index) : this.get(name).get(index) as any
 	}
 	
 	private internalController<K extends KEY<T>>(nameOrIndex: K | number | 'this', index?: number): Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {

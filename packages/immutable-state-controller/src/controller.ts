@@ -92,6 +92,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			listener,
 			tag: tag !== undefined ? tag : DEFAULT_CHANGE_LISTENER_TAG,
 		})
+		return this
 	}
 
 	public removeChangeListener(listener: ChangeListener<T>) {
@@ -99,6 +100,7 @@ export class ControllerImpl<T> implements Controller<T> {
 		if (index !== -1) {
 			this.changeListeners.splice(index, 1)
 		}
+		return this
 	}
 
 	public removeAllChangeListeners(tag?: string) {
@@ -115,6 +117,7 @@ export class ControllerImpl<T> implements Controller<T> {
 		for (const sub of Object.values(this.memoisedControllers)) {
 			sub.removeAllChangeListeners(tag)
 		}
+		return this
 	}
 
 	public get(index: number): Controller<INDEXPROPERTY<T>>

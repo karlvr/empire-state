@@ -144,4 +144,18 @@ describe('change listeners', () => {
 		expect(parentFired).toEqual(1)
 		expect(childFired).toEqual(1)
 	})
+
+	it('is chainable', () => {
+		const state = {
+			a: 'Hello world',
+		}
+
+		const changeListener = () => null
+
+		const controller = controllerWithInitialValue(state)
+
+		expect(controller.addChangeListener(changeListener)).toBe(controller)
+		expect(controller.removeChangeListener(changeListener)).toBe(controller)
+		expect(controller.removeAllChangeListeners()).toBe(controller)
+	})
 })

@@ -67,7 +67,7 @@ export function useController<T>(controller: Controller<T>): Controller<T> {
  * @param snapshot 
  * @returns 
  */
-export function useNewSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
+export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
 	return createMemoisedController(snapshot)
 }
 

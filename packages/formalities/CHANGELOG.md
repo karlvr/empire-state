@@ -1,5 +1,11 @@
 # formalities
 
+## 1.0.0
+
+### Major Changes
+
+- b1ef40d: Update to release version of react-immutable-state-controller
+
 ## 0.9.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # examples
 
+## 1.0.0
+
+### Major Changes
+
+- b1ef40d: Update to release version of react-immutable-state-controller
+
+### Patch Changes
+
+- Updated dependencies [b1ef40d]
+  - formalities@1.0.0
+
 ## 0.9.1
 
 ### Patch Changes

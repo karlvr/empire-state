@@ -1,5 +1,22 @@
 # immutable-state-controller
 
+## 1.0.0
+
+### Major Changes
+
+- af49af7: Rename `withInitialValue` and `withFuncs` to `controllerWithInitialValue` and `controllerWithFuncs`
+
+  To update your code for this new version:
+
+  - Search existing code for `withInitialValue` and `withFuncs` using a case-sensitive and match-whole-word search; check which instances are related
+    to `immutable-state-controller`; replace with the new function names.
+
+### Minor Changes
+
+- 76fa4f8: Allow setters to take a function to provide the new value
+- a5db91a: Change listener methods return this for chaining
+- e46c019: Add find and findIndex to Controller
+
 ## 0.10.0
 
 ### Minor Changes

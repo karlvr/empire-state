@@ -1,5 +1,13 @@
 # examples
 
+## 0.9.4
+
+### Patch Changes
+
+- Updated dependencies [39836ff]
+- Updated dependencies [af49af7]
+  - react-immutable-state-controller@1.0.0
+
 ## 0.9.3
 
 ### Patch Changes

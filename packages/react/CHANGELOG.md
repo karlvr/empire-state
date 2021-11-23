@@ -1,5 +1,31 @@
 # react-immutable-state-controller
 
+## 1.0.0
+
+### Major Changes
+
+- 39836ff: Rename useController to useNewController, and add a new useController to re-render components when anything in the controller changes
+
+  To update your code for this new version:
+
+  - Search existing code for `useController` using a case-sensitive and match-whole-word search; replace with `useNewController`
+  - Where you've used `controller.map`, consider adding a `useController` beforehand to ensure that your component re-renders when the controller's value changes.
+
+- af49af7: Rename `withInitialValue` and `withFuncs` to `controllerWithInitialValue` and `controllerWithFuncs`
+
+  To update your code for this new version:
+
+  - Search existing code for `withInitialValue` and `withFuncs` using a case-sensitive and match-whole-word search; check which instances are related
+    to `immutable-state-controller`; replace with the new function names.
+
+### Patch Changes
+
+- Updated dependencies [76fa4f8]
+- Updated dependencies [af49af7]
+- Updated dependencies [a5db91a]
+- Updated dependencies [e46c019]
+  - immutable-state-controller@1.0.0
+
 ## 0.10.0
 
 ### Patch Changes

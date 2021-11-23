@@ -103,3 +103,82 @@ eController.map((controller: Controller<string>, index: number, array: string[])
 const ecController = eController.find((value: string, index: number, array: string[]) => value === 'C')
 ecController.setValue('c')
 ```
+
+## Controller reference
+
+A `Controller` manages a value. It is a generic type, where its type represents the type of value it contains.
+
+Some examples of controllers:
+
+* `Controller<string>` for a controller that simply contains a string value
+* `Controller<Person>` for a controller that contains an object
+* `Controller<Person[]>` for a controller that contains an array
+
+### Accessing the value
+
+You can get the value from the controller using the `value` property, and set it using the `setValue` method.
+
+|Property / Method|Description|
+|--------|-----------|
+|`value`|The value in the controller.|
+|`setValue(newValue: T)`|Set the value in the controller.|
+
+Note that the value in the controller is _live_, ie. it is independent of React’s render cycle.
+
+### Nested values
+
+When the controller contains an array or an object, you can create sub-controllers to access specific parts of the controller. Changes in sub-controllers are immediately reflected in the parent controller.
+
+#### Array controllers
+
+When a controller contains an array value, these methods are applicable:
+
+|Method|Description|
+|------|-----------|
+|`get(index: number)`|Returns a sub-controller for the value at the given index.|
+|`set(index: number, newValue)`|Set the value at the given index.|
+|`map(callback)`|Map over the values. The callback receives a controller for each value as its first argument and an index as its second.|
+|`find(predicate)`|Returns the first value in the controller that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`. The `find` method returns a `Controller` for the found value, or `undefined` if not found.|
+|`findIndex(predicate)`|Returns the index of the first value in the controller that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
+
+#### Object controllers
+
+When a controller contains an object value, these methods are applicable:
+
+|Method|Description|
+|------|-----------|
+|`get(prop: string)`|Return a sub-controller for the value of the given property.|
+|`set(prop: string, newValue)`|Set the value of the given property.|
+|`get(prop: string, index: number)`|Returns a sub-controller for the value at the given index of the array in the given property.|
+|`map(prop: string, callback)`|Map over the values in the given array-valued property. The callback receives a controller for each value as its first argument and an index as its second.|
+|`find(prop: string, predicate)`|Returns the first value in the given array-valued property that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`. The `find` method returns a `Controller` for the found value, or `undefined` if not found.|
+|`findIndex(prop: string, predicate)`|Returns the index of the first value in the given array-values property that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
+
+### Listening for changes
+
+You can add change listeners to a controller. The change listener will be called when the value in the controller is changed.
+
+```typescript
+controller.addChangeListener(function(newValue: T) {
+
+})
+```
+
+Listeners can also be removed:
+
+```typescript
+controller.removeChangeListener(listenerFunc)
+```
+
+Listeners can be added with a "tag" and then removed all at once:
+
+```typescript
+controller.addChangeListener(listenerFunc, 'myTag')
+controller.removeAllChangeListeners('myTag')
+```
+
+Or all change listeners can be removed:
+
+```typescript
+controller.removeAllChangeListeners()
+```

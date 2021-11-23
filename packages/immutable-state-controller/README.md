@@ -15,7 +15,7 @@ Each `Controller` or `Snapshot` provides a method to change the state. All chang
 npm install immutable-state-controller
 ```
 
-## Usage
+## Example
 
 ```typescript
 import { controllerWithInitialValue } from 'immutable-state-controller'
@@ -28,22 +28,26 @@ const controller = controllerWithInitialValue({
 		e: ['A', 'B', 'C', 'D'],
 	},
 })
+
+controller.get('a').setValue('Bye bye')
+
+const immutableValue = controller.snapshot('c')
 ```
 
-You can obtain snapshots from the Controller of either the whole state, or of parts of the state.
-Any changes you make via the Controller will be reflected immediately in the controller's `value`.
+## Snapshots
+
+A `Snapshot` is an immutable snapshot of the state from a controller.
+
+You can obtain snapshots from the `Controller` of either the whole state, or of parts of the state.
+Any changes you make via the `Controller` will be reflected immediately in the controller's `value`,
+but the `Snapshot` never changes as it is immutable — ensuring that you retain a consistent, immutable view of the state.
 
 ```typescript
 const aSnapshot = controller.snapshot('a') // Snapshot<string>
 // aSnapshot.value === 'Hello world'
 
-aSnapshot.setValue('Bye bye')
+aSnapshot.change('Bye bye')
 // controller.value.a === 'Bye bye'
-```
-
-However the snapshot value has not changed, ensuring that you retain a consistent, immutable view of the state:
-
-```typescript
 // aSnapshot.value === 'Hello world'
 ```
 
@@ -53,7 +57,7 @@ Snapshots can be created for any type, including objects:
 const cSnapshot = controller.snapshot('c') // Snapshot<{ d: string, e: string[] }>
 // cSnapshot.value.d === 'Nested okay'
 
-cSnapshot.setValue({
+cSnapshot.change({
 	d: 'Changed',
 	e: ['E'],
 })
@@ -69,10 +73,33 @@ const eSnapshot = controller.get('c').snapshot('e') // Snapshot<string[]>
 
 // eSnapshot.value == ['E']
 
-eSnapshot.setValue(['F', 'G'])
+eSnapshot.change(['F', 'G'])
 // controller.value.c.e == ['F', 'G']
 ```
 
 This pattern is powerful when sharing state between multiple pieces of code while wanting to
 ensure an immutable and consistent view of that state; creating and sharing a new snapshot of the
 state when appropriate.
+
+## Nested controllers
+
+You can obtain a controller for a nested value. Any changes to the nested controller are
+also reflected in the parent controller.
+
+```typescript
+const cController = controller.get('c')
+cController.setValue({
+	d: 'Gone',
+	e: [],
+})
+```
+
+Array `Controller`s also support `map` and `find` to access nested controllers:
+
+```typescript
+const eController = controller.get('e')
+eController.map((controller: Controller<string>, index: number, array: string[]) => controller.value.toLowerCase()) == ['a', 'b', 'c', 'd']
+
+const ecController = eController.find((value: string, index: number, array: string[]) => value === 'C')
+ecController.setValue('c')
+```

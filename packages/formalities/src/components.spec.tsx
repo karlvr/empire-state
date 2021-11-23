@@ -1,5 +1,5 @@
 import React from 'react'
-import { Snapshot, withInitialValue } from 'react-immutable-state-controller'
+import { Snapshot, controllerWithInitialValue } from 'react-immutable-state-controller'
 import { wrapComponent, Formalities } from './components'
 
 function TestComponent(props: Snapshot<number> & { name: string }) {
@@ -20,7 +20,7 @@ const testState = {
 	g: undefined as string | undefined,
 }
 
-const testController = withInitialValue(testState)
+const testController = controllerWithInitialValue(testState)
 
 test('components can be used', () => {
 	const all = (

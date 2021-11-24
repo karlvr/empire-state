@@ -3,7 +3,7 @@
   "version": "0.9.5",
   "private": true,
   "dependencies": {
-    "empire-state-react": "0.9.0",
+    "empire-state-react": "1.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },

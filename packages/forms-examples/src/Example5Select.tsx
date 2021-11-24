@@ -1,9 +1,9 @@
 /**
- * An example of using Formalities with Select input elements.
+ * An example of using empire-state-forms with Select input elements.
  */
 
 import React from 'react'
-import { useNewController, Formalities, useSnapshot } from 'empire-state-forms'
+import { useNewController, Select, useSnapshot } from 'empire-state-forms'
 
 interface MyFormState {
 	likeAnimals?: boolean
@@ -27,7 +27,7 @@ export default function Example4() {
 			<h1>Example 5: Select</h1>
 			<div>
 				<label>Like animals:</label>
-				<Formalities.Select controller={controller} prop="likeAnimals" options={[
+				<Select controller={controller} prop="likeAnimals" options={[
 					undefined,
 					true,
 					false,
@@ -37,7 +37,7 @@ export default function Example4() {
 			</div>
 			<div>
 				<label>Like animals:</label>
-				<Formalities.Select controller={controller} prop="likeAnimals" options={[
+				<Select controller={controller} prop="likeAnimals" options={[
 					{ value: undefined, text: '' },
 					{ value: true, text: 'Yes' },
 					{ value: false, text: 'No' },
@@ -46,7 +46,7 @@ export default function Example4() {
 			</div>
 			<div>
 				<label>Favourite animal:</label>
-				<Formalities.Select controller={controller} prop="favouriteAnimal" options={[
+				<Select controller={controller} prop="favouriteAnimal" options={[
 					{ value: '' },
 					{ value: 'Kangaroo' },
 					{ value: 'Donkey' },
@@ -55,7 +55,7 @@ export default function Example4() {
 			</div>
 			<div>
 				<label>Favourite animal 2:</label>
-				<Formalities.Select controller={controller} prop="favouriteAnimal" options={['', 'Kangaroo', 'Donkey', 'Giraffe', 'Tuatara']} display={o => o} />
+				<Select controller={controller} prop="favouriteAnimal" options={['', 'Kangaroo', 'Donkey', 'Giraffe', 'Tuatara']} display={o => o} />
 			</div>
 			<h2>Summary</h2>
 			<div>Like animals: {`${state.likeAnimals}`} ({typeof state.likeAnimals})</div>

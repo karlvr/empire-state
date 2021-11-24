@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useNewController, Formalities, useSnapshot } from 'empire-state-forms'
+import { useNewController, Text, useSnapshot } from 'empire-state-forms'
 
 interface MyFormState {
 	names?: string[]
@@ -26,7 +26,7 @@ export default function Example6() {
 			<h1>Example 6: Repeating</h1>
 			{
 				(names || []).map((name, index) => (
-					<Formalities.Text key={index} controller={namesController.get(index)} />
+					<Text key={index} controller={namesController.get(index)} />
 				))
 			}
 

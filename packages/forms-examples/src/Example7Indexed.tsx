@@ -2,7 +2,7 @@
  * An example of repeating fields using Indexed component.
  */
 
-import { useNewController, Formalities, Controller, IndexedCursor, IndexedActions, useSnapshot } from 'empire-state-forms'
+import { useNewController, Text, Indexed, Controller, IndexedCursor, IndexedActions, useSnapshot } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {
@@ -17,7 +17,7 @@ export default function Example7() {
 	function renderChild(controller: Controller<string>, cursor: IndexedCursor, actions: IndexedActions<string>) {
 		return (
 			<React.Fragment key={cursor.index}>
-				<Formalities.Text controller={controller} prop="this" />
+				<Text controller={controller} prop="this" />
 				<button onClick={() => actions.onRemove(cursor.index)}>X</button>
 				<button onClick={() => actions.onInsert(cursor.index + 1, '')}>+</button>
 			</React.Fragment>
@@ -39,7 +39,7 @@ export default function Example7() {
 	return (
 		<div>
 			<h1>Example 7: Indexed</h1>
-			<Formalities.Indexed 
+			<Indexed 
 				controller={controller} 
 				prop="names" 
 				renderBefore={renderBefore}

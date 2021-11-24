@@ -1,8 +1,8 @@
 /**
- * An example of using Formalities with Checkable input elements.
+ * An example of using empire-state-forms with Checkable input elements.
  */
 
-import { Formalities, useNewController, useSnapshot } from 'empire-state-forms'
+import { MultiCheckable, useNewController, useSnapshot } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {
@@ -22,14 +22,14 @@ export default function Example4() {
 		<div>
 			<h1>Example 4a: Multi Checkable</h1>
 			<div>
-				<label><Formalities.MultiCheckable 
+				<label><MultiCheckable 
 					type="checkbox" 
 					name="favouriteAnimals" 
 					checkedValue="giraffes"
 					controller={controller} 
 					prop="favouriteAnimals" 
 				/> Giraffes</label>
-				<label><Formalities.MultiCheckable 
+				<label><MultiCheckable 
 					type="checkbox" 
 					name="favouriteAnimals" 
 					checkedValue="cats"

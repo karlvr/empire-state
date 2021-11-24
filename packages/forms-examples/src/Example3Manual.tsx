@@ -1,5 +1,5 @@
 /**
- * An example of using Formalities manually; without the helper React components.
+ * An example of using empire-state-react manually; without the helper React components.
  */
 
 import { useNewController, useSnapshot } from 'empire-state-forms'

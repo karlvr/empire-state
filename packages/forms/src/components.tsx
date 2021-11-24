@@ -438,3 +438,4 @@ export const Formalities = {
 	Select,
 	Indexed,
 }
+export default Formalities

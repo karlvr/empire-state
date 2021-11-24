@@ -13,10 +13,10 @@ npm install formalities
 ## Usage
 
 ```typescript
-import { useController, useSnapshot, Formalities } from 'formalities'
+import { useNewController, useSnapshot, Formalities } from 'formalities'
 
 function MyForm() {
-	const controller = useController({
+	const controller = useNewController({
 		name: '',
 		age: undefined as number | undefined,
 		address: '',
@@ -117,7 +117,7 @@ but that's even more boiler-plate.
 
 ### Component state
 
-Using the hook `useController` we create a `Controller` that reads and updates from the component's state.
+Using the hook `useNewController` we create a new `Controller` that reads and updates from the component's state.
 
 In the component we use the Formalities components to create normal `<input>` elements,
 but bound to the value of one of the `Controller`'s properties, and reporting changes back 
@@ -126,7 +126,7 @@ to the component state.
 The `Formalities` components supports all of the regular `<input>` properties.
 
 ```typescript
-import { useController, Formalities } from 'formalities'
+import { useNewController, Formalities } from 'formalities'
 
 interface MyFormState {
 	name: string
@@ -135,7 +135,7 @@ interface MyFormState {
 }
 
 function MyForm() {
-	const controller = useController<MyFormState>({
+	const controller = useNewController<MyFormState>({
 		name: '',
 		address: '',
 	})
@@ -155,7 +155,7 @@ function MyForm() {
 }
 ```
 
-Formalities's `useController` returns a `Controller` with an initial value. The type of the `Controller` is
+`useNewController` returns a `Controller` with an initial value. The type of the `Controller` is
 determined from that initial value.
 
 The `<Formalities.Text>` component specifies the `Controller` instance via the `controller` prop, and which property
@@ -233,7 +233,7 @@ It can then be used like `<Formalities.Text>` in the examples above, as in:
 import MyTextField from './MyTextField'
 
 function MyForm() {
-	const controller = useController(...)
+	const controller = useNewController(...)
 
 	return (
 		<div>

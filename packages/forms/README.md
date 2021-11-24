@@ -1,21 +1,21 @@
-# Formalities
+# Empire State - Forms
 
 A small package to build [React](https://reactjs.org) forms with immutable state, type-safety and not a lot of boilerplate.
 
 Formalities makes use of [`empire-state-react`](https://github.com/karlvr/empire-state/tree/main/packages/react) to create immutable state updates.
 
-You'll want to familiarise yourself with [`empire-state-react`](https://github.com/karlvr/empire-state/tree/main/packages/react) and [`empire-state`](https://github.com/karlvr/empire-state/tree/main/packages/core) before using this package.
+You'll want to familiarise yourself with [`empire-state-react`](../react) and [`empire-state`](../core) before using this package.
 
 ## Install
 
 ```shell
-npm install formalities
+npm install empire-state-forms
 ```
 
 ## Usage
 
 ```typescript
-import { useNewController, useSnapshot, Formalities } from 'formalities'
+import { useNewController, useSnapshot, Formalities } from 'empire-state-forms'
 
 function MyForm() {
 	const controller = useNewController({
@@ -62,7 +62,7 @@ function MyForm() {
 * `<Formalities.Select>` a `<select>` element
 * `<Formalities.Indexed>` a component for custom array properties
 
-See the [examples](https://github.com/karlvr/formalities/tree/master/packages/examples/src) for examples of using each of these components.
+See the [examples](../forms-examples/src) for examples of using each of these components.
 
 ## The case for Formalities
 
@@ -128,7 +128,7 @@ to the component state.
 The `Formalities` components supports all of the regular `<input>` properties.
 
 ```typescript
-import { useNewController, Formalities } from 'formalities'
+import { useNewController, Formalities } from 'empire-state-forms'
 
 interface MyFormState {
 	name: string
@@ -205,7 +205,7 @@ In the examples above we've used Formalities's `<Formalities.String>` component 
 element. You can also create your own components that interact with the controller:
 
 ```typescript
-import { Snapshot, wrapComponent } from 'formalities'
+import { Snapshot, wrapComponent } from 'empire-state-forms'
 
 interface MyTextFieldProps extends Snapshot<string> {}
 

@@ -2,7 +2,7 @@
  * An example of using Formalities manually; without the helper React components.
  */
 
-import { useNewController, useSnapshot } from 'formalities'
+import { useNewController, useSnapshot } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {

@@ -2,7 +2,7 @@
  * An example of using Formalities with Checkable input elements.
  */
 
-import { Formalities, useNewController, useSnapshot } from 'formalities'
+import { Formalities, useNewController, useSnapshot } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {

@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useNewController, Formalities, wrapComponent, Snapshot, useSnapshotController, useSnapshot } from 'formalities'
+import { useNewController, Formalities, wrapComponent, Snapshot, useSnapshotController, useSnapshot } from 'empire-state-forms'
 
 interface MyFormState {
 	personalDetails?: PersonalDetails

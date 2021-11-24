@@ -2,7 +2,7 @@
  * An example of using Formalities to manage a simple form state.
  */
 
-import { useNewController, useSnapshot, Formalities } from 'formalities'
+import { useNewController, useSnapshot, Formalities } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {

@@ -2,7 +2,7 @@
  * An example of using Formalities to manage undefined properties.
  */
 
-import { Formalities, Snapshot, wrapComponent, useNewController, useSnapshotController, useSnapshot } from 'formalities'
+import { Formalities, Snapshot, wrapComponent, useNewController, useSnapshotController, useSnapshot } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {

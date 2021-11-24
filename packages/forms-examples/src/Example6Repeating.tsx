@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useNewController, Formalities, useSnapshot } from 'formalities'
+import { useNewController, Formalities, useSnapshot } from 'empire-state-forms'
 
 interface MyFormState {
 	names?: string[]

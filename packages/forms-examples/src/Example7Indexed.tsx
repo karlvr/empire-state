@@ -2,7 +2,7 @@
  * An example of repeating fields using Indexed component.
  */
 
-import { useNewController, Formalities, Controller, IndexedCursor, IndexedActions, useSnapshot } from 'formalities'
+import { useNewController, Formalities, Controller, IndexedCursor, IndexedActions, useSnapshot } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {

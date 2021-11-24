@@ -1,14 +1,10 @@
-# formalities
-
-## 1.0.1
-
-### Patch Changes
-
-- Re-release 1.0.0
+# empire-state-forms
 
 ## 1.0.0
 
 ### Major Changes
+
+- 843c85c: Rename to `empire-state-forms`
 
 - 4a083f6: Allow the "prop" prop to be optional, meaning "this", to support the new `controller.get('property')` form in `empire-state`
 

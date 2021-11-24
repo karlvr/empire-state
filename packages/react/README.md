@@ -1,14 +1,14 @@
 # React Immutable State Controller
 
-[![npm version](https://badge.fury.io/js/react-immutable-state-controller.svg)](https://badge.fury.io/js/react-immutable-state-controller)
-[![Node CI](https://github.com/karlvr/immutable-state-controller/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/immutable-state-controller/actions/workflows/github-actions-build.yml)
+[![npm version](https://badge.fury.io/js/empire-state-react.svg)](https://badge.fury.io/js/empire-state-react)
+[![Node CI](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml)
 
 A small library to manage immutable state in a tree of React components without a lot of boilerplate, but with a lot of type-safety.
 
 ## Installation
 
 ```shell
-npm install react-immutable-state-controller
+npm install empire-state-react
 ```
 
 ## Raison d’être
@@ -19,11 +19,11 @@ Another difficulty with React’s `useState` is that the entire component subtre
 
 ### Compared to Redux
 
-[Redux](https://redux.js.org) provides a similar capability to `react-immutable-state-controller`, however with a lot more complexity and boilerplate. Also Redux is designed to manage global state in an application, where you really benefit from using reducers, selectors and actions, whereas `react-immutable-state-controller` is designed to improve the managing of local state in a tree of components.
+[Redux](https://redux.js.org) provides a similar capability to `empire-state-react`, however with a lot more complexity and boilerplate. Also Redux is designed to manage global state in an application, where you really benefit from using reducers, selectors and actions, whereas `empire-state-react` is designed to improve the managing of local state in a tree of components.
 
 ## Solution
 
-With `react-immutable-state-controller` you create one or more _controllers_ to contain state in a component, or at the root of a _tree_ of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useSnapshot`).
+With `empire-state-react` you create one or more _controllers_ to contain state in a component, or at the root of a _tree_ of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useSnapshot`).
 
 The `useSnapshot` hook works a little like React’s `useState`, except instead of creating a state value that’s local to the component, it always reflects and updates the value in the controller, where that controller has possibly been created in the current component or passed as `props` from a parent component.
 
@@ -109,4 +109,4 @@ If the value is changed, either using `useSnapshot`’s `change` function, or an
 
 ## Reference
 
-See [`immutable-state-controller`](../immutable-state-controller) for more information and an API reference for `Controller`s and `Snapshot`s.
+See [`empire-state`](../core) for more information and an API reference for `Controller`s and `Snapshot`s.

@@ -1,15 +1,17 @@
-# immutable-state-controller
+# empire-state
 
 ## 1.0.0
 
 ### Major Changes
+
+- Rename package to `empire-state`
 
 - af49af7: Rename `withInitialValue` and `withFuncs` to `controllerWithInitialValue` and `controllerWithFuncs`
 
   To update your code for this new version:
 
   - Search existing code for `withInitialValue` and `withFuncs` using a case-sensitive and match-whole-word search; check which instances are related
-    to `immutable-state-controller`; replace with the new function names.
+    to `empire-state`; replace with the new function names.
 
 ### Minor Changes
 

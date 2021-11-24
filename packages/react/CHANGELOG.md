@@ -1,16 +1,10 @@
-# react-immutable-state-controller
-
-## 1.0.1
-
-### Patch Changes
-
-- 38a270b: Rename useNewSnapshotController back to useSnapshotController
-
-  Even though this is a breaking change, I've snuck it in as a patch as I only released 1.0.0 a minute ago.
+# empire-state-react
 
 ## 1.0.0
 
 ### Major Changes
+
+- Rename package to `empire-state-react`
 
 - 39836ff: Rename useController to useNewController, and add a new useController to re-render components when anything in the controller changes
 
@@ -24,7 +18,7 @@
   To update your code for this new version:
 
   - Search existing code for `withInitialValue` and `withFuncs` using a case-sensitive and match-whole-word search; check which instances are related
-    to `immutable-state-controller`; replace with the new function names.
+    to `empire-state-react`; replace with the new function names.
 
 ### Patch Changes
 

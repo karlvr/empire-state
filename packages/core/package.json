@@ -1,6 +1,6 @@
 {
-  "name": "immutable-state-controller",
-  "version": "1.0.0",
+  "name": "empire-state",
+  "version": "0.9.0",
   "description": "Immutable state change controller",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,10 +25,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/karlvr/immutable-state-controller.git"
+    "url": "https://github.com/karlvr/empire-state.git"
   },
   "bugs": {
-    "url": "https://github.com/karlvr/immutable-state-controller/issues"
+    "url": "https://github.com/karlvr/empire-state/issues"
   },
-  "homepage": "https://github.com/karlvr/immutable-state-controller/tree/main/packages/immutable-state-controller#readme"
+  "homepage": "https://github.com/karlvr/empire-state/tree/main/packages/core#readme"
 }

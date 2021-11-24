@@ -1,5 +1,5 @@
 {
-	"name": "immutable-state-controller-root",
+	"name": "empire-state-root",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -41,6 +41,6 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/karlvr/immutable-state-controller.git"
+		"url": "https://github.com/karlvr/empire-state.git"
 	}
 }

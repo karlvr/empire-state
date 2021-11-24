@@ -1,24 +1,24 @@
-# Immutable State Controller
+# Empire State
 
-[![npm version](https://badge.fury.io/js/immutable-state-controller.svg)](https://badge.fury.io/js/immutable-state-controller)
-[![Node CI](https://github.com/karlvr/immutable-state-controller/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/immutable-state-controller/actions/workflows/github-actions-build.yml)
+[![npm version](https://badge.fury.io/js/empire-state.svg)](https://badge.fury.io/js/empire-state)
+[![Node CI](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml)
 
 A small library to work with immutable state without a lot of boilerplate, but with a lot of type-safety using TypeScript.
 
-`immutable-state-controller` lets you view and mutate state using a `Controller`, while also providing access to immutable copies of state using `Snapshot`s.
+`empire-state` lets you view and mutate state using a `Controller`, while also providing access to immutable copies of state using `Snapshot`s.
 
 Each `Controller` or `Snapshot` provides a method to change the state. All changes are immediately visible in the `Controller`, but a `Snapshot` never changes.
 
 ## Installation
 
 ```shell
-npm install immutable-state-controller
+npm install empire-state
 ```
 
 ## Example
 
 ```typescript
-import { controllerWithInitialValue } from 'immutable-state-controller'
+import { controllerWithInitialValue } from 'empire-state'
 
 const controller = controllerWithInitialValue({
 	a: 'Hello world',

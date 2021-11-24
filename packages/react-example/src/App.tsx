@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Controller, useNewController, useSnapshot } from 'react-immutable-state-controller'
+import { Controller, useNewController, useSnapshot } from 'empire-state-react'
 
 interface Data {
 	one?: Data2

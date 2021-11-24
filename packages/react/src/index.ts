@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { controllerWithFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'immutable-state-controller'
-import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY } from 'immutable-state-controller/dist/type-utils'
-import { FunctionKeys } from 'immutable-state-controller/dist/utilities'
-export * from 'immutable-state-controller'
+import { controllerWithFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'empire-state'
+import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY } from 'empire-state/dist/type-utils'
+import { FunctionKeys } from 'empire-state/dist/utilities'
+export * from 'empire-state'
 
 /**
  * Create a new controller with undefined initial state.

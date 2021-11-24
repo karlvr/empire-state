@@ -1,6 +1,6 @@
 {
-  "name": "react-immutable-state-controller",
-  "version": "1.0.1",
+  "name": "empire-state-react",
+  "version": "0.9.0",
   "description": "React hooks for the Immutable state change controller",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
   "author": "Karl von Randow",
   "license": "MIT",
   "dependencies": {
-    "immutable-state-controller": "1.0.0"
+    "empire-state": "0.9.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.31",
@@ -24,10 +24,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/karlvr/immutable-state-controller.git"
+    "url": "https://github.com/karlvr/empire-state.git"
   },
   "bugs": {
-    "url": "https://github.com/karlvr/immutable-state-controller/issues"
+    "url": "https://github.com/karlvr/empire-state/issues"
   },
-  "homepage": "https://github.com/karlvr/immutable-state-controller/tree/main/packages/react#readme"
+  "homepage": "https://github.com/karlvr/empire-state/tree/main/packages/react#readme"
 }

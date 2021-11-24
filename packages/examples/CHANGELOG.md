@@ -1,5 +1,12 @@
 # examples
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies
+  - formalities@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

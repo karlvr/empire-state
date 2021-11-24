@@ -1,6 +1,6 @@
 {
 	"name": "formalities",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "React form helpers for immutable state",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -35,7 +35,7 @@
 		"url": "https://github.com/karlvr/formalities.git"
 	},
 	"bugs": {
-	  "url": "https://github.com/karlvr/formalities/issues"
+		"url": "https://github.com/karlvr/formalities/issues"
 	},
 	"homepage": "https://github.com/karlvr/formalities/tree/main/packages/formalities#readme",
 	"gitHead": "8a31be2466980619ab663d1d7d1f836f48049d07"

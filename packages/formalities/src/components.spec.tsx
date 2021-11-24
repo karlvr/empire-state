@@ -1,5 +1,5 @@
 import React from 'react'
-import { Snapshot, controllerWithInitialValue } from 'react-immutable-state-controller'
+import { Snapshot, controllerWithInitialValue } from 'empire-state-react'
 import { wrapComponent, Formalities } from './components'
 
 function TestComponent(props: Snapshot<number> & { name: string }) {

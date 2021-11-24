@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback } from 'react'
-import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY } from 'immutable-state-controller/dist/type-utils' // TODO change to an "spi" export
-import { Subtract } from 'immutable-state-controller/dist/utilities'
+import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY } from 'empire-state/dist/type-utils' // TODO change to an "spi" export
+import { Subtract } from 'empire-state/dist/utilities'
 import equal from 'fast-deep-equal'
-import { Controller, Snapshot, useSnapshot, SnapshotHookResult } from 'react-immutable-state-controller'
+import { Controller, Snapshot, useSnapshot, SnapshotHookResult } from 'empire-state-react'
 
 /** A ControllerProperty represents a controller property using a Controller and the name of a property it controls. */
 export interface ControllerProperty<T, K extends KEYORTHIS<T>> {

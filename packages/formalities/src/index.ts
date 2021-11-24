@@ -1,2 +1,2 @@
 export * from './components'
-export * from 'react-immutable-state-controller'
+export * from 'empire-state-react'

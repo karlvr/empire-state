@@ -1,8 +1,10 @@
 # Formalities
 
-A small library to build React forms with immutable state, type-safety and not a lot of boilerplate.
+A small package to build React forms with immutable state, type-safety and not a lot of boilerplate.
 
-Formalities makes use of [`immer`](https://github.com/immerjs/immer) and [`react-immutable-state-controller`](https://github.com/karlvr/immutable-state-controller/tree/main/packages/react) to create immutable state updates.
+Formalities makes use of [`immer`](https://github.com/immerjs/immer) and [`empire-state-react`](https://github.com/karlvr/empire-state/tree/main/packages/react) to create immutable state updates.
+
+You'll want to familiarise yourself with [`empire-state-react`](https://github.com/karlvr/empire-state/tree/main/packages/react) and [`empire-state`](https://github.com/karlvr/empire-state/tree/main/packages/core) before using this package.
 
 ## Install
 

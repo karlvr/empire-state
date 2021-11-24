@@ -1,8 +1,11 @@
 # Empire State - Forms
 
-A small package to build [React](https://reactjs.org) forms with immutable state, type-safety and not a lot of boilerplate.
+[![npm version](https://badge.fury.io/js/empire-state-forms.svg)](https://badge.fury.io/js/empire-state-forms)
+[![Node CI](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml)
 
-Formalities makes use of [`empire-state-react`](https://github.com/karlvr/empire-state/tree/main/packages/react) to create immutable state updates.
+A small package to build [React](https://reactjs.org) forms with immutable state, limited re-rendering, type-safety and no boilerplate.
+
+`empire-state-forms` makes use of [`empire-state-react`](https://github.com/karlvr/empire-state/tree/main/packages/react) to create immutable state updates.
 
 You'll want to familiarise yourself with [`empire-state-react`](../react) and [`empire-state`](../core) before using this package.
 
@@ -15,7 +18,7 @@ npm install empire-state-forms
 ## Usage
 
 ```typescript
-import { useNewController, useSnapshot, Formalities } from 'empire-state-forms'
+import { useNewController, useSnapshot, Text, Number } from 'empire-state-forms'
 
 function MyForm() {
 	const controller = useNewController({
@@ -28,7 +31,7 @@ function MyForm() {
 		evt.preventDefault()
 
 		const value = controller.value
-		// send the value to the server
+		// now send the value to the server or parent component
 	}, [controller])
 
 	return (
@@ -36,15 +39,15 @@ function MyForm() {
 			<div>
 				<label>Name:</label>
 				{/* Note that VS Code will autocomplete and type-check the prop attribute */}
-				<Formalities.Text type="text" controller={controller} prop="name" />
+				<Text type="text" controller={controller} prop="name" />
 			</div>
 			<div>
 				<label>Age:</label>
-				<Formalities.Number type="number" controller={controller} prop="age" updateOnBlur={true} />
+				<Number type="number" controller={controller} prop="age" updateOnBlur={true} />
 			</div>
 			<div>
 				<label>Address:</label>
-				<Formalities.Text type="text" controller={controller} prop="address" />
+				<Text type="text" controller={controller} prop="address" />
 			</div>
 			<button onClick={handleSave} />
 		</div>
@@ -54,20 +57,19 @@ function MyForm() {
 
 ## Components
 
-* `<Formalities.Text>` an `<input>` element for `string` properties
-* `<Formalities.Number>` an `<input>` element for `number` properties
-* `<Formalities.Checkable>` an `<input>` element for checkboxes
-* `<Formalities.MultiCheckable>` an `<input>` element for checkboxes for array properties
-* `<Formalities.TextArea>` a `<textarea>` element for `string` properties
-* `<Formalities.Select>` a `<select>` element
-* `<Formalities.Indexed>` a component for custom array properties
+* `<Text>` an `<input>` element for `string` properties
+* `<Number>` an `<input>` element for `number` properties
+* `<Checkable>` an `<input>` element for checkboxes
+* `<MultiCheckable>` an `<input>` element for checkboxes for array properties
+* `<TextArea>` a `<textarea>` element for `string` properties
+* `<Select>` a `<select>` element
+* `<Indexed>` a component for custom array properties
 
 See the [examples](../forms-examples/src) for examples of using each of these components.
 
-## The case for Formalities
+## The case for `empire-state-forms`
 
-This is how we might manage form state in React components, while maintaining type-safety with
-TypeScript:
+Here is a comparison to the code sample above with how we might normally manage form state in React components, while maintaining type-safety with TypeScript:
 
 ```typescript
 function MyForm() {
@@ -112,23 +114,22 @@ function MyForm() {
 }
 ```
 
-And we could be using [`immer`](https://github.com/immerjs/immer) so we have immutable state,
-but that's even more boiler-plate.
+There's a lot more code, and complex code, to deal with. And we could be using [`immer`](https://github.com/immerjs/immer) so we have immutable state, but that's even more boilerplate.
 
 ## Examples
 
-### Component state
+### `useNewController`
 
-Using the hook `useNewController` we create a new `Controller` that reads and updates from the component's state.
+Using the hook `useNewController` we create a new `Controller` with an initial state. Changes to the controllers value do _not_ cause the component to re-render.
 
-In the component we use the Formalities components to create normal `<input>` elements,
+In the component we use the `empire-state-forms` components to create normal `<input>` elements,
 but bound to the value of one of the `Controller`'s properties, and reporting changes back 
 to the component state.
 
-The `Formalities` components supports all of the regular `<input>` properties.
+The `empire-state-forms` components supports all of the regular `<input>` properties.
 
 ```typescript
-import { useNewController, Formalities } from 'empire-state-forms'
+import { useNewController, Text } from 'empire-state-forms'
 
 interface MyFormState {
 	name: string
@@ -146,11 +147,11 @@ function MyForm() {
 		<div>
 			<div>
 				<label>Name:</label>
-				<Formalities.Text controller={controller} prop="name" />
+				<Text controller={controller} prop="name" />
 			</div>
 			<div>
 				<label>Address:</label>
-				<Formalities.Text controller={controller} prop="address" />
+				<Text controller={controller} prop="address" />
 			</div>
 		</div>
 	)
@@ -158,11 +159,11 @@ function MyForm() {
 ```
 
 `useNewController` returns a `Controller` with an initial value. The type of the `Controller` is
-determined from that initial value.
+determined from that initial value, or you can specify the type, e.g. `useNewController<Type>(...)`.
 
-The `<Formalities.Text>` component specifies the `Controller` instance via the `controller` prop, and which property
+The `<Text>` component specifies the `Controller` instance via the `controller` prop, and which property
 inside the controller via the `prop` prop. Due to the type-safety of the `Controller` the `prop` prop can only 
-accept appropriate value, and VS Code will autocomplete valid `prop` values for you.
+accept appropriate value, and VS Code will autocomplete valid `prop` values for you. If the controller itself contains the value you want to use, omit the `prop` prop.
 
 ### Component props
 
@@ -191,8 +192,8 @@ function MyFormSection(props: MyFormSectionProps) {
 		<div>
 			<div>
 				<label>Full name:</label>
-				<Formalities.Text controller={controller} prop="givenName" placeholder="Given name" />
-				<Formalities.Text controller={controller} prop="familyName" placeholder="Family name" />
+				<Text controller={controller} prop="givenName" placeholder="Given name" />
+				<Text controller={controller} prop="familyName" placeholder="Family name" />
 			</div>
 		</div>
 	)
@@ -201,7 +202,7 @@ function MyFormSection(props: MyFormSectionProps) {
 
 ### Custom components
 
-In the examples above we've used Formalities's `<Formalities.String>` component replacement for the standard `<input>`
+In the examples above we've used `empire-state-forms`'s `<Text>` component replacement for the standard `<input>`
 element. You can also create your own components that interact with the controller:
 
 ```typescript
@@ -226,10 +227,9 @@ function MyTextField(props: MyTextFieldProps) {
 export default wrapComponent(MyTextField)
 ```
 
-The last line above uses Formalities's to wrap `MyTextField`, which accepts props `value` and `change`, to create a component that instead accepts
-props `controller` and `prop`.
+The last line above uses `empire-state-forms`'s to wrap `MyTextField`, which accepts props `value` and `change`, to create a component that instead accepts props `controller` and `prop`.
 
-It can then be used like `<Formalities.Text>` in the examples above, as in:
+It can then be used like `<Text>` in the examples above, as in:
 
 ```typescript
 import MyTextField from './MyTextField'
@@ -254,9 +254,8 @@ function MyForm() {
 ```
 
 Now when the `MyTextField` component wants to change its value, it calls the `change` function in its
-props, which invokes the controller, which updates the state on the `MyForm` component, triggering React
-to update, which updates the form.
+props, which updates the controller.
 
 ### More examples
 
-See the `packages/examples` directory for more examples.
+See the [examples](../forms-examples) for more examples.

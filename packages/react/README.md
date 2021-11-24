@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/empire-state-react.svg)](https://badge.fury.io/js/empire-state-react)
 [![Node CI](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml)
 
-A small library to manage immutable state in a tree of React components without a lot of boilerplate, but with a lot of type-safety.
+A small package to manage immutable state in a tree of [React](https://reactjs.org) components without a lot of boilerplate, but with a lot of type-safety.
 
 ## Installation
 

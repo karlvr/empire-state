@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/empire-state.svg)](https://badge.fury.io/js/empire-state)
 [![Node CI](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml/badge.svg)](https://github.com/karlvr/empire-state/actions/workflows/github-actions-build.yml)
 
-A small library to work with immutable state without a lot of boilerplate, but with a lot of type-safety using TypeScript.
+A small package to work with immutable state without a lot of boilerplate, but with a lot of type-safety using TypeScript.
 
 `empire-state` lets you view and mutate state using a `Controller`, while also providing access to immutable copies of state using `Snapshot`s.
 

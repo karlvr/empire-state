@@ -34,5 +34,9 @@
 		"type": "git",
 		"url": "https://github.com/karlvr/formalities.git"
 	},
+	"bugs": {
+	  "url": "https://github.com/karlvr/formalities/issues"
+	},
+	"homepage": "https://github.com/karlvr/formalities/tree/main/packages/formalities#readme",
 	"gitHead": "8a31be2466980619ab663d1d7d1f836f48049d07"
 }

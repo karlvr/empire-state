@@ -77,12 +77,12 @@ importers:
 
   packages/formalities:
     specifiers:
-      empire-state: ^0.9.0
-      empire-state-react: ^0.9.0
+      empire-state: ^1.0.0
+      empire-state-react: ^1.0.0
       fast-deep-equal: ^3.1.1
     dependencies:
-      empire-state: 0.9.0
-      empire-state-react: 0.9.0_react@17.0.2
+      empire-state: 1.0.0
+      empire-state-react: 1.0.0_react@17.0.2
       fast-deep-equal: 3.1.3
 
 packages:
@@ -3282,17 +3282,17 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
-  /empire-state-react/0.9.0_react@17.0.2:
-    resolution: {integrity: sha512-W6+osRrT+RDGDAzOMzA47e4vBXP+Kufp31LaCo34St8rl5kGYOOPZ4bbiWtjeOYSvxGA2yi4AVLaoEBuxD3O9A==}
+  /empire-state-react/1.0.0_react@17.0.2:
+    resolution: {integrity: sha512-1taFnn8mJsuUdrMqhqd1CZqtFjViL8okYtml0nHtftMDd2ZVKGCQCgLal9TWSpDXfWCa87xUPcaaLFZwW5Ycng==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
-      empire-state: 0.9.0
+      empire-state: 1.0.0
       react: 17.0.2
     dev: false
 
-  /empire-state/0.9.0:
-    resolution: {integrity: sha512-MAR4LBGZUJbXUUMOKKHelivLKmHOMls/RT2aUMkuvXndWsA/mjF9YRt6+79lcnlHN7p9NEtpwxsIckBiq5mGYg==}
+  /empire-state/1.0.0:
+    resolution: {integrity: sha512-qvMbOyN41CgIGwEew6wOhTle8CgNHyHUKDd2oPLjr+J0mHuok1sgETe5BomFkA2ljyywp/9FuC6Ukabj9AcvsA==}
     dependencies:
       immer: 9.0.6
     dev: false

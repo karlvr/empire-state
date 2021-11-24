@@ -1,6 +1,6 @@
 {
 	"name": "empire-state-forms",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "React form helpers for immutable state",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -26,7 +26,7 @@
 		"empire-state-react": "1.0.0"
 	},
 	"devDependencies": {
-	  "rimraf": "^3.0.2"
+		"rimraf": "^3.0.2"
 	},
 	"peerDependencies": {
 		"react": ">=16.8",

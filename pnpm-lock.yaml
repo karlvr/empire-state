@@ -83,7 +83,7 @@ importers:
       webpack-cli: ^4.9.1
       webpack-dev-server: ^4.3.1
     dependencies:
-      empire-state-forms: link:../forms
+      empire-state-forms: 1.0.0_react-dom@17.0.2+react@17.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     devDependencies:
@@ -3335,6 +3335,34 @@ packages:
     resolution: {integrity: sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==}
     engines: {node: '>= 4'}
     dev: true
+
+  /empire-state-forms/1.0.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-ESYwiS/dyAbmqZ3I/Iq2SdfE5VNCpV4xSCpPE3Nwtgl7Ngcg4pdPVy2x4q9mJtijbxAjUpu5+XthlD/A8x7TcQ==}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      empire-state: 1.0.0
+      empire-state-react: 1.0.0_react@17.0.2
+      fast-deep-equal: 3.1.3
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /empire-state-react/1.0.0_react@17.0.2:
+    resolution: {integrity: sha512-1taFnn8mJsuUdrMqhqd1CZqtFjViL8okYtml0nHtftMDd2ZVKGCQCgLal9TWSpDXfWCa87xUPcaaLFZwW5Ycng==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      empire-state: 1.0.0
+      react: 17.0.2
+    dev: false
+
+  /empire-state/1.0.0:
+    resolution: {integrity: sha512-qvMbOyN41CgIGwEew6wOhTle8CgNHyHUKDd2oPLjr+J0mHuok1sgETe5BomFkA2ljyywp/9FuC6Ukabj9AcvsA==}
+    dependencies:
+      immer: 9.0.6
+    dev: false
 
   /encodeurl/1.0.2:
     resolution: {integrity: sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=}

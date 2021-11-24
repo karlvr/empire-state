@@ -1,5 +1,11 @@
 # examples
 
+## 0.9.6
+
+### Patch Changes
+
+- 078a9be: Export all components in default export rather than only in Formalities const
+
 ## 0.9.5
 
 ### Patch Changes

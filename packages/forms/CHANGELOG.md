@@ -1,5 +1,11 @@
 # empire-state-forms
 
+## 1.0.1
+
+### Patch Changes
+
+- 078a9be: Export all components in default export rather than only in Formalities const
+
 ## 1.0.0
 
 ### Major Changes

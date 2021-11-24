@@ -8,7 +8,7 @@ import { Controller, Snapshot, useSnapshot, SnapshotHookResult } from 'empire-st
 /** A ControllerProperty represents a controller property using a Controller and the name of a property it controls. */
 export interface ControllerProperty<T, K extends KEYORTHIS<T>> {
 	controller: Controller<T>
-	prop: K
+	prop?: K
 }
 
 export type AnyControllerProperty<T> = ControllerProperty<T, KEYORTHIS<T>>

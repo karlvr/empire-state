@@ -38,6 +38,9 @@ test('components can be used', () => {
 			<Formalities.Indexed controller={testController} prop="e" />
 			<Formalities.Indexed controller={testController} prop="f" />
 			<Formalities.Generic controller={testController} prop="b" convert={value => parseInt(value)} display={value => `${value}`} />
+
+			<Formalities.Text controller={testController.get('d')} />
+			<Formalities.Number controller={testController.get('b')} />
 		</>
 	)
 	expect(all).not.toBeUndefined()

@@ -145,6 +145,29 @@ describe('change listeners', () => {
 		expect(childFired).toEqual(1)
 	})
 
+	it('only notifies once when using an indexed controller', () => {
+		const state = {
+			a: [{
+				b: 'Hello world',
+			}],
+		}
+
+		let eventCount = 0
+
+		const changeListener = () => {
+			eventCount += 1
+		}
+
+		const controller = controllerWithInitialValue(state)
+
+		const controller2 = controller.get('a', 0)
+		const controller3 = controller2.get('b')
+		controller3.addChangeListener(changeListener)
+		controller3.setValue('Goodbye world')
+
+		expect(eventCount).toEqual(1)
+	})
+
 	it('is chainable', () => {
 		const state = {
 			a: 'Hello world',

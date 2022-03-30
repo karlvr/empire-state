@@ -219,7 +219,7 @@ export class ControllerImpl<T> implements Controller<T> {
 							result[nameOrIndex] = newValue
 							return produce(result, draft => draft) as any as T
 						})()
-					this.setValue(parentNewValue)
+					this.internalSetValue(parentNewValue, true)
 				}
 				const currentValue = this.value
 				const value: any = currentValue !== undefined && currentValue !== null ? (currentValue as any)[nameOrIndex] : undefined

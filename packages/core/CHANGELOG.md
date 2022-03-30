@@ -1,5 +1,11 @@
 # empire-state
 
+## 1.0.1
+
+### Patch Changes
+
+- c3ee2e7: Fix duplicate sending of notifications to change listeners when using indexed properties
+
 ## 1.0.0
 
 ### Major Changes

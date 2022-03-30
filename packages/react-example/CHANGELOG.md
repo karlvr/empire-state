@@ -1,5 +1,11 @@
 # examples
 
+## 0.9.7
+
+### Patch Changes
+
+- empire-state-react@1.0.1
+
 ## 0.9.6
 
 ### Patch Changes

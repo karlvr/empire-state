@@ -1,5 +1,18 @@
 # empire-state-forms
 
+## 1.1.0
+
+### Minor Changes
+
+- ab09667: Rename useNewController to useControllerWithInitialState
+
+### Patch Changes
+
+- Updated dependencies [ab09667]
+- Updated dependencies [d868af9]
+- Updated dependencies [9825294]
+  - empire-state-react@1.1.0
+
 ## 1.0.2
 
 ### Patch Changes

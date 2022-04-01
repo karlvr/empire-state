@@ -1,5 +1,16 @@
 # empire-state-react
 
+## 1.1.0
+
+### Minor Changes
+
+- ab09667: Rename useNewController to useControllerWithInitialState
+- d868af9: Add useControllerWithValue hook
+
+### Patch Changes
+
+- 9825294: Improve useState refresh pattern
+
 ## 1.0.1
 
 ### Patch Changes

@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useControllerWithInitialState, Text, useSnapshot } from 'empire-state-forms'
+import { useControllerWithInitialState, Text, useControllerValue } from 'empire-state-forms'
 
 interface MyFormState {
 	names?: string[]
@@ -13,7 +13,7 @@ export default function Example6() {
 
 	const controller = useControllerWithInitialState<MyFormState>({})
 	const namesController = controller.get('names')
-	const [names] = useSnapshot(namesController)
+	const [names] = useControllerValue(namesController)
 
 	function addNew(evt: React.MouseEvent) {
 		const namesSnapshot = namesController.snapshot()

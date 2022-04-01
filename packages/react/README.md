@@ -23,9 +23,9 @@ Another difficulty with React’s `useState` is that the entire component subtre
 
 ## Solution
 
-With `empire-state-react` you create one or more _controllers_ to contain state in a component, or at the root of a _tree_ of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useSnapshot`).
+With `empire-state-react` you create one or more _controllers_ to contain state in a component, or at the root of a _tree_ of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useControllerValue`).
 
-The `useSnapshot` hook works a little like React’s `useState`, except instead of creating a state value that’s local to the component, it always reflects and updates the value in the controller, where that controller has possibly been created in the current component or passed as `props` from a parent component.
+The `useControllerValue` hook provides access to a value from the controller, and a function to change that value. When the value changes your component will re-render.
 
 ## Example
 
@@ -63,9 +63,9 @@ function EditPersonComponent({ person: Person; onChange: (newPerson: Person) => 
 }
 
 function EditName(props: { controller: Controller<Name> }) {
-	const [givenName, changeGivenName] = useSnapshot(controller)
-	const [middleName, changeMiddleName] = useSnapshot(controller)
-	const [familyName, changeFamilyName] = useSnapshot(controller)
+	const [givenName, changeGivenName] = useControllerValue(controller)
+	const [middleName, changeMiddleName] = useControllerValue(controller)
+	const [familyName, changeFamilyName] = useControllerValue(controller)
 
 	const handleGivenName = useCallback(function(evt: React.ChangeEvent<HTMLInputElement>) {
 		changeGivenName(evt.target.value)
@@ -81,7 +81,7 @@ In this example the `EditPersonComponent` will not re-render even though the `gi
 
 ## Immutability
 
-Controllers use [`immer`](https://github.com/immerjs/immer) to ensure the immutability of the values they contain. The values that you get from a controller or snapshot will be immutable (frozen), so if you’re mutating an array or object value, you’ll need to use `immer`’s `produce` method to mutate it, or spread / copy it.
+Controllers use [`immer`](https://github.com/immerjs/immer) to ensure the immutability of the values they contain. The values that you get from a controller are immutable (frozen), so if you’re mutating an array or object value, you’ll need to use `immer`’s `produce` method to mutate it, or spread / copy it.
 
 ## Hooks
 
@@ -91,7 +91,7 @@ Controllers use [`immer`](https://github.com/immerjs/immer) to ensure the immuta
 
 The `Controller` has a `value` property to access the current state, and a `setValue` function to change that state. Changes to the `Controller`’s `value` are _immediately_ visible in code, but they _DO NOT_ trigger a re-render in React, unlike `useState`.
 
-A `useControllerWithInitialState` hook always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useSnapshot` to re-render when state changes.
+A `useControllerWithInitialState` hook always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useControllerValue` to re-render when state changes.
 
 ### `useControllerWithValue`
 
@@ -99,7 +99,7 @@ A `useControllerWithInitialState` hook always returns the _same_ `Controller` ob
 
 The `Controller` has a `value` property to access the current state, and a `setValue` function to change that state. Changes to the `Controller`’s `value` are _immediately_ visible in code, but they _DO NOT_ trigger a re-render in React.
 
-A `useControllerWithValue` hook always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useSnapshot` to re-render when state changes.
+A `useControllerWithValue` hook always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useControllerValue` to re-render when state changes.
 
 If the `value` parameter changes, the `Controller`'s state will be reset to the new value.
 
@@ -109,14 +109,14 @@ If the `value` parameter changes, the `Controller`'s state will be reset to the 
 `useController` is useful if you're using the `Controller`'s `map`, `find` or `findIndex` methods and therefore need to re-render if the
 controller's value changes.
 
-### `useSnapshot`
+### `useControllerValue`
 
-`useSnapshot(controller)` and `useSnapshot(controller, property)` returns an array containing the current value (immutable) and a function to change the value (exactly like React’s `useState`).
+`useControllerValue(controller)` and `useControllerValue(controller, property)` returns an array containing the current value (immutable) and a function to change the value (exactly like React’s `useState`).
 
 The value originates from the `Controller`; either the whole value of the controller or one of its properties.
 
-If the value is changed, either using `useSnapshot`’s `change` function, or any other snapshot’s `change` function, or even using the `Controller`’s own `setValue` function, the component _WILL_ re-render.
+If the value is changed, either using `useControllerValue`’s `change` function or the `Controller`’s `setValue` function, the component _WILL_ re-render.
 
 ## Reference
 
-See [`empire-state`](../core) for more information and an API reference for `Controller`s and `Snapshot`s.
+See [`empire-state`](../core) for more information and an API reference for `Controller`s.

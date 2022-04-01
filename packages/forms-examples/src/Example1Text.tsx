@@ -2,7 +2,7 @@
  * An example of using empire-state-forms to manage a simple form state.
  */
 
-import { useControllerWithInitialState, useSnapshot, Text, Number, TextArea } from 'empire-state-forms'
+import { useControllerWithInitialState, useControllerValue, Text, Number, TextArea } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {
@@ -14,7 +14,7 @@ interface MyFormState {
 const Example1: React.FC = function() {
 
 	const controller = useControllerWithInitialState<MyFormState>({})
-	const [state] = useSnapshot(controller)
+	const [state] = useControllerValue(controller)
 
 	return (
 		<div>

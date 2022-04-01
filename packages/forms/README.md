@@ -18,7 +18,7 @@ npm install empire-state-forms
 ## Usage
 
 ```typescript
-import { useControllerWithInitialState, useSnapshot, Text, Number } from 'empire-state-forms'
+import { useControllerWithInitialState, useControllerValue, Text, Number } from 'empire-state-forms'
 
 function MyForm() {
 	const controller = useControllerWithInitialState({

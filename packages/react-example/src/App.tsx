@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Controller, useControllerWithInitialState, useSnapshot } from 'empire-state-react'
+import { Controller, useControllerWithInitialState, useControllerValue } from 'empire-state-react'
 
 interface Data {
 	one?: Data2
@@ -12,7 +12,7 @@ interface Data2 {
 
 const SubCom = function(props: { name: string; valueName: string; controller: Controller<Data2 | undefined> }) {
 	const { name, valueName, controller } = props
-	const [d, changeD] = useSnapshot(controller, 'd')
+	const [d, changeD] = useControllerValue(controller, 'd')
 
 	const renders = useRef(0)
 	renders.current += 1
@@ -36,7 +36,7 @@ const SubCom = function(props: { name: string; valueName: string; controller: Co
 
 const SubCom2 = function(props: { name: string; valueName: string; controller: Controller<Data | undefined>; prop: keyof Data }) {
 	const { name, valueName, controller, prop } = props
-	const [value, changeValue] = useSnapshot<Data | undefined, keyof Data, Data2 | undefined>(controller, prop)
+	const [value, changeValue] = useControllerValue<Data | undefined, keyof Data, Data2 | undefined>(controller, prop)
 
 	const renders = useRef(0)
 	renders.current += 1

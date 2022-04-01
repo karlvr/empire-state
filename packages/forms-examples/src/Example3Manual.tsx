@@ -2,7 +2,7 @@
  * An example of using empire-state-react manually; without the helper React components.
  */
 
-import { useControllerWithInitialState, useSnapshot } from 'empire-state-forms'
+import { useControllerWithInitialState, useControllerValue } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {
@@ -18,7 +18,7 @@ export default function Example3() {
 	const ageSnapshot = controller.snapshot('age')
 	const addressSnapshot = controller.snapshot('address')
 
-	const [state] = useSnapshot(controller)
+	const [state] = useControllerValue(controller)
 	return (
 		<div>
 			<h1>Example 3: Manual</h1>

@@ -2,7 +2,7 @@
  * An example of repeating fields using Indexed component.
  */
 
-import { useControllerWithInitialState, Text, Indexed, Controller, IndexedCursor, IndexedActions, useSnapshot } from 'empire-state-forms'
+import { useControllerWithInitialState, Text, Indexed, Controller, IndexedCursor, IndexedActions, useControllerValue } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {
@@ -12,7 +12,7 @@ interface MyFormState {
 export default function Example7() {
 
 	const controller = useControllerWithInitialState<MyFormState>({})
-	const [state] = useSnapshot(controller)
+	const [state] = useControllerValue(controller)
 
 	function renderChild(controller: Controller<string>, cursor: IndexedCursor, actions: IndexedActions<string>) {
 		return (

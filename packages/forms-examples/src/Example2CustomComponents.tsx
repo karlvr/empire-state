@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useControllerWithInitialState, Text, Number, wrapComponent, Snapshot, useSnapshotController, useSnapshot } from 'empire-state-forms'
+import { useControllerWithInitialState, Text, Number, wrapComponent, Snapshot, useSnapshotController, useControllerValue } from 'empire-state-forms'
 
 interface MyFormState {
 	personalDetails?: PersonalDetails
@@ -96,7 +96,7 @@ const WorkDetailsComponent = wrapComponent(function(props: Snapshot<WorkDetails 
 
 const Example2: React.FC = function() {
 	const controller = useControllerWithInitialState<MyFormState>({})
-	const [state] = useSnapshot(controller)
+	const [state] = useControllerValue(controller)
 
 	function renderAddress(address: Address) {
 		return (

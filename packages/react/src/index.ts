@@ -9,7 +9,7 @@ export * from 'empire-state'
  * Create a controller with undefined initial state.
  * 
  * The controller state is mutable and WILL NOT trigger component re-render when it changes.
- * Use useSnapshot to get access to state and to re-render when state changes.
+ * Use useControllerValue to get access to state and to re-render when state changes.
  */
 export function useControllerWithInitialState<T = undefined>(): Controller<T | undefined>
 
@@ -21,7 +21,7 @@ export function useControllerWithInitialState<T = undefined>(): Controller<T | u
  * update the controller's value when you need to.
  * 
  * The controller state is mutable and WILL NOT trigger component re-render when it changes.
- * Use useSnapshot to get access to state and to re-render when state changes.
+ * Use useControllerValue to get access to state and to re-render when state changes.
  * @param initialState 
  * @returns 
  */
@@ -103,7 +103,7 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	currentSnapshotSetValue.current = snapshot.change
 
 	/* We use useMemo so that the controller in the calling component doesn't change and doesn't trigger a re-render when we use it in deps in a component.
-	   We rely on the useSnapshot hook to trigger re-renders. Or, if a controller is based on component state, then the component state changing
+	   We rely on the useControllerValue hook to trigger re-renders. Or, if a controller is based on component state, then the component state changing
 	   will trigger the re-render.
 	 */
 	const mainController = useMemo(
@@ -124,40 +124,39 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	   we must remove all of the change listeners as the render pass will add them again.
 
 	   We only remove the _default_ change listeners so we don't remove the change listeners
-	   that are added by `useSnapshot` below, as they manage their own lifecycle using `useEffect`.
+	   that are added by `useControllerValue` below, as they manage their own lifecycle using `useEffect`.
 	 */
 	mainController.removeAllChangeListeners(DEFAULT_CHANGE_LISTENER_TAG)
 	return mainController
 }
 
-export type SnapshotHookResult<S> = [S, (newValue: S) => void]
+export type ControllerValueHookResult<S> = [S, (newValue: S) => void]
 
 /**
- * Returns a snapshot of the whole value in the controller.
+ * Returns the controller's value, and a function to change the value. The component will re-render when the value changes.
  */
-export function useSnapshot<T>(controller: Controller<T>): SnapshotHookResult<T>
+export function useControllerValue<T>(controller: Controller<T>): ControllerValueHookResult<T>
 /**
- * Returns a snapshot of the value at the given index in the controller's value, assuming the controller contains an array value.
+ * Returns the value at the given index in the controller's value, assuming the controller contains an array value,
+ * and a function to change that value.
  */
-export function useSnapshot<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): SnapshotHookResult<S>
+export function useControllerValue<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): ControllerValueHookResult<S>
 /**
- * Returns a snapshot of the whole value in the controller.
+ * Returns a the value of the given property in the controller's value, assuming the controller contains an object value,
+ * and a function to change that value.
  */
-// export function useSnapshot<T>(controller: Controller<T>, name: 'this'): Snapshot<T>
+export function useControllerValue<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): ControllerValueHookResult<S>
 /**
- * Returns a snapshot of the value of the given property in the controller's value, assuming the controller contains an object value.
+ * Returns the value at the given index in the value of the given property in the controller's value,
+ * assuming the controller contains an object value and the property value is an array value,
+ * and a function to change that value.
  */
-export function useSnapshot<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): SnapshotHookResult<S>
+export function useControllerValue<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): ControllerValueHookResult<S>
 /**
- * Returns a snapshot of the value at the given index in the value of the given property in the controller's value,
- * assuming the controller contains an object value and the property value is an array value.
+ * The combination of all controller value methods so you can call the hook with arguments that can match some combination that
+ * is supported.
  */
-export function useSnapshot<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): SnapshotHookResult<S>
-/**
- * The combination of all snapshot methods so you can call snapshot with arguments that can match some combination that
- * snapshot supports.
- */
-export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): SnapshotHookResult<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
+export function useControllerValue<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): ControllerValueHookResult<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
 	const [, setRefresh] = useState(0)
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -169,7 +168,7 @@ export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, name
 			setRefresh(n => n + 1)
 		}
 		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
-		snapshotController.addChangeListener(changeListener, 'useSnapshot')
+		snapshotController.addChangeListener(changeListener, 'useControllerValue')
 		
 		return function() {
 			snapshotController.removeChangeListener(changeListener)

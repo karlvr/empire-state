@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY } from 'empire-state/dist/type-utils' // TODO change to an "spi" export
 import { Subtract } from 'empire-state/dist/utilities'
 import equal from 'fast-deep-equal'
-import { Controller, Snapshot, useSnapshot, SnapshotHookResult } from 'empire-state-react'
+import { Controller, Snapshot, useControllerValue, ControllerValueHookResult } from 'empire-state-react'
 
 /** A ControllerProperty represents a controller property using a Controller and the name of a property it controls. */
 export interface ControllerProperty<T, K extends KEYORTHIS<T>> {
@@ -83,7 +83,7 @@ interface GenericInputProps<T, K extends KEYORTHIS<T>> extends HTMLInputProps, C
 
 export function Generic<T, K extends KEYORTHIS<T>>(props: GenericInputProps<T, K>) {
 	const { controller, prop, convert, display, ...rest } = props
-	const [value, changeValue] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<PROPERTYORTHIS<T, K>>
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<PROPERTYORTHIS<T, K>>
 	return (
 		<BaseInput
 			value={value}
@@ -102,7 +102,7 @@ interface TextProps<T> extends HTMLInputProps, ControllerPropertyOfType<T, TextT
 
 export function Text<T>(props: TextProps<T>) {
 	const { controller, prop, ...rest } = props
-	const [value, changeValue] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<TextType>
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<TextType>
 
 	return <BaseInput
 		value={value}
@@ -120,7 +120,7 @@ interface NumberProps<T> extends HTMLInputProps, ControllerPropertyOfType<T, Num
 
 export function Number<T>(props: NumberProps<T>) {
 	const { controller, prop, ...rest } = props
-	const [value, changeValue] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<NumberType>
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<NumberType>
 
 	return <BaseInput
 		value={value}
@@ -150,7 +150,7 @@ interface CheckableProps<T, V> extends HTMLInputProps, ControllerPropertyOfType<
 
 export function Checkable<T, V>(props: CheckableProps<T, V>) {
 	const { controller, prop, checkedValue, uncheckedValue, ...rest } = props
-	const [value, changeValue] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<V>
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<V>
 
 	const onChange = useCallback(function(evt: React.ChangeEvent<HTMLInputElement>) {
 		if (evt.target.checked) {
@@ -186,7 +186,7 @@ function myIndexOf<T>(haystack: T[], needle: T): number {
 
 export function MultiCheckable<T, V>(props: MultiCheckableProps<T, V>) {
 	const { controller, prop, checkedValue, uncheckedValue, ...rest } = props
-	const [value, changeValue] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<V[]>
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<V[]>
 	const checked = value ? myIndexOf(value, checkedValue) !== -1 : false
 
 	const onChange = useCallback(function(evt: React.ChangeEvent<HTMLInputElement>) {
@@ -217,7 +217,7 @@ interface TextAreaProps<T> extends HTMLTextAreaProps, ControllerPropertyOfType<T
 
 export function TextArea<T>(props: TextAreaProps<T>) {
 	const { controller, prop, ...rest } = props
-	const [value, changeValue] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<TextType>
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<TextType>
 
 	return (
 		<BaseTextArea
@@ -265,7 +265,7 @@ type SelectProps<T, K extends KEYORTHIS<T>> = SelectProps1<T, K> | SelectProps2<
 
 export function Select<T, K extends KEYORTHIS<T>>(props: SelectProps<T, K>) {
 	const { controller, prop, options, display, ...rest } = props
-	const [value, changeValue] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<PROPERTYORTHIS<T, K>>
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<PROPERTYORTHIS<T, K>>
 
 	const selectedIndex = options ? 
 		isOptionTypeObjects(options, props)
@@ -353,7 +353,7 @@ interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProperty<T, 
 export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined>>(props: IndexedProps<T, K>) {
 	const { controller, prop, renderEach, renderBefore, renderAfter, RenderEach, RenderBefore, RenderAfter } = props
 	const actualController = prop !== 'this' ? controller.get(prop as KEY<T>) : controller
-	const [value, changeValue] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<any[] | undefined>
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<any[] | undefined>
 	const arrayValue = value || []
 
 	const actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>> = {
@@ -417,7 +417,7 @@ export function wrapComponent<V, P extends Snapshot<V>>(component: React.FC<Snap
 	return <T, K extends COMPATIBLEKEYS<T, V>>(props: Subtract<P, Snapshot<V>> & ControllerProperty<T, K>) => {
 		const { controller, prop, ...rest } = props
 		// const snapshot = takeSnapshot(controller, prop) as Snapshot<V>
-		const [value, change] = useSnapshot(controller, prop as unknown as KEY<T>) as SnapshotHookResult<V>
+		const [value, change] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<V>
 
 		const componentProps = {
 			value,

@@ -6,7 +6,7 @@ import { FunctionKeys } from 'empire-state/dist/utilities'
 export * from 'empire-state'
 
 /**
- * Create a new controller with undefined initial state.
+ * Create a controller with undefined initial state.
  * 
  * The controller state is mutable and WILL NOT trigger component re-render when it changes.
  * Use useSnapshot to get access to state and to re-render when state changes.
@@ -14,7 +14,7 @@ export * from 'empire-state'
 export function useControllerWithInitialState<T = undefined>(): Controller<T | undefined>
 
 /**
- * Create a new controller with the given initial state.
+ * Create a controller with the given initial state.
  * 
  * Like React's useState, the initial state is just an initial state. The controller's state will
  * NOT be changed if the value of the initial state changes. You should use a useEffect block to
@@ -35,6 +35,31 @@ export function useControllerWithInitialState<T>(initialState?: T): Controller<T
 			value.current = newValue
 		},
 	})
+}
+
+/**
+ * Create a controller with the given value. The controller state can be changed as normal.
+ * The controller state will be reset to the given value if it changes.
+ * @param value 
+ * @returns 
+ */
+export function useControllerWithValue<T>(value: T): Controller<T> {
+	const ref = useRef(value)
+	const [, setRefresh] = useState(0)
+
+	const controller = createMemoisedController({
+		value: ref.current,
+		change: (newValue) => {
+			ref.current = newValue
+		},
+	})
+
+	/* Check if the `value` changes from what we previously saw, and reset the controller value if it does */
+	if (value !== ref.current) {
+		ref.current = value
+		setRefresh(n => n + 1)
+	}
+	return controller
 }
 
 /**

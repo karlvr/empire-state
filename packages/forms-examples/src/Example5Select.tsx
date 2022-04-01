@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useNewController, Select, useSnapshot } from 'empire-state-forms'
+import { useControllerWithInitialState, Select, useSnapshot } from 'empire-state-forms'
 
 interface MyFormState {
 	likeAnimals?: boolean
@@ -19,7 +19,7 @@ const INITIAL_STATE: MyFormState = {
 
 export default function Example4() {
 
-	const controller = useNewController(INITIAL_STATE)
+	const controller = useControllerWithInitialState(INITIAL_STATE)
 	const [state] = useSnapshot(controller)
 
 	return (

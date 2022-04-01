@@ -2,7 +2,7 @@
  * An example of using empire-state-forms to manage undefined properties.
  */
 
-import { Text, Snapshot, wrapComponent, useNewController, useSnapshotController, useSnapshot } from 'empire-state-forms'
+import { Text, Snapshot, wrapComponent, useControllerWithInitialState, useSnapshotController, useSnapshot } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {
@@ -22,7 +22,7 @@ const WrappedUndefinedSnapshot = wrapComponent(UndefinedSnapshot)
 
 export default function Example8() {
 
-	const controller = useNewController<MyFormState>({})
+	const controller = useControllerWithInitialState<MyFormState>({})
 	const [state] = useSnapshot(controller)
 
 	return (

@@ -11,7 +11,7 @@ export * from 'empire-state'
  * The controller state is mutable and WILL NOT trigger component re-render when it changes.
  * Use useSnapshot to get access to state and to re-render when state changes.
  */
-export function useNewController<T = undefined>(): Controller<T | undefined>
+export function useControllerWithInitialState<T = undefined>(): Controller<T | undefined>
 
 /**
  * Create a new controller with the given initial state.
@@ -25,9 +25,9 @@ export function useNewController<T = undefined>(): Controller<T | undefined>
  * @param initialState 
  * @returns 
  */
-export function useNewController<T>(initialState: T): Controller<T>
+export function useControllerWithInitialState<T>(initialState: T): Controller<T>
 
-export function useNewController<T>(initialState?: T): Controller<T | undefined> {
+export function useControllerWithInitialState<T>(initialState?: T): Controller<T | undefined> {
 	const value = useRef(initialState)
 	return createMemoisedController({
 		value: value.current,

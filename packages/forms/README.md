@@ -18,10 +18,10 @@ npm install empire-state-forms
 ## Usage
 
 ```typescript
-import { useNewController, useSnapshot, Text, Number } from 'empire-state-forms'
+import { useControllerWithInitialState, useSnapshot, Text, Number } from 'empire-state-forms'
 
 function MyForm() {
-	const controller = useNewController({
+	const controller = useControllerWithInitialState({
 		name: '',
 		age: undefined as number | undefined,
 		address: '',
@@ -118,9 +118,9 @@ There's a lot more code, and complex code, to deal with. And we could be using [
 
 ## Examples
 
-### `useNewController`
+### `useControllerWithInitialState`
 
-Using the hook `useNewController` we create a new `Controller` with an initial state. Changes to the controllers value do _not_ cause the component to re-render.
+Using the hook `useControllerWithInitialState` we create a new `Controller` with an initial state. Changes to the controllers value do _not_ cause the component to re-render.
 
 In the component we use the `empire-state-forms` components to create normal `<input>` elements,
 but bound to the value of one of the `Controller`'s properties, and reporting changes back 
@@ -129,7 +129,7 @@ to the component state.
 The `empire-state-forms` components supports all of the regular `<input>` properties.
 
 ```typescript
-import { useNewController, Text } from 'empire-state-forms'
+import { useControllerWithInitialState, Text } from 'empire-state-forms'
 
 interface MyFormState {
 	name: string
@@ -138,7 +138,7 @@ interface MyFormState {
 }
 
 function MyForm() {
-	const controller = useNewController<MyFormState>({
+	const controller = useControllerWithInitialState<MyFormState>({
 		name: '',
 		address: '',
 	})
@@ -158,8 +158,8 @@ function MyForm() {
 }
 ```
 
-`useNewController` returns a `Controller` with an initial value. The type of the `Controller` is
-determined from that initial value, or you can specify the type, e.g. `useNewController<Type>(...)`.
+`useControllerWithInitialState` returns a `Controller` with an initial value. The type of the `Controller` is
+determined from that initial value, or you can specify the type, e.g. `useControllerWithInitialState<Type>(...)`.
 
 The `<Text>` component specifies the `Controller` instance via the `controller` prop, and which property
 inside the controller via the `prop` prop. Due to the type-safety of the `Controller` the `prop` prop can only 
@@ -235,7 +235,7 @@ It can then be used like `<Text>` in the examples above, as in:
 import MyTextField from './MyTextField'
 
 function MyForm() {
-	const controller = useNewController(...)
+	const controller = useControllerWithInitialState(...)
 
 	return (
 		<div>

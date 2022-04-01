@@ -2,7 +2,7 @@
  * An example of using empire-state-forms with Checkable input elements.
  */
 
-import { MultiCheckable, useNewController, useSnapshot } from 'empire-state-forms'
+import { MultiCheckable, useControllerWithInitialState, useSnapshot } from 'empire-state-forms'
 import React from 'react'
 
 interface MyFormState {
@@ -15,7 +15,7 @@ const INITIAL_STATE: MyFormState = {
 
 export default function Example4() {
 
-	const controller = useNewController(INITIAL_STATE)
+	const controller = useControllerWithInitialState(INITIAL_STATE)
 	const [state] = useSnapshot(controller)
 
 	return (

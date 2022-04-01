@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { useNewController, Text, useSnapshot } from 'empire-state-forms'
+import { useControllerWithInitialState, Text, useSnapshot } from 'empire-state-forms'
 
 interface MyFormState {
 	names?: string[]
@@ -11,7 +11,7 @@ interface MyFormState {
 
 export default function Example6() {
 
-	const controller = useNewController<MyFormState>({})
+	const controller = useControllerWithInitialState<MyFormState>({})
 	const namesController = controller.get('names')
 	const [names] = useSnapshot(namesController)
 

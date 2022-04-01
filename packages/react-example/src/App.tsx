@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Controller, useNewController, useSnapshot } from 'empire-state-react'
+import { Controller, useControllerWithInitialState, useSnapshot } from 'empire-state-react'
 
 interface Data {
 	one?: Data2
@@ -59,7 +59,7 @@ const SubCom2 = function(props: { name: string; valueName: string; controller: C
 }
 
 const App = function() {
-	const controller = useNewController<Data>()
+	const controller = useControllerWithInitialState<Data>()
 	const one = controller.get('one')
 	const two = controller.get('two')
 	const [forceRender, setForceRender] = useState(0)

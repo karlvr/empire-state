@@ -46,7 +46,7 @@ interface Address {
 }
 
 function EditPersonComponent({ person: Person; onChange: (newPerson: Person) => void }) {
-	const controller = useNewController(person)
+	const controller = useControllerWithInitialState(person)
 
 	const handleSave = useCallback(function(evt: React.MouseEvent) {
 		evt.preventDefault()
@@ -85,13 +85,13 @@ Controllers use [`immer`](https://github.com/immerjs/immer) to ensure the immuta
 
 ## Hooks
 
-### `useNewController`
+### `useControllerWithInitialState`
 
-`useNewController(initialValue)` returns a new `Controller` that controls access to the state; whatever type that is.
+`useControllerWithInitialState(initialValue)` returns a new `Controller` that controls access to the state; whatever type that is.
 
 The `Controller` has a `value` property to access the current state, and a `setValue` function to change that state. Changes to the `Controller`’s `value` are _immediately_ visible in code, but they _DO NOT_ trigger a re-render in React.
 
-A `useNewController` hook always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useSnapshot` to re-render when state changes...
+A `useControllerWithInitialState` hook always returns the _same_ `Controller` object, so passing a controller to child components will not cause a re-render even if the value in the controller has changed. That's why you need `useSnapshot` to re-render when state changes...
 
 ### `useController`
 

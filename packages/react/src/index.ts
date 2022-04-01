@@ -44,12 +44,12 @@ export function useControllerWithInitialState<T>(initialState?: T): Controller<T
  * @returns 
  */
 export function useController<T>(controller: Controller<T>): Controller<T> {
-	const [refresh, setRefresh] = useState(0)
+	const [, setRefresh] = useState(0)
 
 	/* Add and remove the change listener */
 	useEffect(function() {
 		const changeListener: ChangeListener<unknown> = function() {
-			setRefresh(refresh + 1)
+			setRefresh(n => n + 1)
 		}
 		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
 		controller.addChangeListener(changeListener, 'useController')
@@ -57,7 +57,7 @@ export function useController<T>(controller: Controller<T>): Controller<T> {
 		return function() {
 			controller.removeChangeListener(changeListener)
 		}
-	}, [refresh, controller])
+	}, [controller])
 
 	return controller
 }
@@ -133,7 +133,7 @@ export function useSnapshot<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K
  * snapshot supports.
  */
 export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): SnapshotHookResult<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
-	const [refresh, setRefresh] = useState(0)
+	const [, setRefresh] = useState(0)
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const snapshotController = nameOrIndex !== undefined ? controller.get(nameOrIndex as any, index as any) : controller
@@ -141,7 +141,7 @@ export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, name
 	/* Add and remove the change listener */
 	useEffect(function() {
 		const changeListener: ChangeListener<unknown> = function() {
-			setRefresh(refresh + 1)
+			setRefresh(n => n + 1)
 		}
 		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
 		snapshotController.addChangeListener(changeListener, 'useSnapshot')
@@ -149,7 +149,7 @@ export function useSnapshot<T, K extends KEY<T>>(controller: Controller<T>, name
 		return function() {
 			snapshotController.removeChangeListener(changeListener)
 		}
-	}, [refresh, snapshotController])
+	}, [snapshotController])
 
 	const snapshot = snapshotController.snapshot()
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,5 +1,11 @@
 # empire-state-react
 
+## 1.2.0
+
+### Minor Changes
+
+- 3196fa2: Rename useSnapshot to useControllerValue
+
 ## 1.1.0
 
 ### Minor Changes

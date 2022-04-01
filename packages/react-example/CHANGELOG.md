@@ -1,5 +1,16 @@
 # examples
 
+## 0.11.0
+
+### Minor Changes
+
+- 3196fa2: Rename useSnapshot to useControllerValue
+
+### Patch Changes
+
+- Updated dependencies [3196fa2]
+  - empire-state-react@1.2.0
+
 ## 0.10.0
 
 ### Minor Changes

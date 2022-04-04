@@ -70,4 +70,13 @@ describe('map', () => {
 		expect(index).toEqual(-1)
 	})
 
+	it('works when the array is undefined', () => {
+		const controller = controllerWithInitialValue<string[] | undefined>(undefined)
+
+		const index = controller.findIndex((value, index) => {
+			return value === 'Chuck'
+		})
+		expect(index).toEqual(-1)
+	})
+
 })

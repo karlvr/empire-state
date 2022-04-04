@@ -164,6 +164,9 @@ export class ControllerImpl<T> implements Controller<T> {
 			return this.findIndex('this', name)
 		}
 		const value: unknown[] = name === 'this' ? this.value : this.value !== undefined ? (this.value as any)[name] : undefined
+		if (!value) {
+			return -1
+		}
 		return value.findIndex(predicate as any)
 	}
 
@@ -175,6 +178,9 @@ export class ControllerImpl<T> implements Controller<T> {
 			return this.find('this', name)
 		}
 		const value: unknown[] = name === 'this' ? this.value : this.value !== undefined ? (this.value as any)[name] : undefined
+		if (!value) {
+			return undefined
+		}
 		const index = value.findIndex(predicate as any)
 		if (index === -1) {
 			return undefined

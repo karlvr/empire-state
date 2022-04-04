@@ -71,4 +71,13 @@ describe('map', () => {
 		expect(name).toBeUndefined()
 	})
 
+	it('works when the array is undefined', () => {
+		const controller = controllerWithInitialValue<string[] | undefined>(undefined)
+
+		const name = controller.find((value, index) => {
+			return value === 'Chuck'
+		})
+		expect(name).toBeUndefined()
+	})
+
 })

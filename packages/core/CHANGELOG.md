@@ -1,5 +1,15 @@
 # empire-state
 
+## 1.4.0
+
+### Minor Changes
+
+- 46a3a3f: Add push and remove methods to Controller
+
+### Patch Changes
+
+- aaf769e: Fix find and findIndex for undefined array values
+
 ## 1.0.1
 
 ### Patch Changes

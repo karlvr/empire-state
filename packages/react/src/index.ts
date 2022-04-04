@@ -44,19 +44,20 @@ export function useControllerWithInitialState<T>(initialState?: T): Controller<T
  * @returns 
  */
 export function useControllerWithValue<T>(value: T): Controller<T> {
-	const ref = useRef(value)
+	const current = useRef(value)
+	const original = useRef(value)
 	const [, setRefresh] = useState(0)
 
 	const controller = createMemoisedController({
-		value: ref.current,
+		value: current.current,
 		change: (newValue) => {
-			ref.current = newValue
+			current.current = newValue
 		},
 	})
 
 	/* Check if the `value` changes from what we previously saw, and reset the controller value if it does */
-	if (value !== ref.current) {
-		ref.current = value
+	if (value !== original.current) {
+		original.current = value
 		setRefresh(n => n + 1)
 	}
 	return controller

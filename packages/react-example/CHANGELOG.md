@@ -1,5 +1,12 @@
 # examples
 
+## 0.11.3
+
+### Patch Changes
+
+- Updated dependencies [993708b]
+  - empire-state-react@1.3.2
+
 ## 0.11.2
 
 ### Patch Changes

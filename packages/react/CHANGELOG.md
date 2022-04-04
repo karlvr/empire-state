@@ -1,5 +1,11 @@
 # empire-state-react
 
+## 1.3.2
+
+### Patch Changes
+
+- 993708b: Fix bug in useControllerWithValue where changes in the original value were not detected correctly at all
+
 ## 1.3.1
 
 ### Patch Changes

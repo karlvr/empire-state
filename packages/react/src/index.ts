@@ -69,10 +69,6 @@ export function useControllerWithValue<T>(value: T): Controller<T> {
  */
 export function useController<T>(controller: Controller<T>): Controller<T>
 /**
- * Use a controller for the value at an index in the given controller. The component will re-render when the value in the controller changes.
- */
-export function useController<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
-/**
  * Use a controller for the value in the named property in the given controller. The component will re-render when the value in the controller changes.
  */
 export function useController<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): Controller<S>
@@ -80,6 +76,10 @@ export function useController<T, K extends KEY<T>, S = PROPERTY<T, K>>(controlle
  * Use a controller for the value at an index in the named property in the given controller. The component will re-render when the value in the controller changes.
  */
 export function useController<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Controller<S>
+/**
+ * Use a controller for the value at an index in the given controller. The component will re-render when the value in the controller changes.
+ */
+export function useController<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
 /**
  * The combination of all controller value methods so you can call the hook with arguments that can match some combination that
  * is supported.
@@ -156,11 +156,6 @@ export type ControllerValueHookResult<S> = [S, (newValue: S) => void]
  */
 export function useControllerValue<T>(controller: Controller<T>): ControllerValueHookResult<T>
 /**
- * Returns the value at the given index in the controller's value, assuming the controller contains an array value,
- * and a function to change that value.
- */
-export function useControllerValue<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): ControllerValueHookResult<S>
-/**
  * Returns a the value of the given property in the controller's value, assuming the controller contains an object value,
  * and a function to change that value.
  */
@@ -171,6 +166,11 @@ export function useControllerValue<T, K extends KEY<T>, S = PROPERTY<T, K>>(cont
  * and a function to change that value.
  */
 export function useControllerValue<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): ControllerValueHookResult<S>
+/**
+ * Returns the value at the given index in the controller's value, assuming the controller contains an array value,
+ * and a function to change that value.
+ */
+export function useControllerValue<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): ControllerValueHookResult<S>
 /**
  * The combination of all controller value methods so you can call the hook with arguments that can match some combination that
  * is supported.

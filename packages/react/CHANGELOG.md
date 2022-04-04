@@ -1,5 +1,11 @@
 # empire-state-react
 
+## 1.3.0
+
+### Minor Changes
+
+- 6e4ec62: Expand useController function to support the same arguments as useControllerValue
+
 ## 1.2.0
 
 ### Minor Changes

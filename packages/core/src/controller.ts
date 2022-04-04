@@ -182,6 +182,40 @@ export class ControllerImpl<T> implements Controller<T> {
 		return name === 'this' ? this.get(index) : this.get(name).get(index) as any
 	}
 
+	/**
+	 * Push a value onto the end of an array.
+	 * @param name 
+	 * @param newValue 
+	 */
+	public push(name: 'this', newValue: INDEXPROPERTY<T>): void
+	public push<K extends KEY<T>>(name: K, newValue: INDEXPROPERTY<PROPERTY<T, K>>): void
+	public push<K extends KEY<T>>(nameOrIndex: K | 'this', newValue: INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>): void {
+		(this.internalController(nameOrIndex) as Controller<unknown>).setValue((value: any) => ([...(value || []), newValue]))
+	}
+
+	/**
+	 * Remove values matching a predicate from an array property.
+	 * @param predicate 
+	 */
+	public remove(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): void
+	public remove<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void
+	public remove<K extends KEY<T>>(name: K | 'this', predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void {
+		if (typeof name === 'function') {
+			return this.remove('this', name)
+		}
+		if (name !== 'this') {
+			return this.get(name).remove('this', predicate)
+		}
+		
+		const value: unknown[] = this.value as unknown as unknown[]
+		if (!value) {
+			return
+		}
+		
+		const newValue = value.filter((value, index, array) => !predicate!(value as any, index, array as any))
+		this.setValue(newValue as unknown as T)
+	}
+
 	private internalSetValue(value: T, fromSubController = false): void {
 		const oldValue = this.source().value
 		this.source().change(value as T)

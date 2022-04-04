@@ -63,13 +63,32 @@ export function useControllerWithValue<T>(value: T): Controller<T> {
 }
 
 /**
- * Register that you're using the given controller in this component. The component will now re-render when the value
- * in the controller changes.
+ * Use the given controller in this component. The component will re-render when the value in the controller changes.
  * @param controller 
  * @returns 
  */
-export function useController<T>(controller: Controller<T>): Controller<T> {
+export function useController<T>(controller: Controller<T>): Controller<T>
+/**
+ * Use a controller for the value at an index in the given controller. The component will re-render when the value in the controller changes.
+ */
+export function useController<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
+/**
+ * Use a controller for the value in the named property in the given controller. The component will re-render when the value in the controller changes.
+ */
+export function useController<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): Controller<S>
+/**
+ * Use a controller for the value at an index in the named property in the given controller. The component will re-render when the value in the controller changes.
+ */
+export function useController<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Controller<S>
+/**
+ * The combination of all controller value methods so you can call the hook with arguments that can match some combination that
+ * is supported.
+ */
+export function useController<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): Controller<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
 	const [, setRefresh] = useState(0)
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const valueController = nameOrIndex !== undefined ? controller.get(nameOrIndex as any, index as any) : controller
 
 	/* Add and remove the change listener */
 	useEffect(function() {
@@ -77,14 +96,14 @@ export function useController<T>(controller: Controller<T>): Controller<T> {
 			setRefresh(n => n + 1)
 		}
 		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
-		controller.addChangeListener(changeListener, 'useController')
+		valueController.addChangeListener(changeListener, 'useController')
 		
 		return function() {
-			controller.removeChangeListener(changeListener)
+			valueController.removeChangeListener(changeListener)
 		}
-	}, [controller])
+	}, [valueController])
 
-	return controller
+	return valueController
 }
 
 /**
@@ -160,7 +179,7 @@ export function useControllerValue<T, K extends KEY<T>>(controller: Controller<T
 	const [, setRefresh] = useState(0)
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const snapshotController = nameOrIndex !== undefined ? controller.get(nameOrIndex as any, index as any) : controller
+	const valueController = nameOrIndex !== undefined ? controller.get(nameOrIndex as any, index as any) : controller
 	
 	/* Add and remove the change listener */
 	useEffect(function() {
@@ -168,14 +187,14 @@ export function useControllerValue<T, K extends KEY<T>>(controller: Controller<T
 			setRefresh(n => n + 1)
 		}
 		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
-		snapshotController.addChangeListener(changeListener, 'useControllerValue')
+		valueController.addChangeListener(changeListener, 'useControllerValue')
 		
 		return function() {
-			snapshotController.removeChangeListener(changeListener)
+			valueController.removeChangeListener(changeListener)
 		}
-	}, [snapshotController])
+	}, [valueController])
 
-	const snapshot = snapshotController.snapshot()
+	const snapshot = valueController.snapshot()
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	return [snapshot.value, snapshot.change] as unknown as any
 }

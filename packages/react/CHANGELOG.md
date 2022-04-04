@@ -1,5 +1,11 @@
 # empire-state-react
 
+## 1.3.1
+
+### Patch Changes
+
+- 6789105: Reorder function definitions to fix autocomplete for valid key values
+
 ## 1.3.0
 
 ### Minor Changes

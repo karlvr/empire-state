@@ -23,9 +23,11 @@ Another difficulty with React’s `useState` is that the entire component subtre
 
 ## Solution
 
-With `empire-state-react` you create one or more _controllers_ to contain state in a component, or at the root of a _tree_ of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useControllerValue`).
+With `empire-state-react` you create one or more _controllers_ to contain state in a component, or at the root of a _tree_ of components that use that state. Using the _controller_ you can get and set _parts_ of its state, with re-renders limited to components that use the part of the state that has changed (using `useControllerValue` or `useController`).
 
 The `useControllerValue` hook provides access to a value from the controller, and a function to change that value. When the value changes your component will re-render.
+
+The `useController` hook signals that a component is using the value from the controller (or a nested property of the controller) and should be re-rendered when that value changes.
 
 ## Example
 
@@ -116,6 +118,39 @@ controller's value changes.
 The value originates from the `Controller`; either the whole value of the controller or one of its properties.
 
 If the value is changed, either using `useControllerValue`’s `change` function or the `Controller`’s `setValue` function, the component _WILL_ re-render.
+
+## Notes
+
+### Deps
+
+Any `Controller`s returned by hooks or by methods on `Controller` remain the same (`===`) for the life of the component,
+even though the value it contains may change.
+
+When using a `Controller` in a React `deps` array, such as with `useEffect` or `useCallback`, you can pass the `Controller`
+instance itself as the dependency, and then always access the current value of the `Controller` within the function.
+
+```typescript
+const controller = useControllerWithInitialValue(true)
+const handleClick = useCallback(function() {
+	console.log(`The current value is ${controller.value}`)
+}, [controller])
+```
+
+### Re-renders and `useControllerValue` vs `Controller`'s `value` property
+
+Because `empire-state-react` allows mutable state (in a `Controller`) without re-renders, care must be taken to ensure that
+components re-render when they need to.
+
+Avoid using the `Controller`'s `value` property in a component's rendering, as using the value from a controller alone
+does not result in re-rendering. Instead you should use `const [value] = useControllerValue(controller)` to access the value.
+
+Conversely you _should_ use the `Controller`'s `value` property in a component's callback functions, as doing so provides
+access to the current value without the usual requirement of recreating the function (using `useCallback`'s `deps` array)
+whenever the value changes.
+
+If you use a `Controller`'s other methods such as `map` or `find` when rendering then you should signal that use the
+controller by using the `useController` hook. This hook can also be used to extract a nested controlller, as opposed to
+using the `Controller'`s `get` method.
 
 ## Reference
 

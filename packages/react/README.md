@@ -63,9 +63,9 @@ function EditPersonComponent({ person: Person; onChange: (newPerson: Person) => 
 }
 
 function EditName(props: { controller: Controller<Name> }) {
-	const [givenName, changeGivenName] = useControllerValue(controller)
-	const [middleName, changeMiddleName] = useControllerValue(controller)
-	const [familyName, changeFamilyName] = useControllerValue(controller)
+	const [givenName, changeGivenName] = useControllerValue(controller, 'givenName')
+	const [middleName, changeMiddleName] = useControllerValue(controller, 'middleName')
+	const [familyName, changeFamilyName] = useControllerValue(controller, 'familyName')
 
 	const handleGivenName = useCallback(function(evt: React.ChangeEvent<HTMLInputElement>) {
 		changeGivenName(evt.target.value)

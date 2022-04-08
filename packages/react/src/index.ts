@@ -58,6 +58,7 @@ export function useControllerWithValue<T>(value: T): Controller<T> {
 	/* Check if the `value` changes from what we previously saw, and reset the controller value if it does */
 	if (value !== original.current) {
 		original.current = value
+		current.current = value
 		setRefresh(n => n + 1)
 	}
 	return controller

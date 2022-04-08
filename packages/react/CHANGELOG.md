@@ -1,5 +1,16 @@
 # empire-state-react
 
+## 1.5.0
+
+### Minor Changes
+
+- dcc6337: Fix types on snapshots and nested controllers obtained using get so they include undefined if a parent value could be undefined
+
+### Patch Changes
+
+- Updated dependencies [dcc6337]
+  - empire-state@1.5.0
+
 ## 1.4.0
 
 ### Patch Changes

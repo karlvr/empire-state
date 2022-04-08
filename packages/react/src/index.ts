@@ -70,27 +70,31 @@ export function useControllerWithValue<T>(value: T): Controller<T> {
  * @returns 
  */
 export function useController<T>(controller: Controller<T>): Controller<T>
+export function useController<T>(controller: Controller<T> | undefined): Controller<T> | undefined
 /**
  * Use a controller for the value in the named property in the given controller. The component will re-render when the value in the controller changes.
  */
 export function useController<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T>, name: K): Controller<S>
+export function useController<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T> | undefined, name: K): Controller<S> | undefined
 /**
  * Use a controller for the value at an index in the named property in the given controller. The component will re-render when the value in the controller changes.
  */
 export function useController<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Controller<S>
+export function useController<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T> | undefined, name: K, index: number): Controller<S> | undefined
 /**
  * Use a controller for the value at an index in the given controller. The component will re-render when the value in the controller changes.
  */
 export function useController<T, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
+export function useController<T, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T> | undefined, index: number): Controller<S> | undefined
 /**
  * The combination of all controller value methods so you can call the hook with arguments that can match some combination that
  * is supported.
  */
-export function useController<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
+export function useController<T, K extends KEY<T>>(controller: Controller<T> | undefined, nameOrIndex?: K | number | 'this', index?: number): Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> | undefined {
 	const [, setRefresh] = useState(0)
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const valueController = nameOrIndex !== undefined ? controller.get(nameOrIndex as any, index as any) : controller
+	const valueController = nameOrIndex !== undefined ? controller?.get(nameOrIndex as any, index as any) : controller
 
 	/* Add and remove the change listener */
 	useEffect(function() {
@@ -98,10 +102,10 @@ export function useController<T, K extends KEY<T>>(controller: Controller<T>, na
 			setRefresh(n => n + 1)
 		}
 		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
-		valueController.addChangeListener(changeListener, 'useController')
+		valueController?.addChangeListener(changeListener, 'useController')
 		
 		return function() {
-			valueController.removeChangeListener(changeListener)
+			valueController?.removeChangeListener(changeListener)
 		}
 	}, [valueController])
 
@@ -157,31 +161,35 @@ export type ControllerValueHookResult<S> = [S, (newValue: S) => void]
  * Returns the controller's value, and a function to change the value. The component will re-render when the value changes.
  */
 export function useControllerValue<T>(controller: Controller<T>): ControllerValueHookResult<T>
+export function useControllerValue<T>(controller: Controller<T> | undefined): ControllerValueHookResult<T | undefined>
 /**
  * Returns a the value of the given property in the controller's value, assuming the controller contains an object value,
  * and a function to change that value.
  */
 export function useControllerValue<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): ControllerValueHookResult<S>
+export function useControllerValue<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T> | undefined, name: K): ControllerValueHookResult<S | undefined>
 /**
  * Returns the value at the given index in the value of the given property in the controller's value,
  * assuming the controller contains an object value and the property value is an array value,
  * and a function to change that value.
  */
 export function useControllerValue<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): ControllerValueHookResult<S>
+export function useControllerValue<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T> | undefined, name: K, index: number): ControllerValueHookResult<S | undefined>
 /**
  * Returns the value at the given index in the controller's value, assuming the controller contains an array value,
  * and a function to change that value.
  */
 export function useControllerValue<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): ControllerValueHookResult<S>
+export function useControllerValue<T, S = INDEXPROPERTY<T>>(controller: Controller<T> | undefined, index: number): ControllerValueHookResult<S | undefined>
 /**
  * The combination of all controller value methods so you can call the hook with arguments that can match some combination that
  * is supported.
  */
-export function useControllerValue<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): ControllerValueHookResult<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
+export function useControllerValue<T, K extends KEY<T>>(controller: Controller<T> | undefined, nameOrIndex?: K | number | 'this', index?: number): ControllerValueHookResult<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T> | undefined> {
 	const [, setRefresh] = useState(0)
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const valueController = nameOrIndex !== undefined ? controller.get(nameOrIndex as any, index as any) : controller
+	const valueController = nameOrIndex !== undefined ? controller?.get(nameOrIndex as any, index as any) : controller
 	
 	/* Add and remove the change listener */
 	useEffect(function() {
@@ -189,16 +197,21 @@ export function useControllerValue<T, K extends KEY<T>>(controller: Controller<T
 			setRefresh(n => n + 1)
 		}
 		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
-		valueController.addChangeListener(changeListener, 'useControllerValue')
+		valueController?.addChangeListener(changeListener, 'useControllerValue')
 		
 		return function() {
-			valueController.removeChangeListener(changeListener)
+			valueController?.removeChangeListener(changeListener)
 		}
 	}, [valueController])
 
-	const snapshot = valueController.snapshot()
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return [snapshot.value, snapshot.change] as unknown as any
+	if (valueController) {
+		const snapshot = valueController.snapshot()
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		return [snapshot.value, snapshot.change] as unknown as any
+	} else {
+		/* If we don't have a controller then the value is undefined and we ignore any attempts to change the value */
+		return [undefined, (ignore: unknown) => undefined]
+	}
 }
 
 /** Interface for component containing changeable props */

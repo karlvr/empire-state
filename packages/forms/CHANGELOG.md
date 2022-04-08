@@ -1,5 +1,12 @@
 # empire-state-forms
 
+## 1.2.6
+
+### Patch Changes
+
+- Updated dependencies [a8af4d0]
+  - empire-state-react@1.5.1
+
 ## 1.2.5
 
 ### Patch Changes

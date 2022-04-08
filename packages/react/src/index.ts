@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { controllerWithFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'empire-state'
-import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY } from 'empire-state/dist/type-utils'
+import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY, UNDEFINEDIFUNDEFINED } from 'empire-state/dist/type-utils'
 import { FunctionKeys } from 'empire-state/dist/utilities'
 export * from 'empire-state'
 
@@ -72,20 +72,20 @@ export function useController<T>(controller: Controller<T>): Controller<T>
 /**
  * Use a controller for the value in the named property in the given controller. The component will re-render when the value in the controller changes.
  */
-export function useController<T, K extends KEY<T>, S = PROPERTY<T, K>>(controller: Controller<T>, name: K): Controller<S>
+export function useController<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T>, name: K): Controller<S>
 /**
  * Use a controller for the value at an index in the named property in the given controller. The component will re-render when the value in the controller changes.
  */
-export function useController<T, K extends KEY<T>, S = INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Controller<S>
+export function useController<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Controller<S>
 /**
  * Use a controller for the value at an index in the given controller. The component will re-render when the value in the controller changes.
  */
-export function useController<T, S = INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
+export function useController<T, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
 /**
  * The combination of all controller value methods so you can call the hook with arguments that can match some combination that
  * is supported.
  */
-export function useController<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): Controller<T | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
+export function useController<T, K extends KEY<T>>(controller: Controller<T>, nameOrIndex?: K | number | 'this', index?: number): Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> {
 	const [, setRefresh] = useState(0)
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

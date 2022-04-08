@@ -1,4 +1,4 @@
-import { KEY, PROPERTY, INDEXPROPERTY, COMPATIBLEKEYS } from './type-utils'
+import { KEY, PROPERTY, INDEXPROPERTY, COMPATIBLEKEYS, UNDEFINEDIFUNDEFINED } from './type-utils'
 
 /** A Snapshot represents an immutable view of state, and a means to change it. */
 export interface Snapshot<T> {
@@ -49,14 +49,14 @@ export interface Controller<T> {
 	/**
 	 * Returns a sub-controller for the value of the given property in this controller's value, assuming this controller has an object value.
 	 */
-	get<K extends KEY<T>>(name: K): Controller<PROPERTY<T, K>>
+	get<K extends KEY<T>>(name: K): Controller<UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>
 	/**
 	 * Returns a sub-controller for the value at the given index in the value of the given property in this controller's value, 
 	 * assuming this controller has an object value and the property value is an array value.
 	 */
-	get<K extends KEY<T>>(name: K, index: number): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
-	get<S>(name: COMPATIBLEKEYS<T, S>): Controller<S>
-	get<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>): Controller<O>
+	get<K extends KEY<T>>(name: K, index: number): Controller<UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>
+	get<S>(name: COMPATIBLEKEYS<T, S>): Controller<UNDEFINEDIFUNDEFINED<T> | S>
+	get<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>): Controller<UNDEFINEDIFUNDEFINED<T> | O>
 
 	/**
 	 * Set the value at the given index in this controller's array value.
@@ -89,7 +89,7 @@ export interface Controller<T> {
 	/**
 	 * Returns a snapshot of the value at the given index in this controller's value, assuming this controller contains an array value.
 	 */
-	snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
+	snapshot(index: number): Snapshot<UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>
 	/**
 	 * Returns a snapshot of the whole value in this controller.
 	 */
@@ -97,23 +97,18 @@ export interface Controller<T> {
 	/**
 	 * Returns a snapshot of the value of the given property in this controller's value, assuming this controller contains an object value.
 	 */
-	snapshot<K extends KEY<T>>(name: K): Snapshot<PROPERTY<T, K>>
+	snapshot<K extends KEY<T>>(name: K): Snapshot<UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>
 	/**
 	 * Returns a snapshot of the value at the given index in the value of the given property in this controller's value,
 	 * assuming this controller contains an object value and the property value is an array value.
 	 */
-	snapshot<K extends KEY<T>>(name: K, index: number): Snapshot<INDEXPROPERTY<PROPERTY<T, K>>>
+	snapshot<K extends KEY<T>>(name: K, index: number): Snapshot<UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>
 	/**
 	 * Convenience version for the COMPATIBLEKEYS utility to produce the right return type for the Snapshot.
 	 */
-	snapshot<S>(name: COMPATIBLEKEYS<T, S>): Snapshot<S>
-	snapshot<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>, index: number): Snapshot<O>
-	/**
-	 * The combination of all snapshot methods so you can call snapshot with arguments that can match some combination that
-	 * snapshot supports.
-	 */
-	snapshot<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>>
-
+	snapshot<S>(name: COMPATIBLEKEYS<T, S>): Snapshot<UNDEFINEDIFUNDEFINED<T> | S>
+	snapshot<S extends ArrayLike<O>, O>(name: COMPATIBLEKEYS<T, S>, index: number): Snapshot<UNDEFINEDIFUNDEFINED<T> | O>
+	
 	map<U>(callback: (controller: Controller<INDEXPROPERTY<T>>, index: number, array: T) => U): U[]
 	map<U>(name: 'this', callback: (controller: Controller<INDEXPROPERTY<T>>, index: number, array: T) => U): U[]
 	map<K extends KEY<T>, U>(name: K, callback: (controller: Controller<INDEXPROPERTY<PROPERTY<T, K>>>, index: number, array: PROPERTY<T, K>) => U): U[]

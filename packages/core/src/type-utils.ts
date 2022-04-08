@@ -22,3 +22,9 @@ type COMPATIBLETHIS<T, R> = T extends R ? 'this' : never
 
 /** Returns the keys of T that are compatible with R, and 'this' if T itself is compatible with R */
 export type COMPATIBLEKEYS<T, R> = CompatibleKeys<KEYABLE<T>, R> | COMPATIBLETHIS<T, R>
+
+/**
+ * If the given type supports undefined then we output undefined, otherwise never.
+ * So we can pass on a possible undefined value if the source has one.
+ */
+export type UNDEFINEDIFUNDEFINED<T> = T extends undefined ? undefined : never

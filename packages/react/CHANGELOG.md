@@ -1,5 +1,11 @@
 # empire-state-react
 
+## 1.6.0
+
+### Minor Changes
+
+- 1756521: useController and useControllerValue accept undefined controllers
+
 ## 1.5.1
 
 ### Patch Changes

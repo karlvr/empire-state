@@ -1,5 +1,11 @@
 # empire-state
 
+## 1.7.1
+
+### Patch Changes
+
+- 8c53c94: Fix onToggle typing with undefineds
+
 ## 1.7.0
 
 ### Minor Changes

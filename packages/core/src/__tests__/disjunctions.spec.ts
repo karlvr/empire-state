@@ -28,7 +28,7 @@ describe('disjunctions', () => {
 		expect(isA(controller.value)).toBeTruthy()
 		expect(isB(controller.value)).toBeFalsy()
 
-		const controller2: Controller<A | B> = controller
+		const controller2: Controller<A | B> = controller as unknown as Controller<A | B>
 		expect(isA(controller2.value)).toBeTruthy()
 		expect(isB(controller2.value)).toBeFalsy()
 

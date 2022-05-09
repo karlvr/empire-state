@@ -1,5 +1,16 @@
 # examples
 
+## 1.1.0
+
+### Minor Changes
+
+- d12f1bc: Introduce useStatelessController as a more obvious replacement for useSnapshotController
+
+### Patch Changes
+
+- Updated dependencies [d12f1bc]
+  - empire-state-forms@1.3.0
+
 ## 1.0.8
 
 ### Patch Changes

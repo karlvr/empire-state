@@ -1,5 +1,16 @@
 # examples
 
+## 0.12.0
+
+### Minor Changes
+
+- d12f1bc: Introduce useStatelessController as a more obvious replacement for useSnapshotController
+
+### Patch Changes
+
+- Updated dependencies [d12f1bc]
+  - empire-state-react@1.7.0
+
 ## 0.11.7
 
 ### Patch Changes

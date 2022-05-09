@@ -1,5 +1,11 @@
 # empire-state
 
+## 1.7.0
+
+### Minor Changes
+
+- 5cf354f: Add onToggle and onChange to Controller
+
 ## 1.5.0
 
 ### Minor Changes

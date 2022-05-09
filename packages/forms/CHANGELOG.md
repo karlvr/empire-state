@@ -1,5 +1,18 @@
 # empire-state-forms
 
+## 1.3.0
+
+### Minor Changes
+
+- d12f1bc: Introduce useStatelessController as a more obvious replacement for useSnapshotController
+
+### Patch Changes
+
+- Updated dependencies [5cf354f]
+- Updated dependencies [d12f1bc]
+  - empire-state@1.7.0
+  - empire-state-react@1.7.0
+
 ## 1.2.7
 
 ### Patch Changes

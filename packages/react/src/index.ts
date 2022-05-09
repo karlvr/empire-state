@@ -113,8 +113,22 @@ export function useController<T, K extends KEY<T>>(controller: Controller<T> | u
 }
 
 /**
- * <p>Create a new Controller with the given Snapshot.</p>
- * @param snapshot 
+ * Create a new Controller with the given `value` and an `onChange` function to call when the value has been changed.
+ * The controller itself is considered stateless as it doesn't maintain any state itself.
+ * @param value the value
+ * @param onChange a function that is called when the controller reports a change to the value 
+ * @returns 
+ */
+export function useStatelessController<T>(value: T, onChange: (newValue: T) => void): Controller<T> {
+	return createMemoisedController({
+		value,
+		change: onChange,
+	})
+}
+
+/**
+ * Create a new Controller with the given snapshot.
+ * @param snapshot a snapshot
  * @returns 
  */
 export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {

@@ -186,7 +186,7 @@ interface MyFormSectionProps {
 }
 
 function MyFormSection(props: MyFormSectionProps) {
-	const controller = useSnapshotController({ value: props.value, change: props.onChange })
+	const controller = useStatelessController(props.value, props.onChange)
 
 	return (
 		<div>

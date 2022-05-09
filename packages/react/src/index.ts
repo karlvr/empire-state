@@ -109,7 +109,7 @@ export function useController<T, K extends KEY<T>>(controller: Controller<T> | u
 		}
 	}, [valueController])
 
-	return valueController
+	return valueController as Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> | undefined
 }
 
 /**

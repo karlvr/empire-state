@@ -86,10 +86,10 @@ export interface Controller<T> {
 	 * Returns a function that, when called, toggles the boolean value in this Controller
 	 */
 	onToggle(): T extends boolean ? () => void : never
-	onToggle(index: number): T extends boolean[] ? () => void : never
+	onToggle(index: number): T extends (boolean | undefined)[] ? () => void : never
 	onToggle(name: 'this'): T extends boolean ? () => void : never
-	onToggle<K extends COMPATIBLEKEYS<T, boolean>>(name: K): () => void
-	onToggle<K extends COMPATIBLEKEYS<T, boolean[]>>(name: K, index: number): () => void
+	onToggle<K extends COMPATIBLEKEYS<T, boolean | undefined>>(name: K): () => void
+	onToggle<K extends COMPATIBLEKEYS<T, (boolean | undefined)[] | undefined>>(name: K, index: number): () => void
 
 	/**
 	 * Returns a function that, when called, changes the value in this Controller.

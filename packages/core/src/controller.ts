@@ -60,10 +60,11 @@ export class ControllerImpl<T> implements Controller<T> {
 	}
 
 	public onToggle(): T extends boolean ? () => void : never
-	public onToggle(index: number): T extends boolean[] ? () => void : never
+	public onToggle(index: number): T extends (boolean | undefined)[] ? () => void : never
 	public onToggle(name: 'this'): T extends boolean ? () => void : never
-	public onToggle<K extends COMPATIBLEKEYS<T, boolean>>(name: K): () => void
-	public onToggle<K extends COMPATIBLEKEYS<T, boolean>>(nameOrIndex?: K | number | 'this', index?: number): () => void {
+	public onToggle<K extends COMPATIBLEKEYS<T, boolean | undefined>>(name: K): () => void
+	public onToggle<K extends COMPATIBLEKEYS<T, (boolean | undefined)[] | undefined>>(name: K, index: number): () => void
+	public onToggle<K extends COMPATIBLEKEYS<T, boolean |(boolean | undefined)[] | undefined>>(nameOrIndex?: K | number | 'this', index?: number): () => void {
 		if (nameOrIndex !== undefined) {
 			return this.internalController(nameOrIndex, index).onToggle()
 		}

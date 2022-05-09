@@ -83,6 +83,24 @@ export interface Controller<T> {
 	set<K extends KEY<T>>(name: K, func: SetValueFunc<PROPERTY<T, K>>): void
 
 	/**
+	 * Returns a function that, when called, toggles the boolean value in this Controller
+	 */
+	onToggle(): T extends boolean ? () => void : never
+	onToggle(index: number): T extends boolean[] ? () => void : never
+	onToggle(name: 'this'): T extends boolean ? () => void : never
+	onToggle<K extends COMPATIBLEKEYS<T, boolean>>(name: K): () => void
+	onToggle<K extends COMPATIBLEKEYS<T, boolean[]>>(name: K, index: number): () => void
+
+	/**
+	 * Returns a function that, when called, changes the value in this Controller.
+	 */
+	onChange(): (newValue: T) => void
+	onChange(index: number): (newValue: INDEXPROPERTY<T>) => void
+	onChange(name: 'this'): (newValue: T) => void
+	onChange<K extends KEY<T>>(name: K): (newValue: PROPERTY<T, K>) => void
+	onChange<K extends KEY<T>>(name: K, index: number): (newValue: INDEXPROPERTY<PROPERTY<T, K>>) => void
+
+	/**
 	 * Returns a snapshot of the whole value in this controller.
 	 */
 	snapshot(): Snapshot<T>

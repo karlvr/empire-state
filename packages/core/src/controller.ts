@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { produce } from 'immer'
 import { DEFAULT_CHANGE_LISTENER_TAG } from './constants'
-import { KEY, PROPERTY, INDEXPROPERTY } from './type-utils'
+import { KEY, PROPERTY, INDEXPROPERTY, COMPATIBLEKEYS } from './type-utils'
 import { Snapshot, Controller, ChangeListener, ControllerSource, SetValueFunc } from './types'
 
 interface ChangeListenerInfo<T> {
@@ -27,6 +27,7 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	private changeListeners: ChangeListenerInfo<T>[] = []
 	private memoisedSnapshot: Snapshot<T> | undefined
+	private memoisedToggle: (() => void) | undefined
 	private memoisedControllers: { [prop: string]: Controller<any> } = {}
 	private notifyingChangeListeners = false
 
@@ -58,28 +59,40 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 	}
 
+	public onToggle(): T extends boolean ? () => void : never
+	public onToggle(index: number): T extends boolean[] ? () => void : never
+	public onToggle(name: 'this'): T extends boolean ? () => void : never
+	public onToggle<K extends COMPATIBLEKEYS<T, boolean>>(name: K): () => void
+	public onToggle<K extends COMPATIBLEKEYS<T, boolean>>(nameOrIndex?: K | number | 'this', index?: number): () => void {
+		if (nameOrIndex !== undefined) {
+			return this.internalController(nameOrIndex, index).onToggle()
+		}
+
+		if (this.memoisedToggle) {
+			return this.memoisedToggle
+		}
+
+		this.memoisedToggle = () => {
+			this.setValue(!this.value as unknown as T)
+		}
+		return this.memoisedToggle
+	}
+ 
+	public onChange(): (newValue: T) => void
+	public onChange(index: number): (newValue: INDEXPROPERTY<T>) => void
+	public onChange(name: 'this'): (newValue: T) => void
+	public onChange<K extends KEY<T>>(name: K): (newValue: PROPERTY<T, K>) => void
+	public onChange<K extends KEY<T>>(name: K, index: number): (newValue: INDEXPROPERTY<PROPERTY<T, K>>) => void
+	public onChange<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number) {
+		return this.internalSnapshot(nameOrIndex, index).change
+	}
+
 	public snapshot(): Snapshot<T>
 	public snapshot(index: number): Snapshot<INDEXPROPERTY<T>>
 	public snapshot(name: 'this'): Snapshot<T>
 	public snapshot<K extends KEY<T>>(name?: K): Snapshot<PROPERTY<T, K>>
 	public snapshot<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>> {
-		if (nameOrIndex !== undefined) {
-			return this.internalController(nameOrIndex, index).snapshot()
-		}
-
-		/* If the snapshot value hasn't changed, we return the memoised snapshot */
-		const memoisedSnapshot = this.memoisedSnapshot
-		if (memoisedSnapshot && memoisedSnapshot.value === this.value) {
-			return memoisedSnapshot
-		} else {
-			const result: Snapshot<T> = {
-				change: (newValue: T) => this.setValue(newValue),
-				value: produce(this.value, draft => draft),
-			}
-
-			this.memoisedSnapshot = result
-			return result
-		}
+		return this.internalSnapshot(nameOrIndex, index)
 	}
 
 	public getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>) {
@@ -288,6 +301,26 @@ export class ControllerImpl<T> implements Controller<T> {
 
 		this.memoisedControllers[`${nameOrIndex}`] = result
 		return result
+	}
+
+	private internalSnapshot<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number): Snapshot<T> | Snapshot<PROPERTY<T, K>> | Snapshot<INDEXPROPERTY<PROPERTY<T, K>>> | Snapshot<INDEXPROPERTY<T>> {
+		if (nameOrIndex !== undefined) {
+			return this.internalController(nameOrIndex, index).snapshot()
+		}
+
+		/* If the snapshot value hasn't changed, we return the memoised snapshot */
+		const memoisedSnapshot = this.memoisedSnapshot
+		if (memoisedSnapshot && memoisedSnapshot.value === this.value) {
+			return memoisedSnapshot
+		} else {
+			const result: Snapshot<T> = {
+				change: (newValue: T) => this.setValue(newValue),
+				value: produce(this.value, draft => draft),
+			}
+
+			this.memoisedSnapshot = result
+			return result
+		}
 	}
 
 	private notifyIfChanged() {

@@ -1,5 +1,11 @@
 # empire-state-react
 
+## 1.7.2
+
+### Patch Changes
+
+- da2ccaa: Fix forComponentState so it can be used before the component's state is set
+
 ## 1.7.1
 
 ### Patch Changes

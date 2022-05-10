@@ -1,5 +1,12 @@
 # examples
 
+## 0.12.2
+
+### Patch Changes
+
+- Updated dependencies [da2ccaa]
+  - empire-state-react@1.7.2
+
 ## 0.12.1
 
 ### Patch Changes

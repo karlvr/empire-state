@@ -1,5 +1,11 @@
 # examples
 
+## 1.1.2
+
+### Patch Changes
+
+- empire-state-forms@1.3.2
+
 ## 1.1.1
 
 ### Patch Changes

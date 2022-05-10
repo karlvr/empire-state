@@ -312,9 +312,17 @@ export function forComponentState<T, K extends KEY<T>>(component: ChangeableComp
 			},
 		)
 	} else {
-		let currentValue = (component.state as KEYABLE<T>)[property]
+		let currentValueInitialised = false
+		let currentValue: PROPERTY<T, K>
+		
 		return controllerWithFuncs(
-			() => currentValue,
+			() => {
+				if (!currentValueInitialised) {
+					currentValue = (component.state as KEYABLE<T>)[property]
+					currentValueInitialised = true
+				}
+				return currentValue
+			},
 			(newValue) => {
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
 				currentValue = newValue

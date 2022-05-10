@@ -34,11 +34,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/karlvr/formalities.git"
+		"url": "https://github.com/karlvr/empire-state.git"
 	},
 	"bugs": {
-		"url": "https://github.com/karlvr/formalities/issues"
+		"url": "https://github.com/karlvr/empire-state/issues"
 	},
-	"homepage": "https://github.com/karlvr/formalities/tree/main/packages/formalities#readme",
+	"homepage": "https://github.com/karlvr/empire-state/tree/main/packages/forms#readme",
 	"gitHead": "8a31be2466980619ab663d1d7d1f836f48049d07"
 }

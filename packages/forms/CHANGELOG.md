@@ -1,5 +1,11 @@
 # empire-state-forms
 
+## 1.3.3
+
+### Patch Changes
+
+- a92f7cc: Fix default export
+
 ## 1.3.2
 
 ### Patch Changes

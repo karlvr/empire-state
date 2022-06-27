@@ -164,6 +164,9 @@ export class ControllerImpl<T> implements Controller<T> {
 		if (!value || !callback) {
 			return []
 		}
+		if (typeof value.map !== 'function') {
+			throw new Error(`Controller.map called with non-array value: ${value}`)
+		}
 		return value.map((nestedValue, nestedValueIndex) => {
 			const nestedController = this.internalController(name, nestedValueIndex) as Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 			return callback(nestedController, nestedValueIndex, value as any)
@@ -181,6 +184,9 @@ export class ControllerImpl<T> implements Controller<T> {
 		if (!value) {
 			return -1
 		}
+		if (typeof value.findIndex !== 'function') {
+			throw new Error(`Controller.findIndex called with non-array value: ${value}`)
+		}
 		return value.findIndex(predicate as any)
 	}
 
@@ -194,6 +200,9 @@ export class ControllerImpl<T> implements Controller<T> {
 		const value: unknown[] = name === 'this' ? this.value : this.value !== undefined ? (this.value as any)[name] : undefined
 		if (!value) {
 			return undefined
+		}
+		if (typeof value.findIndex !== 'function') {
+			throw new Error(`Controller.find called with non-array value: ${value}`)
 		}
 		const index = value.findIndex(predicate as any)
 		if (index === -1) {

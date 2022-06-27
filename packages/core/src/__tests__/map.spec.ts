@@ -38,4 +38,11 @@ describe('map', () => {
 		expect(names[4]).toEqual('Timmy')
 	})
 
+	it('can detect non-array values', () => {
+		const controller = controllerWithInitialValue({ name: 'Julina' })
+		expect(() => controller.map((childController, index) => {
+			return childController.value
+		})).toThrowError(/^Controller.map called with non-array value/)
+	})
+
 })

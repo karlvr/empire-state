@@ -1,5 +1,11 @@
 # empire-state
 
+## 1.7.3
+
+### Patch Changes
+
+- 50f2124: Detect non-array values in map, findIndex and find and report an error
+
 ## 1.7.1
 
 ### Patch Changes

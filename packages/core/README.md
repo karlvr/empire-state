@@ -157,6 +157,9 @@ When a controller contains an array value, these methods are applicable:
 |`map(callback)`|Map over the values. The callback receives a controller for each value as its first argument and an index as its second.|
 |`find(predicate)`|Returns the first value in the controller that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`. The `find` method returns a `Controller` for the found value, or `undefined` if not found.|
 |`findIndex(predicate)`|Returns the index of the first value in the controller that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
+|`push('this', newValue)`|Push a new value into the array value in the controller|
+|`pushNew('this')`|Return a sub-controller that adds a value to the array value in this controller whenever it receives a new value|
+|`remove('this', predicate)`|Remove values from the array value in the controller using a predicate function. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
 |`onToggle(index: number)`|Return a function that toggles the boolean value in the array in the controller|
 |`onChange(index: number)`|Return a function to change the value in the array in the controller|
 
@@ -172,6 +175,9 @@ When a controller contains an object value, these methods are applicable:
 |`map(prop: string, callback)`|Map over the values in the given array-valued property. The callback receives a controller for each value as its first argument and an index as its second.|
 |`find(prop: string, predicate)`|Returns the first value in the given array-valued property that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`. The `find` method returns a `Controller` for the found value, or `undefined` if not found.|
 |`findIndex(prop: string, predicate)`|Returns the index of the first value in the given array-values property that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
+|`push(prop: string, newValue)`|Push a new value into the given array-valued property|
+|`pushNew(prop: string)`|Return a sub-controller that adds a value to the given array-valued property whenever it receives a new value|
+|`remove(prop: string, predicate)`|Remove values from the given array-valued property using a predicate function. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
 |`onToggle(prop: string)`|Return a function that toggles the boolean value in the property in the controller|
 |`onToggle(prop: string, index: number)`|Return a function that toggles the boolean value in the array in the property in the controller|
 |`onChange(prop: string)`|Return a function to change the value in the property in the controller|

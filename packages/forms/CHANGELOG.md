@@ -1,5 +1,11 @@
 # empire-state-forms
 
+## 1.9.0
+
+### Minor Changes
+
+- c672e21: Bump version to match empire-state
+
 ## 1.3.6
 
 ### Patch Changes

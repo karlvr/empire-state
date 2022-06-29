@@ -156,7 +156,6 @@ export interface Controller<T> {
 
 	push(name: 'this', newValue: INDEXPROPERTY<T>): void
 	push<K extends KEY<T>>(name: K, newValue: INDEXPROPERTY<PROPERTY<T, K>>): void
-	push<K extends KEY<T>>(nameOrIndex: K | 'this', newValue: INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>): void
 
 	/**
 	 * Remove the value that is controlled by this controller from its parent. Only applicable
@@ -164,9 +163,13 @@ export interface Controller<T> {
 	 */
 	remove(): void
 	
+	/**
+	 * Remove elements from an array controlled by this controller
+	 * @param name the array property name to remove from, or 'this' to remove from the controller's value if it is an array
+	 * @param predicate a predicate to determine which array members to remove
+	 */
 	remove(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): void
 	remove<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void
-	remove<K extends KEY<T>>(name: K | 'this', predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void
 	
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void

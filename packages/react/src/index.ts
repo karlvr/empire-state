@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { controllerWithFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'empire-state'
 import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY, UNDEFINEDIFUNDEFINED } from 'empire-state/dist/type-utils'
 import { FunctionKeys } from 'empire-state/dist/utilities'
+import { SetValueFunc } from 'empire-state/dist/types'
 export * from 'empire-state'
 
 /**
@@ -281,7 +282,7 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 			(newValue) => {
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
 				currentValue = newValue
-				actualComponent.props[onChangeProperty](newValue)
+				;(actualComponent.props[onChangeProperty] as unknown as SetValueFunc<T>)(newValue)
 			},
 		)
 	}

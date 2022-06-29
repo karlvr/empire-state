@@ -2,12 +2,13 @@
 import { produce } from 'immer'
 import { DEFAULT_CHANGE_LISTENER_TAG } from './constants'
 import { KEY, PROPERTY, INDEXPROPERTY, COMPATIBLEKEYS } from './type-utils'
-import { Snapshot, Controller, ChangeListener, ControllerSource, SetValueFunc } from './types'
+import { Snapshot, Controller, ChangeListener, ControllerSource, SetValueFunc, isExtendedSnapshot, ExtendedSnapshot } from './types'
 
 interface ChangeListenerInfo<T> {
 	listener: ChangeListener<T>
 	tag: string
 }
+
 export class ControllerImpl<T> implements Controller<T> {
 
 	private source: () => Snapshot<T>
@@ -226,12 +227,22 @@ export class ControllerImpl<T> implements Controller<T> {
 	 * Remove values matching a predicate from an array property.
 	 * @param predicate 
 	 */
+	public remove(): void
 	public remove(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): void
 	public remove<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void
-	public remove<K extends KEY<T>>(name: K | 'this', predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void {
+	public remove<K extends KEY<T>>(name?: K | 'this', predicate?: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void {
+		if (typeof name === 'undefined') {
+			this.removeFromParent()
+			return
+		}
+
 		if (typeof name === 'function') {
 			return this.remove('this', name)
 		}
+		if (typeof predicate === 'undefined') {
+			throw new Error('Predicate parameter is required')
+		}
+
 		if (name !== 'this') {
 			return this.get(name).remove('this', predicate)
 		}
@@ -267,6 +278,7 @@ export class ControllerImpl<T> implements Controller<T> {
 
 		let result: Controller<INDEXPROPERTY<T>> | Controller<PROPERTY<T, K>> | Controller<T> | Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 		if (typeof nameOrIndex === 'number') {
+			/* Array values */
 			result = new ControllerImpl<INDEXPROPERTY<T>>(() => {
 				const onChange = (newValue: INDEXPROPERTY<T>) => {
 					const currentValue = this.value
@@ -284,16 +296,33 @@ export class ControllerImpl<T> implements Controller<T> {
 						})()
 					this.internalSetValue(parentNewValue, true)
 				}
+				const onRemove = () => {
+					const currentValue = this.value
+					if (currentValue === undefined || currentValue === null) {
+						return
+					}
+					const parentNewValue = produce(this.value, draft => {
+						(draft as unknown as Array<INDEXPROPERTY<T>>).splice(nameOrIndex, 1)
+					})
+					this.internalSetValue(parentNewValue, true)
+				}
 				const currentValue = this.value
 				const value: any = currentValue !== undefined && currentValue !== null ? (currentValue as any)[nameOrIndex] : undefined
-				return {
+				const extendedSnapshot: ExtendedSnapshot<INDEXPROPERTY<T>> = {
 					change: onChange,
 					value: produce(value, (draft: any) => draft) as INDEXPROPERTY<T>,
+					extendedSnapshot: true,
+					remove: onRemove,
 				}
+				return extendedSnapshot
 			})
 		} else {
+			/* Object values */
 			result = new ControllerImpl<PROPERTY<T, K>>(() => {
 				const onChange = this.propOnChange(nameOrIndex)
+				const onRemove = () => {
+					onChange(undefined as any)
+				}
 				const currentValue = this.value
 				let value: any = currentValue !== undefined && currentValue !== null ? currentValue[nameOrIndex as unknown as keyof T] : undefined
 
@@ -302,10 +331,13 @@ export class ControllerImpl<T> implements Controller<T> {
 					value = getter(value)
 				}
 
-				return {
+				const extendedSnapshot: ExtendedSnapshot<PROPERTY<T, K>> = {
 					change: onChange,
 					value: produce(value, (draft: any) => draft) as any as PROPERTY<T, K>,
+					extendedSnapshot: true,
+					remove: onRemove,
 				}
+				return extendedSnapshot
 			})
 		}
 
@@ -396,6 +428,19 @@ export class ControllerImpl<T> implements Controller<T> {
 
 		this.onChanges[name as string] = func
 		return func
+	}
+
+	private removeFromParent(): void {
+		const snapshot = this.source()
+		if (!isExtendedSnapshot(snapshot)) {
+			throw new Error('Source is not an ExtendedSnapshot therefore remove() is not supported')
+		}
+
+		if (!snapshot.remove) {
+			throw new Error('Source is an ExtendedSnapshot but does not support remove()')
+		}
+
+		snapshot.remove()
 	}
 
 }

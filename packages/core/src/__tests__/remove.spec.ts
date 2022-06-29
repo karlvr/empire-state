@@ -84,4 +84,51 @@ describe('remove', () => {
 		expect(controller.value).toBeUndefined()
 	})
 
+	it('can remove a value from a parent array', () => {
+		interface TestInterface {
+			children: string[]
+		}
+
+		const controller = controllerWithInitialValue<TestInterface>({
+			children: [
+				'Peter',
+				'Janet',
+				'Pam',
+			],
+		})
+
+		expect(controller.value.children.length).toEqual(3)
+
+		const firstChildController = controller.get('children', 0)
+		expect(firstChildController.value).toEqual('Peter')
+		firstChildController.remove()
+
+		expect(controller.value.children.length).toEqual(2)
+
+		/* The child controller now points at the new first element */
+		expect(firstChildController.value).toEqual('Janet')
+	})
+
+	it('can remove a value from a parent object', () => {
+		interface TestInterface {
+			a: string | undefined
+			b: string | undefined
+		}
+
+		const controller = controllerWithInitialValue<TestInterface>({
+			a: 'Hello',
+			b: 'World',
+		})
+
+		expect(controller.value).toEqual({ a: 'Hello', b: 'World' })
+
+		const aController = controller.get('a')
+		expect(aController.value).toEqual('Hello')
+		aController.remove()
+		
+		expect(controller.value).toEqual({ b: 'World' })
+		
+		/* The child controller still points at the property, which is undefined */
+		expect(aController.value).toBeUndefined()
+	})
 })

@@ -13,13 +13,13 @@ describe('pushNew', () => {
 		const childrenNewController = controller.pushNew('children')
 		expect(childrenNewController.value).toBeUndefined()
 		childrenNewController.setValue('Barbara')
-		expect(childrenNewController.value).toBeUndefined()
+		expect(childrenNewController.value).toEqual('Barbara')
 
 		expect(controller.value.children.length).toBe(4)
 		expect(controller.value.children).toEqual(['Peter', 'Janet', 'Pam', 'Barbara'])
 	})
 
-	it('can push multiple new values in a string array property', () => {
+	it('can update the pushed new value', () => {
 		interface TestInterface {
 			children: string[]
 		}
@@ -32,10 +32,10 @@ describe('pushNew', () => {
 		expect(childrenNewController.value).toBeUndefined()
 		childrenNewController.setValue('Barbara')
 		childrenNewController.setValue('Jack')
-		expect(childrenNewController.value).toBeUndefined()
+		expect(childrenNewController.value).toEqual('Jack')
 
-		expect(controller.value.children.length).toBe(5)
-		expect(controller.value.children).toEqual(['Peter', 'Janet', 'Pam', 'Barbara', 'Jack'])
+		expect(controller.value.children.length).toBe(4)
+		expect(controller.value.children).toEqual(['Peter', 'Janet', 'Pam', 'Jack'])
 	})
 
 })

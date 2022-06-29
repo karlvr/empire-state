@@ -226,14 +226,16 @@ export class ControllerImpl<T> implements Controller<T> {
 	public pushNew(name: 'this'): Controller<INDEXPROPERTY<T>>
 	public pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 	public pushNew<K extends KEY<T>>(name: K | 'this'): Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+		const subController = this.internalController(name) as Controller<any>
+
 		let pushedValueController: Controller<any> | undefined
 		return new ControllerImpl<unknown>(() => {
 			return {
 				change: (newValue) => {
 					if (!pushedValueController) {
-						this.push(name as any, newValue as any)
-						const length = (this.value as unknown as Array<unknown>).length
-						pushedValueController = this.get(name as any, length - 1)
+						subController.push('this', newValue)
+						const length = (subController.value as unknown as Array<unknown>).length
+						pushedValueController = subController.get(length - 1)
 					} else {
 						pushedValueController.setValue(newValue)
 					}

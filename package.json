@@ -11,7 +11,7 @@
 		"clean": "pnpm --recursive clean",
 		"clean:node": "rm -rf node_modules && pnpm --recursive exec rm -rf node_modules",
 		"link": "pnpm --recursive --workspace-concurrency=1 exec pnpm link --global",
-		"lint": "pnpm lint --recursive",
+		"lint": "pnpm --recursive lint",
 		"release": "pnpm clean && pnpm build && pnpm lint && pnpm test && pnpx changeset publish && pnpm install",
 		"release:version": "pnpm changeset version && pnpm install && pnpm build",
 		"test": "pnpm --recursive --workspace-concurrency 1 test",

@@ -223,6 +223,19 @@ export class ControllerImpl<T> implements Controller<T> {
 		(this.internalController(nameOrIndex) as Controller<unknown>).setValue((value: any) => ([...(value || []), newValue]))
 	}
 
+	public pushNew(name: 'this'): Controller<INDEXPROPERTY<T>>
+	public pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	public pushNew<K extends KEY<T>>(name: K | 'this'): Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+		return new ControllerImpl<unknown>(() => {
+			return {
+				change: (newValue) => {
+					this.push(name as any, newValue as any)
+				},
+				value: undefined,
+			}
+		}) as any
+	}
+
 	/**
 	 * Remove values matching a predicate from an array property.
 	 * @param predicate 

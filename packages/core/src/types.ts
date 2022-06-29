@@ -158,6 +158,13 @@ export interface Controller<T> {
 	push<K extends KEY<T>>(name: K, newValue: INDEXPROPERTY<PROPERTY<T, K>>): void
 
 	/**
+	 * Return a Controller that adds to an array value whenever its value is set.
+	 * @param name the array property to push new elements to, or 'this' to push to this controller's array value
+	 */
+	pushNew(name: 'this'): Controller<INDEXPROPERTY<T>>
+	pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	
+	/**
 	 * Remove the value that is controlled by this controller from its parent. Only applicable
 	 * if the parent is an object or an array.
 	 */

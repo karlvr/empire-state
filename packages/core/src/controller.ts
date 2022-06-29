@@ -151,7 +151,7 @@ export class ControllerImpl<T> implements Controller<T> {
 	public set(name: 'this', newValue: T): void
 	public set<K extends KEY<T>>(name: K, newValue: PROPERTY<T, K>): void
 	public set<K extends KEY<T>>(nameOrIndex: K | number | 'this', newValue: PROPERTY<T, K> | INDEXPROPERTY<T> | T): void {
-		this.internalController(nameOrIndex).setValue(newValue as any)
+		(this.internalController(nameOrIndex) as Controller<unknown>).setValue(newValue)
 	}
 
 	public map<U>(callback: (controller: Controller<INDEXPROPERTY<T>>, index: number, array: T) => U): U[]
@@ -226,12 +226,19 @@ export class ControllerImpl<T> implements Controller<T> {
 	public pushNew(name: 'this'): Controller<INDEXPROPERTY<T>>
 	public pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 	public pushNew<K extends KEY<T>>(name: K | 'this'): Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+		let pushedValueController: Controller<any> | undefined
 		return new ControllerImpl<unknown>(() => {
 			return {
 				change: (newValue) => {
-					this.push(name as any, newValue as any)
+					if (!pushedValueController) {
+						this.push(name as any, newValue as any)
+						const length = (this.value as unknown as Array<unknown>).length
+						pushedValueController = this.get(name as any, length - 1)
+					} else {
+						pushedValueController.setValue(newValue)
+					}
 				},
-				value: undefined,
+				value: pushedValueController ? pushedValueController.value : undefined,
 			}
 		}) as any
 	}
@@ -284,7 +291,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			return this
 		}
 
-		const memoisedController = this.memoisedControllers[`${nameOrIndex}`]
+		const memoisedController = this.memoisedControllers[`${String(nameOrIndex)}`]
 		if (memoisedController) {
 			return memoisedController
 		}
@@ -354,7 +361,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			})
 		}
 
-		this.memoisedControllers[`${nameOrIndex}`] = result
+		this.memoisedControllers[`${String(nameOrIndex)}`] = result
 		return result
 	}
 

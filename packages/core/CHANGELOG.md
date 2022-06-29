@@ -1,5 +1,11 @@
 # empire-state
 
+## 1.9.0
+
+### Minor Changes
+
+- be51af1: Change pushNew semantics to push a single new value and to then represent that value
+
 ## 1.8.0
 
 ### Minor Changes

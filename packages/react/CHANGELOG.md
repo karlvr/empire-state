@@ -1,5 +1,12 @@
 # empire-state-react
 
+## 1.9.0
+
+### Patch Changes
+
+- Updated dependencies [be51af1]
+  - empire-state@1.9.0
+
 ## 1.8.0
 
 ### Patch Changes

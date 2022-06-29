@@ -1,5 +1,14 @@
 # empire-state-react
 
+## 1.8.0
+
+### Patch Changes
+
+- Updated dependencies [94c6e8e]
+- Updated dependencies [2e0acae]
+- Updated dependencies [9b7997f]
+  - empire-state@1.8.0
+
 ## 1.7.3
 
 ### Patch Changes

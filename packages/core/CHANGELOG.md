@@ -1,5 +1,16 @@
 # empire-state
 
+## 1.8.0
+
+### Minor Changes
+
+- 94c6e8e: Add pushNew to Controller
+- 9b7997f: Add remove() to remove controller value from parent
+
+### Patch Changes
+
+- 2e0acae: Remove extraneous push and remove method signatures and add docs
+
 ## 1.7.3
 
 ### Patch Changes

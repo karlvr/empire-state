@@ -9,6 +9,7 @@ importers:
       '@changesets/cli': ^2.17.0
       '@types/jest': ^27.0.2
       '@types/node': ^16.11.1
+      '@types/react': ^17.0.31
       '@typescript-eslint/eslint-plugin': ^5.1.0
       '@typescript-eslint/parser': ^5.1.0
       eslint: ^7.32.0
@@ -29,6 +30,7 @@ importers:
       '@changesets/cli': 2.17.0
       '@types/jest': 27.0.2
       '@types/node': 16.11.1
+      '@types/react': 17.0.31
       '@typescript-eslint/eslint-plugin': 5.1.0_ztvqphqvxaxcbartas6adi2a6a
       '@typescript-eslint/parser': 5.1.0_wnilx7boviscikmvsfkd6ljepe
       eslint: 7.32.0

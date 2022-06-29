@@ -2,16 +2,20 @@
 	"name": "empire-state-root",
 	"version": "0.0.1",
 	"private": true,
+	"engines": {
+		"node": "^16.15.1",
+		"pnpm": ">=7.4.0"
+	},
 	"scripts": {
-		"build": "pnpm build --recursive",
-		"clean": "pnpm clean --recursive",
-		"clean:node": "pnpm --recursive exec rm -rf node_modules",
+		"build": "pnpm --recursive build",
+		"clean": "pnpm --recursive clean",
+		"clean:node": "rm -rf node_modules && pnpm --recursive exec rm -rf node_modules",
 		"link": "pnpm --recursive --workspace-concurrency=1 exec pnpm link --global",
 		"lint": "pnpm lint --recursive",
 		"release": "pnpm clean && pnpm build && pnpm lint && pnpm test && pnpx changeset publish && pnpm install",
 		"release:version": "pnpm changeset version && pnpm install && pnpm build",
-		"test": "pnpm test --recursive --workspace-concurrency 1",
-		"watch": "pnpm watch --parallel"
+		"test": "pnpm --recursive --workspace-concurrency 1 test",
+		"watch": "pnpm --parallel watch"
 	},
 	"keywords": [
 		"immer"
@@ -24,6 +28,7 @@
 		"@changesets/cli": "^2.17.0",
 		"@types/jest": "^27.0.2",
 		"@types/node": "^16.11.1",
+		"@types/react": "^17.0.31",
 		"@typescript-eslint/eslint-plugin": "^5.1.0",
 		"@typescript-eslint/parser": "^5.1.0",
 		"eslint": "^7.32.0",

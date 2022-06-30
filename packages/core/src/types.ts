@@ -154,6 +154,7 @@ export interface Controller<T> {
 	find(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): Controller<INDEXPROPERTY<T>> | undefined
 	find<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): Controller<INDEXPROPERTY<PROPERTY<T, K>>> | undefined
 
+	push(newValue: INDEXPROPERTY<T>): void
 	push(name: 'this', newValue: INDEXPROPERTY<T>): void
 	push<K extends KEY<T>>(name: K, newValue: INDEXPROPERTY<PROPERTY<T, K>>): void
 
@@ -161,6 +162,7 @@ export interface Controller<T> {
 	 * Return a Controller that pushes a new value onto an array when it is first set.
 	 * @param name the array property to push new elements to, or 'this' to push to this controller's array value
 	 */
+	pushNew(): Controller<INDEXPROPERTY<T>>
 	pushNew(name: 'this'): Controller<INDEXPROPERTY<T>>
 	pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
 	

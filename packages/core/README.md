@@ -157,9 +157,9 @@ When a controller contains an array value, these methods are applicable:
 |`map(callback)`|Map over the values. The callback receives a controller for each value as its first argument and an index as its second.|
 |`find(predicate)`|Returns the first value in the controller that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`. The `find` method returns a `Controller` for the found value, or `undefined` if not found.|
 |`findIndex(predicate)`|Returns the index of the first value in the controller that matches the predicate. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
-|`push('this', newValue)`|Push a new value into the array value in the controller|
-|`pushNew('this')`|Return a sub-controller that adds a value to the array value in this controller when it first receives a new value|
-|`remove('this', predicate)`|Remove values from the array value in the controller using a predicate function. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
+|`push(newValue)`|Push a new value into the array value in the controller|
+|`pushNew()`|Return a sub-controller that adds a value to the array value in this controller when it first receives a new value|
+|`remove(predicate)`|Remove values from the array value in the controller using a predicate function. The predicate signature is `(value: T, index: number, array: T[]) => boolean`.|
 |`onToggle(index: number)`|Return a function that toggles the boolean value in the array in the controller|
 |`onChange(index: number)`|Return a function to change the value in the array in the controller|
 

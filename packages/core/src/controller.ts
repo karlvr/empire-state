@@ -217,16 +217,22 @@ export class ControllerImpl<T> implements Controller<T> {
 	 * @param name 
 	 * @param newValue 
 	 */
+	public push(newValue: INDEXPROPERTY<T>): void
 	public push(name: 'this', newValue: INDEXPROPERTY<T>): void
 	public push<K extends KEY<T>>(name: K, newValue: INDEXPROPERTY<PROPERTY<T, K>>): void
-	public push<K extends KEY<T>>(nameOrIndex: K | 'this', newValue: INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>): void {
-		(this.internalController(nameOrIndex) as Controller<unknown>).setValue((value: any) => ([...(value || []), newValue]))
+	public push<K extends KEY<T>>(nameOrIndexOrNewValue: K | 'this' | INDEXPROPERTY<T>, newValue?: INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>): void {
+		if (arguments.length === 1) {
+			this.push('this', nameOrIndexOrNewValue as INDEXPROPERTY<T>)
+		} else {
+			(this.internalController(nameOrIndexOrNewValue as K | 'this') as Controller<unknown>).setValue((value: any) => ([...(value || []), newValue]))
+		}
 	}
 
+	public pushNew(): Controller<INDEXPROPERTY<T>>
 	public pushNew(name: 'this'): Controller<INDEXPROPERTY<T>>
 	public pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
-	public pushNew<K extends KEY<T>>(name: K | 'this'): Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
-		const subController = this.internalController(name) as Controller<any>
+	public pushNew<K extends KEY<T>>(name?: K | 'this'): Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+		const subController = this.internalController(name !== undefined ? name : 'this') as Controller<any>
 
 		let pushedValueController: Controller<any> | undefined
 		return new ControllerImpl<unknown>(() => {

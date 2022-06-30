@@ -62,4 +62,16 @@ describe('push', () => {
 		expect(controller.value.children).toEqual(['Barbara'])
 	})
 
+	it('can push a value in a string array', () => {
+		const controller = controllerWithInitialValue<string[]>(
+			['Peter', 'Janet', 'Pam'],
+		)
+
+		controller.push('this', 'Barbara')
+		controller.push('Jack')
+
+		expect(controller.value.length).toBe(5)
+		expect(controller.value).toEqual(['Peter', 'Janet', 'Pam', 'Barbara', 'Jack'])
+	})
+
 })

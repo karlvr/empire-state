@@ -8,6 +8,7 @@ import Example4a from './Example4MultiCheckable'
 import Example5 from './Example5Select'
 import Example6 from './Example6Repeating'
 import Example7 from './Example7Indexed'
+import Example7a from './Example7aIndexedThis'
 import Example8 from './Example8Undefined'
 import Existing from './Existing'
 
@@ -32,6 +33,8 @@ export default class App extends React.Component {
 				<Example6 />
 				<hr />
 				<Example7 />
+				<hr />
+				<Example7a />
 				<hr />
 				<Example8 />
 			</div>

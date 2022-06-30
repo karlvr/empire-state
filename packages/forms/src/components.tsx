@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback } from 'react'
-import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY } from 'empire-state/dist/type-utils' // TODO change to an "spi" export
+import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY, COMPATIBLETHIS } from 'empire-state/dist/type-utils' // TODO change to an "spi" export
 import { Subtract } from 'empire-state/dist/utilities'
 import equal from 'fast-deep-equal'
 import { Controller, Snapshot, useControllerValue, ControllerValueHookResult } from 'empire-state-react'
@@ -349,9 +349,9 @@ interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProperty<T, 
 	}) => JSX.Element | null
 }
 
-export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined>>(props: IndexedProps<T, K>) {
+export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined> = COMPATIBLETHIS<T, any[] | undefined>>(props: IndexedProps<T, K>) {
 	const { controller, prop, renderEach, renderBefore, renderAfter, RenderEach, RenderBefore, RenderAfter } = props
-	const actualController = prop !== 'this' ? controller.get(prop as KEY<T>) : controller
+	const actualController = prop !== 'this' && prop !== undefined ? controller.get(prop as KEY<T>) : controller
 	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<any[] | undefined>
 	const arrayValue = value || []
 

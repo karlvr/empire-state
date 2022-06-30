@@ -18,7 +18,7 @@ export type PROPERTYORTHIS<T, K extends KEY<T> | 'this'> =
 /** Returns the component type of an indexed type, or never if the type isn't indexable */
 export type INDEXPROPERTY<T> = T extends (infer R)[] ? R : never
 
-type COMPATIBLETHIS<T, R> = T extends R ? 'this' : never
+export type COMPATIBLETHIS<T, R> = T extends R ? 'this' : never
 
 /** Returns the keys of T that are compatible with R, and 'this' if T itself is compatible with R */
 export type COMPATIBLEKEYS<T, R> = CompatibleKeys<KEYABLE<T>, R> | COMPATIBLETHIS<T, R>

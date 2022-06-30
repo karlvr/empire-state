@@ -8,7 +8,7 @@ import Example4a from './Example4MultiCheckable'
 import Example5 from './Example5Select'
 import Example6 from './Example6Repeating'
 import Example7 from './Example7Indexed'
-import Example8 from './Example8'
+import Example8 from './Example8Undefined'
 import Existing from './Existing'
 
 export default class App extends React.Component {

@@ -256,9 +256,10 @@ export class ControllerImpl<T> implements Controller<T> {
 	 * @param predicate 
 	 */
 	public remove(): void
+	public remove(predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): void
 	public remove(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): void
 	public remove<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void
-	public remove<K extends KEY<T>>(name?: K | 'this', predicate?: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void {
+	public remove<K extends KEY<T>>(name?: K | 'this' | ((value: INDEXPROPERTY<T>, index: number, array: T) => boolean), predicate?: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void {
 		if (typeof name === 'undefined') {
 			this.removeFromParent()
 			return

@@ -177,6 +177,7 @@ export interface Controller<T> {
 	 * @param name the array property name to remove from, or 'this' to remove from the controller's value if it is an array
 	 * @param predicate a predicate to determine which array members to remove
 	 */
+	remove(predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): void
 	remove(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): void
 	remove<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void
 	

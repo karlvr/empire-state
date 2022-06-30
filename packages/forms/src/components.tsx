@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY, COMPATIBLETHIS } from 'empire-state/dist/type-utils' // TODO change to an "spi" export
 import { Subtract } from 'empire-state/dist/utilities'
 import equal from 'fast-deep-equal'
-import { Controller, Snapshot, useControllerValue, ControllerValueHookResult } from 'empire-state-react'
+import { Controller, Snapshot, useControllerValue, ControllerValueHookResult, useControllerLength } from 'empire-state-react'
 
 /** A ControllerProperty represents a controller property using a Controller and the name of a property it controls. */
 export interface ControllerProperty<T, K extends KEYORTHIS<T>> {
@@ -351,23 +351,18 @@ interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProperty<T, 
 
 export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined> = COMPATIBLETHIS<T, any[] | undefined>>(props: IndexedProps<T, K>) {
 	const { controller, prop, renderEach, renderBefore, renderAfter, RenderEach, RenderBefore, RenderAfter } = props
-	const actualController = prop !== 'this' && prop !== undefined ? controller.get(prop as KEY<T>) : controller
-	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<any[] | undefined>
-	const arrayValue = value || []
+	const actualController = (prop !== 'this' && prop !== undefined ? controller.get(prop as KEY<T>) : controller) as unknown as Controller<unknown[]>
+	useControllerLength(controller, prop as unknown as KEY<T>)
 
 	const actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>> = {
 		onPush: (value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
-			changeValue([...arrayValue, value])
+			actualController.push(value)
 		},
 		onInsert: (index: number, value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {
-			const newArrayValue = [...arrayValue]
-			newArrayValue.splice(index, 0, value)
-			changeValue(newArrayValue)
+			actualController.splice(index, 0, value)
 		},
 		onRemove: (index: number) => {
-			const newArrayValue = [...arrayValue]
-			newArrayValue.splice(index, 1)
-			changeValue(newArrayValue)
+			actualController.splice(index, 1)
 		},
 	}
 
@@ -375,8 +370,7 @@ export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined> = COMP
 		<>
 			{renderBefore ? renderBefore(actions) : null}
 			{RenderBefore ? <RenderBefore actions={actions} /> : null}
-			{renderEach ? arrayValue.map((v, i) => {
-				const indexController = actualController.get(i)
+			{renderEach ? actualController.map((indexController, i, arrayValue) => {
 				const cursor: IndexedCursor = {
 					index: i,
 					first: i === 0,
@@ -388,8 +382,7 @@ export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined> = COMP
 					actions,
 				)
 			}) : null}
-			{RenderEach ? arrayValue.map((v, i) => {
-				const indexController = actualController.get(i)
+			{RenderEach ? actualController.map((indexController, i, arrayValue) => {
 				const cursor: IndexedCursor = {
 					index: i,
 					first: i === 0,

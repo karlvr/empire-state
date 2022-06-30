@@ -285,6 +285,41 @@ export class ControllerImpl<T> implements Controller<T> {
 		this.setValue(newValue as unknown as T)
 	}
 
+	public splice(index: number, deleteCount?: number, ...items: INDEXPROPERTY<T>[]): INDEXPROPERTY<T>[]
+	public splice(name: 'this', index: number, deleteCount?: number, ...items: INDEXPROPERTY<T>[]): INDEXPROPERTY<T>[]
+	public splice<K extends KEY<T>>(name: K, index: number, deleteCount?: number, ...items: INDEXPROPERTY<PROPERTY<T, K>>[]): INDEXPROPERTY<PROPERTY<T, K>>[]
+	public splice<K extends KEY<T>>(nameOrIndex: K | 'this' | number, indexOrDeleteCount?: number, ...itemsOr: (INDEXPROPERTY<T> |INDEXPROPERTY<PROPERTY<T, K>> | number | undefined)[]): INDEXPROPERTY<T>[] | INDEXPROPERTY<PROPERTY<T, K>>[] {
+		if (typeof nameOrIndex === 'number') {
+			return this.splice('this', nameOrIndex, indexOrDeleteCount as number | undefined, ...itemsOr as INDEXPROPERTY<T>[])
+		}
+
+		if (nameOrIndex !== 'this') {
+			return this.get(nameOrIndex).splice('this', indexOrDeleteCount as number, itemsOr[0] as number | undefined, ...itemsOr.slice(1) as any[])
+		}
+
+		const index = indexOrDeleteCount as number
+		const deleteCount = itemsOr[0] as number | undefined
+		const items = itemsOr.slice(1) as INDEXPROPERTY<T>[] | undefined
+
+		if (index === undefined) {
+			return []
+		}
+		
+		let value: unknown[] = this.value as unknown as unknown[]
+		if (!value) {
+			if (items === undefined) {
+				return []
+			}
+
+			value = []
+		}
+		
+		const newValue = [...value]
+		const result = deleteCount !== undefined ? newValue.splice(index, deleteCount, ...(items || [])) : newValue.splice(index)
+		this.setValue(newValue as unknown as T)
+		return result as INDEXPROPERTY<T>[] | INDEXPROPERTY<PROPERTY<T, K>>[]
+	}
+
 	private internalSetValue(value: T, fromSubController = false): void {
 		const oldValue = this.source().value
 		this.source().change(value as T)

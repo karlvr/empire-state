@@ -181,6 +181,10 @@ export interface Controller<T> {
 	remove(name: 'this', predicate: (value: INDEXPROPERTY<T>, index: number, array: T) => boolean): void
 	remove<K extends KEY<T>>(name: K, predicate: (value: INDEXPROPERTY<PROPERTY<T, K>>, index: number, array: PROPERTY<T, K>) => boolean): void
 	
+	splice(index: number, deleteCount?: number, ...items: INDEXPROPERTY<T>[]): INDEXPROPERTY<T>[]
+	splice(name: 'this', index: number, deleteCount?: number, ...items: INDEXPROPERTY<T>[]): INDEXPROPERTY<T>[]
+	splice<K extends KEY<T>>(name: K, index: number, deleteCount?: number, ...items: INDEXPROPERTY<PROPERTY<T, K>>[]): INDEXPROPERTY<PROPERTY<T, K>>[]
+
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 

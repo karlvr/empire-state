@@ -1,5 +1,17 @@
 # empire-state-forms
 
+## 1.10.0
+
+### Patch Changes
+
+- 3f80133: Fix Indexed component when not specifying prop prop
+- 6ca1ccc: Output empty string instead of undefined if a Select option has an undefined value and no text
+- Updated dependencies [b245677]
+- Updated dependencies [3f80133]
+- Updated dependencies [9406503]
+  - empire-state@1.10.0
+  - empire-state-react@1.10.0
+
 ## 1.9.0
 
 ### Minor Changes

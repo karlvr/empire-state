@@ -1,5 +1,14 @@
 # examples
 
+## 1.1.8
+
+### Patch Changes
+
+- 3f80133: Fix Indexed component when not specifying prop prop
+- Updated dependencies [3f80133]
+- Updated dependencies [6ca1ccc]
+  - empire-state-forms@1.10.0
+
 ## 1.1.7
 
 ### Patch Changes

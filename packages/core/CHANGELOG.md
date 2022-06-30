@@ -1,5 +1,15 @@
 # empire-state
 
+## 1.10.0
+
+### Minor Changes
+
+- b245677: Support omitting "this" as first parameter for push and pushNew
+
+### Patch Changes
+
+- 3f80133: Fix Indexed component when not specifying prop prop
+
 ## 1.9.0
 
 ### Minor Changes

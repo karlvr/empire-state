@@ -1,5 +1,17 @@
 # empire-state-react
 
+## 1.10.0
+
+### Minor Changes
+
+- 9406503: Add useControllerLength hook
+
+### Patch Changes
+
+- Updated dependencies [b245677]
+- Updated dependencies [3f80133]
+  - empire-state@1.10.0
+
 ## 1.9.0
 
 ### Patch Changes

@@ -297,7 +297,7 @@ export function Select<T, K extends KEYORTHIS<T>>(props: SelectProps<T, K>) {
 			{options ?
 				isOptionTypeObjects(options, props)
 					? options.map((item, index) => (
-						<option key={index} value={index} label={item.label}>{item.text || (item.value && String(item.value))}</option>
+						<option key={index} value={index} label={item.label}>{item.text || (item.value && String(item.value)) || ''}</option>
 					))
 					: options.map((item, index) => (
 						<option key={index} value={index}>{props.display!(item)}</option>

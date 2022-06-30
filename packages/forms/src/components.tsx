@@ -325,7 +325,6 @@ export interface IndexedActions<V> {
 }
 
 interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProperty<T, K> {
-	/* Optional so that autocomplete works for the prop field */
 	renderEach?: (
 		controller: Controller<INDEXPROPERTY<PROPERTYORTHIS<T, K>>>,
 		cursor: IndexedCursor, 

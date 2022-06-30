@@ -1,5 +1,18 @@
 # empire-state-forms
 
+## 1.11.0
+
+### Minor Changes
+
+- 4382475: Change Indexed to use useControllerLength and new Controller push and splice functions
+
+### Patch Changes
+
+- Updated dependencies [c7e62e2]
+- Updated dependencies [3837cd9]
+  - empire-state@1.11.0
+  - empire-state-react@1.11.0
+
 ## 1.10.0
 
 ### Patch Changes

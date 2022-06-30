@@ -1,5 +1,15 @@
 # empire-state
 
+## 1.11.0
+
+### Minor Changes
+
+- 3837cd9: Add splice
+
+### Patch Changes
+
+- c7e62e2: Add missing remove function prototype
+
 ## 1.10.0
 
 ### Minor Changes

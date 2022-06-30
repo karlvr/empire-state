@@ -1,5 +1,13 @@
 # empire-state-react
 
+## 1.11.0
+
+### Patch Changes
+
+- Updated dependencies [c7e62e2]
+- Updated dependencies [3837cd9]
+  - empire-state@1.11.0
+
 ## 1.10.0
 
 ### Minor Changes

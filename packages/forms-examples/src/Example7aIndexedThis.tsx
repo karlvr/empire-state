@@ -34,7 +34,7 @@ export default function Example7a() {
 
 	return (
 		<div>
-			<h1>Example 7: Indexed</h1>
+			<h1>Example 7a: Indexed with an array controller</h1>
 			<Indexed
 				controller={controller}
 				renderBefore={renderBefore}

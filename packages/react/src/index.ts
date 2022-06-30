@@ -113,6 +113,45 @@ export function useController<T, K extends KEY<T>>(controller: Controller<T> | u
 	return valueController as Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> | undefined
 }
 
+export function useControllerLength<T>(controller: Controller<T>): Controller<T>
+export function useControllerLength<T>(controller: Controller<T> | undefined): Controller<T> | undefined
+export function useControllerLength<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T>, name: K): Controller<S>
+export function useControllerLength<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T> | undefined, name: K): Controller<S> | undefined
+export function useControllerLength<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Controller<S>
+export function useControllerLength<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T> | undefined, name: K, index: number): Controller<S> | undefined
+export function useControllerLength<T, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
+export function useControllerLength<T, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T> | undefined, index: number): Controller<S> | undefined
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useControllerLength<T extends any[], K extends KEY<T>>(controller: Controller<T> | undefined, nameOrIndex?: K | number | 'this', index?: number): Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> | undefined {
+	const [, setRefresh] = useState(0)
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const valueController = nameOrIndex !== undefined ? controller?.get(nameOrIndex as any, index as any) : controller
+
+	/* Add and remove the change listener */
+	useEffect(function() {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const changeListener: ChangeListener<unknown> = function(newValue, oldValue) {
+			if (Array.isArray(newValue) && Array.isArray(oldValue)) {
+				if (newValue.length !== oldValue.length) {
+					setRefresh(n => n + 1)
+				}
+			} else {
+				setRefresh(n => n + 1)
+			}
+		}
+		/* We add the change listener with a tag so it isn't removed by our removeAllChangeListeners */
+		valueController?.addChangeListener(changeListener, 'useControllerLength')
+		
+		return function() {
+			valueController?.removeChangeListener(changeListener)
+		}
+	}, [valueController])
+
+	return valueController as Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> | undefined
+}
+
 /**
  * Create a new Controller with the given `value` and an `onChange` function to call when the value has been changed.
  * The controller itself is considered stateless as it doesn't maintain any state itself.

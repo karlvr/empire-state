@@ -1,5 +1,19 @@
 # empire-state-forms
 
+## 1.12.0
+
+### Patch Changes
+
+- 9c5dfd8: Update use of useControllerLength now that it has stricter types
+- 7f3f035: Change COMPATIBLEKEYS type utility to only find compatible keys and create separate COMPATIBLEKEYSORTHIS to include the magic 'this', so we don't have that everywhere we want keys
+
+  This actually changes the function signatures in quite a few places for the better, as they no longer implicitly include `'this'`.
+
+- Updated dependencies [86d62b8]
+- Updated dependencies [7f3f035]
+  - empire-state-react@1.12.0
+  - empire-state@1.12.0
+
 ## 1.11.0
 
 ### Minor Changes

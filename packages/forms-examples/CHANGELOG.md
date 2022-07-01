@@ -1,5 +1,13 @@
 # examples
 
+## 1.1.10
+
+### Patch Changes
+
+- Updated dependencies [9c5dfd8]
+- Updated dependencies [7f3f035]
+  - empire-state-forms@1.12.0
+
 ## 1.1.9
 
 ### Patch Changes

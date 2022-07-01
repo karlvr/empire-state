@@ -1,5 +1,16 @@
 # empire-state-react
 
+## 1.12.0
+
+### Minor Changes
+
+- 86d62b8: useControllerLength is only for arrays
+
+### Patch Changes
+
+- Updated dependencies [7f3f035]
+  - empire-state@1.12.0
+
 ## 1.11.0
 
 ### Patch Changes

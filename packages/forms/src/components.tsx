@@ -352,7 +352,7 @@ interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProperty<T, 
 export function Indexed<T, K extends COMPATIBLEKEYSORTHIS<T, any[] | undefined> = COMPATIBLETHIS<T, any[] | undefined>>(props: IndexedProps<T, K>) {
 	const { controller, prop, renderEach, renderBefore, renderAfter, RenderEach, RenderBefore, RenderAfter } = props
 	const actualController = (prop !== 'this' && prop !== undefined ? controller.get(prop as KEY<T>) : controller) as unknown as Controller<unknown[]>
-	useControllerLength(controller, prop as unknown as KEY<T>)
+	useControllerLength(actualController)
 
 	const actions: IndexedActions<INDEXPROPERTY<PROPERTYORTHIS<T, K>>> = {
 		onPush: (value: INDEXPROPERTY<PROPERTYORTHIS<T, K>>) => {

@@ -105,12 +105,6 @@ A `useControllerWithValue` hook always returns the _same_ `Controller` object, s
 
 If the `value` parameter changes, the `Controller`'s state will be reset to the new value.
 
-### `useController`
-
-`useController(controller)` simply returns the given controller, but it will trigger re-renders when the value in the controller changes.
-`useController` is useful if you're using the `Controller`'s `map`, `find` or `findIndex` methods and therefore need to re-render if the
-controller's value changes.
-
 ### `useControllerValue`
 
 `useControllerValue(controller)` and `useControllerValue(controller, property)` returns an array containing the current value (immutable) and a function to change the value (exactly like React’s `useState`).
@@ -118,6 +112,20 @@ controller's value changes.
 The value originates from the `Controller`; either the whole value of the controller or one of its properties.
 
 If the value is changed, either using `useControllerValue`’s `change` function or the `Controller`’s `setValue` function, the component _WILL_ re-render.
+
+### `useController`
+
+`useController(controller)` simply returns the given controller, but it will trigger re-renders when the value in the controller changes.
+`useController` is useful if you need to re-render if anything about the controller's value changes.
+
+If you are using the `Controller`'s `map`, `find` or `findIndex` methods, consider using `useControllerLength` instead to only trigger re-renders
+if the length of the array changes.
+
+### `useControllerLength`
+
+`useControllerLength(controller)`, like `useController`, returns the given controller, but `useControllerLength` only works with array values, and only triggers re-renders when
+the array length changes. `useControllerLength` is using if you're using the `Controller`'s `map`, `find` or `findIndex` methods and therefore need to re-render if the
+controller's value changes.
 
 ## Notes
 

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { controllerWithFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'empire-state'
-import { INDEXPROPERTY, KEY, KEYABLE, PROPERTY, UNDEFINEDIFUNDEFINED } from 'empire-state/dist/type-utils'
+import { COMPATIBLEKEYS, INDEXPROPERTY, KEY, KEYABLE, PROPERTY, UNDEFINEDIFUNDEFINED } from 'empire-state/dist/type-utils'
 import { FunctionKeys } from 'empire-state/dist/utilities'
 import { SetValueFunc } from 'empire-state/dist/types'
 export * from 'empire-state'
@@ -113,17 +113,17 @@ export function useController<T, K extends KEY<T>>(controller: Controller<T> | u
 	return valueController as Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> | undefined
 }
 
-export function useControllerLength<T>(controller: Controller<T>): Controller<T>
-export function useControllerLength<T>(controller: Controller<T> | undefined): Controller<T> | undefined
-export function useControllerLength<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T>, name: K): Controller<S>
-export function useControllerLength<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T> | undefined, name: K): Controller<S> | undefined
-export function useControllerLength<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Controller<S>
-export function useControllerLength<T, K extends KEY<T>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T> | undefined, name: K, index: number): Controller<S> | undefined
-export function useControllerLength<T, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
-export function useControllerLength<T, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T> | undefined, index: number): Controller<S> | undefined
+export function useControllerLength<T extends unknown[] | undefined>(controller: Controller<T>): Controller<T>
+export function useControllerLength<T extends unknown[] | undefined>(controller: Controller<T> | undefined): Controller<T> | undefined
+export function useControllerLength<T, K extends COMPATIBLEKEYS<T, unknown[] | undefined>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T>, name: K): Controller<S>
+export function useControllerLength<T, K extends COMPATIBLEKEYS<T, unknown[] | undefined>, S = UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K>>(controller: Controller<T> | undefined, name: K): Controller<S> | undefined
+export function useControllerLength<T, K extends COMPATIBLEKEYS<T, unknown[][] | undefined>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T>, name: K, index: number): Controller<S>
+export function useControllerLength<T, K extends COMPATIBLEKEYS<T, unknown[][] | undefined>, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<PROPERTY<T, K>>>(controller: Controller<T> | undefined, name: K, index: number): Controller<S> | undefined
+export function useControllerLength<T extends unknown[] | undefined, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T>, index: number): Controller<S>
+export function useControllerLength<T extends unknown[][] | undefined, S = UNDEFINEDIFUNDEFINED<T> | INDEXPROPERTY<T>>(controller: Controller<T> | undefined, index: number): Controller<S> | undefined
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useControllerLength<T extends any[], K extends KEY<T>>(controller: Controller<T> | undefined, nameOrIndex?: K | number | 'this', index?: number): Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> | undefined {
+export function useControllerLength<T, K extends KEY<T>>(controller: Controller<T> | undefined, nameOrIndex?: K | number | 'this', index?: number): Controller<T | UNDEFINEDIFUNDEFINED<T> | PROPERTY<T, K> | INDEXPROPERTY<PROPERTY<T, K>> | INDEXPROPERTY<T>> | undefined {
 	const [, setRefresh] = useState(0)
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

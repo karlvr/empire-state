@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback } from 'react'
-import { KEYORTHIS, COMPATIBLEKEYS, KEY, PROPERTYORTHIS, INDEXPROPERTY, COMPATIBLETHIS } from 'empire-state/dist/type-utils' // TODO change to an "spi" export
+import { KEYORTHIS, KEY, PROPERTYORTHIS, INDEXPROPERTY, COMPATIBLETHIS, COMPATIBLEKEYSORTHIS } from 'empire-state/dist/type-utils' // TODO change to an "spi" export
 import { Subtract } from 'empire-state/dist/utilities'
 import equal from 'fast-deep-equal'
 import { Controller, Snapshot, useControllerValue, ControllerValueHookResult, useControllerLength } from 'empire-state-react'
@@ -14,7 +14,7 @@ export interface ControllerProperty<T, K extends KEYORTHIS<T>> {
 export type AnyControllerProperty<T> = ControllerProperty<T, KEYORTHIS<T>>
 
 /** A ControllerPropertyOfType allows a controller of T and any property it controls that is compatible with the given type S */
-export type ControllerPropertyOfType<T, S> = ControllerProperty<T, COMPATIBLEKEYS<T, S>>
+export type ControllerPropertyOfType<T, S> = ControllerProperty<T, COMPATIBLEKEYSORTHIS<T, S>>
 
 type HTMLInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>
 
@@ -349,7 +349,7 @@ interface IndexedProps<T, K extends KEYORTHIS<T>> extends ControllerProperty<T, 
 	}) => JSX.Element | null
 }
 
-export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined> = COMPATIBLETHIS<T, any[] | undefined>>(props: IndexedProps<T, K>) {
+export function Indexed<T, K extends COMPATIBLEKEYSORTHIS<T, any[] | undefined> = COMPATIBLETHIS<T, any[] | undefined>>(props: IndexedProps<T, K>) {
 	const { controller, prop, renderEach, renderBefore, renderAfter, RenderEach, RenderBefore, RenderAfter } = props
 	const actualController = (prop !== 'this' && prop !== undefined ? controller.get(prop as KEY<T>) : controller) as unknown as Controller<unknown[]>
 	useControllerLength(controller, prop as unknown as KEY<T>)
@@ -406,7 +406,7 @@ export function Indexed<T, K extends COMPATIBLEKEYS<T, any[] | undefined> = COMP
  * @param component A component function that takes a Snapshot
  */
 export function wrapComponent<V, P extends Snapshot<V>>(component: React.FC<Snapshot<V> & P>) {
-	return <T, K extends COMPATIBLEKEYS<T, V>>(props: Subtract<P, Snapshot<V>> & ControllerProperty<T, K>) => {
+	return <T, K extends COMPATIBLEKEYSORTHIS<T, V>>(props: Subtract<P, Snapshot<V>> & ControllerProperty<T, K>) => {
 		const { controller, prop, ...rest } = props
 		// const snapshot = takeSnapshot(controller, prop) as Snapshot<V>
 		const [value, change] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<V>

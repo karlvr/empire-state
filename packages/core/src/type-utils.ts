@@ -20,8 +20,11 @@ export type INDEXPROPERTY<T> = T extends (infer R)[] ? R : never
 
 export type COMPATIBLETHIS<T, R> = T extends R ? 'this' : never
 
+/** Returns the keys of T that are compatible with R */
+export type COMPATIBLEKEYS<T, R> = CompatibleKeys<KEYABLE<T>, R>
+
 /** Returns the keys of T that are compatible with R, and 'this' if T itself is compatible with R */
-export type COMPATIBLEKEYS<T, R> = CompatibleKeys<KEYABLE<T>, R> | COMPATIBLETHIS<T, R>
+export type COMPATIBLEKEYSORTHIS<T, R> = CompatibleKeys<KEYABLE<T>, R> | COMPATIBLETHIS<T, R>
 
 /**
  * If the given type supports undefined then we output undefined, otherwise never.

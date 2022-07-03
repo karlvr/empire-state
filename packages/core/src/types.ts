@@ -188,9 +188,23 @@ export interface Controller<T> {
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 
+	transform<X>(transformer: ControllerTransformer<T, X>): Controller<X>
+
 	addChangeListener(listener: ChangeListener<T>, tag?: string): this
 	removeChangeListener(listener: ChangeListener<T>): this
 	removeAllChangeListeners(tag?: string): this
+}
+
+export interface ControllerTransformer<T, X> {
+	/**
+	 * Transform the value of type T from the source controller _to_ the transformed type X.
+	 */
+	to: (value: T) => X
+
+	/**
+	 * Transform the value of the X _from_ the transformed controller to the source controller type T.
+	 */
+	from: (value: X) => T
 }
 
 export type ChangeListener<T> = (value: T, oldValue: T) => void

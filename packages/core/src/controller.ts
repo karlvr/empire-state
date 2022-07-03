@@ -2,7 +2,7 @@
 import { produce } from 'immer'
 import { DEFAULT_CHANGE_LISTENER_TAG } from './constants'
 import { KEY, PROPERTY, INDEXPROPERTY, COMPATIBLEKEYS } from './type-utils'
-import { Snapshot, Controller, ChangeListener, ControllerSource, SetValueFunc, isExtendedSnapshot, ExtendedSnapshot } from './types'
+import { Snapshot, Controller, ChangeListener, ControllerSource, SetValueFunc, isExtendedSnapshot, ExtendedSnapshot, ControllerTransformer } from './types'
 
 interface ChangeListenerInfo<T> {
 	listener: ChangeListener<T>
@@ -30,6 +30,7 @@ export class ControllerImpl<T> implements Controller<T> {
 	private memoisedSnapshot: Snapshot<T> | undefined
 	private memoisedToggle: (() => void) | undefined
 	private memoisedControllers: { [prop: string]: Controller<any> } = {}
+	private memoisedTransformedControllers: [ControllerTransformer<T, unknown>, Controller<unknown>][] = []
 	private notifyingChangeListeners = false
 
 	public constructor(source: ControllerSource<T>) {
@@ -104,6 +105,25 @@ export class ControllerImpl<T> implements Controller<T> {
 	public setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>) {
 		this.setters[name as string] = func
 		delete this.onChanges[name as string]
+	}
+
+	public transform<X>(transformer: ControllerTransformer<T, X>): Controller<X> {
+		const memoized = this.memoisedTransformedControllers.find(tuple => tuple[0] === transformer)
+		if (memoized) {
+			return memoized[1] as Controller<X>
+		}
+
+		const result = new ControllerImpl(() => {
+			return {
+				value: transformer.to(this.value),
+				change: (newValue) => {
+					this.setValue(transformer.from(newValue))
+				},
+			}
+		})
+
+		this.memoisedTransformedControllers.push([transformer as ControllerTransformer<T, unknown>, result as unknown as Controller<unknown>])
+		return result
 	}
 
 	public addChangeListener(listener: ChangeListener<T>, tag?: string) {

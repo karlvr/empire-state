@@ -211,3 +211,14 @@ Or all change listeners can be removed:
 ```typescript
 controller.removeAllChangeListeners()
 ```
+
+### Transforming Controllers
+
+Sometimes controllers don't contain exactly the right type of value that you need, so you can transform a controller
+using a pair of functions to map between two different types.
+
+First create a `ControllerTransformer<T, X>`, which is an object containing `to` and `from` functions. Then pass that
+object to the controller's `transform(ControllerTransformer<T, X>)` method to obtain a transformed controller.
+
+`ControllerTransformer`s should be statically initialised and reused as the controller memoizes the transformed
+controllers.

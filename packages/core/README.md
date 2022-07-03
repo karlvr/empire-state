@@ -222,3 +222,13 @@ object to the controller's `transform(ControllerTransformer<T, X>)` method to ob
 
 `ControllerTransformer`s should be statically initialised and reused as the controller memoizes the transformed
 controllers.
+
+Some build in transforming functions are included:
+
+|Function|Description|
+|--------|-----------|
+|`transformNullToUndefined(Controller)`|Transform `null`s into `undefined`s and vice versa|
+|`transformNullOrUndefinedToUndefined(Controller)`|Transform `null`s into `undefined`s but don't transform `undefined`s back|
+|`transformUndefinedToNull(Controller)`|Transform `undefined`s into `null`s and vice versa|
+|`transformNumberToString(Controller)`|Transform `number`s into `string`s and vice versa|
+|`transformStringToNumber(Controller)`|Transform `string`s into `number`s and vice versa|

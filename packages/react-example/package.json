@@ -1,9 +1,9 @@
 {
   "name": "react-examples",
-  "version": "0.12.8",
+  "version": "0.12.9",
   "private": true,
   "dependencies": {
-    "empire-state-react": "1.12.0",
+    "empire-state-react": "1.13.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },

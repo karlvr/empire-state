@@ -1,5 +1,12 @@
 # empire-state
 
+## 1.13.0
+
+### Minor Changes
+
+- 7119f35: Add built-in transformer functions
+- 9a72b87: Add `transform` method to `Controller`
+
 ## 1.12.0
 
 ### Patch Changes

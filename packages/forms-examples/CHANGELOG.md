@@ -1,5 +1,15 @@
 # examples
 
+## 1.2.0-next.0
+
+### Minor Changes
+
+- 848179c: Allow all change functions to receive the new value or a function that accepts the current value and returns the new value
+
+### Patch Changes
+
+- empire-state-forms@1.14.0-next.0
+
 ## 1.1.11
 
 ### Patch Changes

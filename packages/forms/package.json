@@ -1,6 +1,6 @@
 {
 	"name": "empire-state-forms",
-	"version": "1.13.0",
+	"version": "1.14.0-next.0",
 	"description": "React form helpers for immutable state",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -22,8 +22,8 @@
 	"license": "MIT",
 	"dependencies": {
 		"fast-deep-equal": "^3.1.1",
-		"empire-state": "1.13.0",
-		"empire-state-react": "1.13.0"
+		"empire-state": "1.14.0-next.0",
+		"empire-state-react": "1.14.0-next.0"
 	},
 	"devDependencies": {
 		"rimraf": "^3.0.2"

@@ -1,5 +1,11 @@
 # empire-state
 
+## 1.14.0-next.0
+
+### Minor Changes
+
+- 848179c: Allow all change functions to receive the new value or a function that accepts the current value and returns the new value
+
 ## 1.13.0
 
 ### Minor Changes

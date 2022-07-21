@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { controllerWithFuncs, Controller, Snapshot, ChangeListener, DEFAULT_CHANGE_LISTENER_TAG } from 'empire-state'
 import { COMPATIBLEKEYS, INDEXPROPERTY, KEY, KEYABLE, PROPERTY, UNDEFINEDIFUNDEFINED } from 'empire-state/dist/type-utils'
 import { FunctionKeys } from 'empire-state/dist/utilities'
-import { SetValueFunc } from 'empire-state/dist/types'
+import { ChangeFunc, SetValueFunc } from 'empire-state/dist/types'
 export * from 'empire-state'
 
 /**
@@ -33,6 +33,9 @@ export function useControllerWithInitialState<T>(initialState?: T): Controller<T
 	return createMemoisedController({
 		value: value.current,
 		change: (newValue) => {
+			if (typeof newValue === 'function') {
+				newValue = (newValue as SetValueFunc<T>)(value.current as T)
+			}
 			value.current = newValue
 		},
 	})
@@ -52,6 +55,9 @@ export function useControllerWithValue<T>(value: T): Controller<T> {
 	const controller = createMemoisedController({
 		value: current.current,
 		change: (newValue) => {
+			if (typeof newValue === 'function') {
+				newValue = (newValue as SetValueFunc<T>)(current.current)
+			}
 			current.current = newValue
 		},
 	})
@@ -159,7 +165,7 @@ export function useControllerLength<T, K extends KEY<T>>(controller: Controller<
  * @param onChange a function that is called when the controller reports a change to the value 
  * @returns 
  */
-export function useStatelessController<T>(value: T, onChange: (newValue: T) => void): Controller<T> {
+export function useStatelessController<T>(value: T, onChange: ChangeFunc<T>): Controller<T> {
 	return createMemoisedController({
 		value,
 		change: onChange,
@@ -209,7 +215,7 @@ function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
 	return mainController
 }
 
-export type ControllerValueHookResult<S> = [S, (newValue: S) => void]
+export type ControllerValueHookResult<S> = [S, ChangeFunc<S>]
 
 /**
  * Returns the controller's value, and a function to change the value. The component will re-render when the value changes.
@@ -282,7 +288,7 @@ interface ChangeableComponentWithPropsGeneral<T> {
 
 /** Interface for component with the changeable value in the state */
 interface ChangeableComponentWithState<T> {
-	setState: (func: (state: T) => T) => void
+	setState: (func: ChangeFunc<T>) => void
 	state: T
 }
 

@@ -2,7 +2,7 @@
 import { produce } from 'immer'
 import { DEFAULT_CHANGE_LISTENER_TAG } from './constants'
 import { KEY, PROPERTY, INDEXPROPERTY, COMPATIBLEKEYS } from './type-utils'
-import { Snapshot, Controller, ChangeListener, ControllerSource, SetValueFunc, isExtendedSnapshot, ExtendedSnapshot, ControllerTransformer } from './types'
+import { Snapshot, Controller, ChangeListener, ControllerSource, SetValueFunc, isExtendedSnapshot, ExtendedSnapshot, ControllerTransformer, ChangeFunc } from './types'
 
 interface ChangeListenerInfo<T> {
 	listener: ChangeListener<T>
@@ -81,11 +81,11 @@ export class ControllerImpl<T> implements Controller<T> {
 		return this.memoisedToggle
 	}
  
-	public onChange(): (newValue: T) => void
-	public onChange(index: number): (newValue: INDEXPROPERTY<T>) => void
-	public onChange(name: 'this'): (newValue: T) => void
-	public onChange<K extends KEY<T>>(name: K): (newValue: PROPERTY<T, K>) => void
-	public onChange<K extends KEY<T>>(name: K, index: number): (newValue: INDEXPROPERTY<PROPERTY<T, K>>) => void
+	public onChange(): ChangeFunc<T>
+	public onChange(index: number): ChangeFunc<INDEXPROPERTY<T>>
+	public onChange(name: 'this'): ChangeFunc<T>
+	public onChange<K extends KEY<T>>(name: K): ChangeFunc<PROPERTY<T, K>>
+	public onChange<K extends KEY<T>>(name: K, index: number): ChangeFunc<INDEXPROPERTY<PROPERTY<T, K>>>
 	public onChange<K extends KEY<T>>(nameOrIndex?: K | number | 'this', index?: number) {
 		return this.internalSnapshot(nameOrIndex, index).change
 	}
@@ -113,11 +113,14 @@ export class ControllerImpl<T> implements Controller<T> {
 			return memoized[1] as Controller<X>
 		}
 
-		const result = new ControllerImpl(() => {
+		const result = new ControllerImpl<X>(() => {
 			return {
 				value: transformer.to(this.value),
 				change: (newValue) => {
-					this.setValue(transformer.from(newValue))
+					if (typeof newValue === 'function') {
+						newValue = (newValue as unknown as SetValueFunc<X>)(transformer.to(this.value))
+					}
+					this.setValue(transformer.from(newValue as any))
 				},
 			}
 		})
@@ -364,8 +367,13 @@ export class ControllerImpl<T> implements Controller<T> {
 		if (typeof nameOrIndex === 'number') {
 			/* Array values */
 			result = new ControllerImpl<INDEXPROPERTY<T>>(() => {
-				const onChange = (newValue: INDEXPROPERTY<T>) => {
+				const onChange: ChangeFunc<INDEXPROPERTY<T>> = (newValue) => {
 					const currentValue = this.value
+					if (typeof newValue === 'function') {
+						const value: any = currentValue !== undefined && currentValue !== null ? (currentValue as any)[nameOrIndex] : undefined
+						newValue = (newValue as SetValueFunc<INDEXPROPERTY<T>>)(value)
+					}
+
 					const parentNewValue = currentValue !== undefined && currentValue !== null
 						? produce(this.value, draft => {
 							(draft as any)[nameOrIndex] = newValue
@@ -440,7 +448,12 @@ export class ControllerImpl<T> implements Controller<T> {
 			return memoisedSnapshot
 		} else {
 			const result: Snapshot<T> = {
-				change: (newValue: T) => this.setValue(newValue),
+				change: (newValue) => {
+					if (typeof newValue === 'function') {
+						newValue = (newValue as SetValueFunc<T>)(this.value)
+					}
+					this.setValue(newValue)
+				},
 				value: produce(this.value, draft => draft),
 			}
 
@@ -481,14 +494,17 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 	}
 
-	private propOnChange<K extends KEY<T>>(name: K): ((value: PROPERTY<T, K>) => void) {
+	private propOnChange<K extends KEY<T>>(name: K): ChangeFunc<PROPERTY<T, K>> {
 		const PROPERTY = this.onChanges[name as string]
 		if (PROPERTY) {
 			return PROPERTY
 		}
 
-		let func = (subValue: PROPERTY<T, K>): void => {
+		let func: ChangeFunc<PROPERTY<T, K>> = (subValue): void => {
 			const currentValue = this.value
+			if (typeof subValue === 'function') {
+				subValue = (subValue as SetValueFunc<PROPERTY<T, K>>)(currentValue !== undefined && currentValue !== null ? (currentValue as any)[name] : undefined)
+			}
 			const newValue = currentValue !== undefined && currentValue !== null ?
 				produce(currentValue, (draft) => {
 					(draft as any)[name] = subValue as any
@@ -503,7 +519,7 @@ export class ControllerImpl<T> implements Controller<T> {
 		const setter = this.setters[name as string]
 		if (setter) {
 			const existingNewFunc = func
-			const newFunc = (subValue: PROPERTY<T, K>): void => {
+			const newFunc: ChangeFunc<PROPERTY<T, K>> = (subValue): void => {
 				const subValue2 = setter(subValue) as PROPERTY<T, K>
 				existingNewFunc(subValue2)
 			}

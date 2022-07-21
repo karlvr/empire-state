@@ -1,5 +1,7 @@
 import { KEY, PROPERTY, INDEXPROPERTY, COMPATIBLEKEYS, UNDEFINEDIFUNDEFINED } from './type-utils'
 
+export type ChangeFunc<T> = <V extends T>(newValue: T | V | SetValueFunc<T>) => void /* The V extends T is so this works with disjunctions, see disjunctions.spec.ts */
+
 /** A Snapshot represents an immutable view of state, and a means to change it. */
 export interface Snapshot<T> {
 	/**
@@ -12,7 +14,7 @@ export interface Snapshot<T> {
 	 * and to the original datasource, which will process and apply the change.
 	 * @param newValue The new snapshot value.
 	 */
-	readonly change: <V extends T>(newValue: V) => void /* The V extends T is so this works with disjunctions, see disjunctions.spec.ts */
+	readonly change: ChangeFunc<T>
 }
 
 export interface ExtendedSnapshot<T> extends Snapshot<T> {
@@ -109,11 +111,11 @@ export interface Controller<T> {
 	/**
 	 * Returns a function that, when called, changes the value in this Controller.
 	 */
-	onChange(): (newValue: T) => void
-	onChange(index: number): (newValue: INDEXPROPERTY<T>) => void
-	onChange(name: 'this'): (newValue: T) => void
-	onChange<K extends KEY<T>>(name: K): (newValue: PROPERTY<T, K>) => void
-	onChange<K extends KEY<T>>(name: K, index: number): (newValue: INDEXPROPERTY<PROPERTY<T, K>>) => void
+	onChange(): ChangeFunc<T>
+	onChange(index: number): ChangeFunc<INDEXPROPERTY<T>>
+	onChange(name: 'this'): ChangeFunc<T>
+	onChange<K extends KEY<T>>(name: K): ChangeFunc<PROPERTY<T, K>>
+	onChange<K extends KEY<T>>(name: K, index: number): ChangeFunc<INDEXPROPERTY<PROPERTY<T, K>>>
 
 	/**
 	 * Returns a snapshot of the whole value in this controller.

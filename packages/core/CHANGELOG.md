@@ -1,5 +1,11 @@
 # empire-state
 
+## 1.14.0-next.1
+
+### Patch Changes
+
+- 92c7727: pushNew should include undefined in its return type, as it is undefined until set
+
 ## 1.14.0-next.0
 
 ### Minor Changes

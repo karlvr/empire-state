@@ -1,5 +1,13 @@
 # empire-state-forms
 
+## 1.14.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [92c7727]
+  - empire-state@1.14.0-next.1
+  - empire-state-react@1.14.0-next.1
+
 ## 1.14.0-next.0
 
 ### Patch Changes

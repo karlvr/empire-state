@@ -1,5 +1,11 @@
 # examples
 
+## 0.13.0-next.1
+
+### Patch Changes
+
+- empire-state-react@1.14.0-next.1
+
 ## 0.13.0-next.0
 
 ### Minor Changes

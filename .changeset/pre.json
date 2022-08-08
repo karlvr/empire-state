@@ -9,6 +9,7 @@
     "react-examples": "0.12.9"
   },
   "changesets": [
+    "eleven-numbers-dream",
     "silly-tips-happen"
   ]
 }

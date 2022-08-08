@@ -164,9 +164,9 @@ export interface Controller<T> {
 	 * Return a Controller that pushes a new value onto an array when it is first set.
 	 * @param name the array property to push new elements to, or 'this' to push to this controller's array value
 	 */
-	pushNew(): Controller<INDEXPROPERTY<T>>
-	pushNew(name: 'this'): Controller<INDEXPROPERTY<T>>
-	pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
+	pushNew(): Controller<INDEXPROPERTY<T> | undefined>
+	pushNew(name: 'this'): Controller<INDEXPROPERTY<T> | undefined>
+	pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>> | undefined>
 	
 	/**
 	 * Remove the value that is controlled by this controller from its parent. Only applicable

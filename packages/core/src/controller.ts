@@ -251,10 +251,10 @@ export class ControllerImpl<T> implements Controller<T> {
 		}
 	}
 
-	public pushNew(): Controller<INDEXPROPERTY<T>>
-	public pushNew(name: 'this'): Controller<INDEXPROPERTY<T>>
-	public pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>>>
-	public pushNew<K extends KEY<T>>(name?: K | 'this'): Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>>> {
+	public pushNew(): Controller<INDEXPROPERTY<T> | undefined>
+	public pushNew(name: 'this'): Controller<INDEXPROPERTY<T> | undefined>
+	public pushNew<K extends KEY<T>>(name: K): Controller<INDEXPROPERTY<PROPERTY<T, K>> | undefined>
+	public pushNew<K extends KEY<T>>(name?: K | 'this'): Controller<INDEXPROPERTY<T>> | Controller<INDEXPROPERTY<PROPERTY<T, K>> | undefined> {
 		const subController = this.internalController(name !== undefined ? name : 'this') as Controller<any>
 
 		let pushedValueController: Controller<any> | undefined

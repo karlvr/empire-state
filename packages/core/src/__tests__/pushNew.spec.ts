@@ -57,4 +57,23 @@ describe('pushNew', () => {
 		expect(controller.value).toEqual(['Peter', 'Janet', 'Pam', 'Barbara', 'Jack'])
 	})
 
+	it('can push a new value when the array may be undefined', () => {
+		const controller = controllerWithInitialValue<string[] | undefined | null>(
+			['Peter', 'Janet', 'Pam'],
+		)
+
+		const childrenNewController = controller.pushNew('this')
+		expect(childrenNewController.value).toBeUndefined()
+		childrenNewController.setValue('Barbara')
+		expect(childrenNewController.value).toEqual('Barbara')
+
+		const childrenNewController2 = controller.pushNew()
+		expect(childrenNewController2.value).toBeUndefined()
+		childrenNewController2.setValue('Jack')
+		expect(childrenNewController2.value).toEqual('Jack')
+
+		expect(controller?.value?.length).toBe(5)
+		expect(controller.value).toEqual(['Peter', 'Janet', 'Pam', 'Barbara', 'Jack'])
+	})
+
 })

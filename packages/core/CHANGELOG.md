@@ -1,5 +1,11 @@
 # empire-state
 
+## 1.14.0-next.2
+
+### Minor Changes
+
+- 26356f2: Bind Controller functions so we can pass them as functions without needing to bind
+
 ## 1.14.0-next.1
 
 ### Patch Changes

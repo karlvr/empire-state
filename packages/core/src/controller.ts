@@ -36,6 +36,15 @@ export class ControllerImpl<T> implements Controller<T> {
 	public constructor(source: ControllerSource<T>) {
 		this.source = source
 		this.lastKnownValue = produce(this.value, draft => draft)
+
+		/* Bind all member functions so callers can pass our member functions as bare functions */
+		const proto = Object.getPrototypeOf(this)
+		for (const p of Object.getOwnPropertyNames(proto) as (keyof this)[]) {
+			const pd = Object.getOwnPropertyDescriptor(proto, p)
+			if (pd && typeof pd.value === 'function') {
+				this[p] = pd.value.bind(this)
+			}
+		}
 	}
 
 	public get value(): T {

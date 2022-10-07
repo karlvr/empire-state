@@ -367,9 +367,6 @@ export class ControllerImpl<T> implements Controller<T> {
 		const start = startOrEnd as number | undefined
 		const end = endOr as number | undefined
 
-		console.log(nameOrStart, startOrEnd, endOr)
-		console.log(this.value, start, end)
-
 		let value: unknown[] = this.value as unknown as unknown[]
 		if (!value) {
 			return []
@@ -377,7 +374,6 @@ export class ControllerImpl<T> implements Controller<T> {
 		
 		const newValue = [...value]
 		const result = newValue.slice(start, end)
-		console.log(result)
 		return result as INDEXPROPERTY<PROPERTY<T, K>>[]
 	}
 

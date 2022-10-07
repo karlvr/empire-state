@@ -189,7 +189,7 @@ export interface Controller<T> {
 
 	slice(start?: number, end?: number): INDEXPROPERTY<T>[]
 	slice(name: 'this', start?: number, end?: number): INDEXPROPERTY<T>[]
-	slice<K extends KEY<T>>(name: K, start?: number, end?: number): INDEXPROPERTY<T>[]
+	slice<K extends KEY<T>>(name: K, start?: number, end?: number): INDEXPROPERTY<PROPERTY<T, K>>[]
 
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void

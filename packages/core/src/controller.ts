@@ -372,8 +372,7 @@ export class ControllerImpl<T> implements Controller<T> {
 			return []
 		}
 		
-		const newValue = [...value]
-		const result = newValue.slice(start, end)
+		const result = value.slice(start, end)
 		return result as INDEXPROPERTY<PROPERTY<T, K>>[]
 	}
 

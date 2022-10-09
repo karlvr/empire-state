@@ -354,7 +354,7 @@ export class ControllerImpl<T> implements Controller<T> {
 
 	public slice(start?: number, end?: number): INDEXPROPERTY<T>[]
 	public slice(name: 'this', start?: number, end?: number): INDEXPROPERTY<T>[]
-	public slice<K extends KEY<T>>(name: K, start?: number, end?: number): INDEXPROPERTY<T>[]
+	public slice<K extends KEY<T>>(name: K, start?: number, end?: number): INDEXPROPERTY<PROPERTY<T, K>>[]
 	public slice<K extends KEY<T>>(nameOrStart: K | 'this' | number | undefined, startOrEnd?: number, endOr?: number): INDEXPROPERTY<T>[] | INDEXPROPERTY<PROPERTY<T, K>>[] {
 		if (nameOrStart === undefined || typeof nameOrStart === 'number') {
 			return this.slice('this', nameOrStart, startOrEnd)

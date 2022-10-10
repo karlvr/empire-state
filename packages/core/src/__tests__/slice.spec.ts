@@ -1,7 +1,7 @@
 import { controllerWithInitialValue } from '../creators'
 
 describe('slice', () => {
-	it('can slice to return a shallow copy of a portion of an array', () => {
+	it('can slice to return a shallow copy of a portion of an array property', () => {
 		interface TestInterface {
 			children: {
 				name: string

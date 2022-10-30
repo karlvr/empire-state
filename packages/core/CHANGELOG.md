@@ -1,5 +1,17 @@
 # empire-state
 
+## 1.14.0
+
+### Minor Changes
+
+- 26356f2: Bind Controller functions so we can pass them as functions without needing to bind
+- Add slice
+- 848179c: Allow all change functions to receive the new value or a function that accepts the current value and returns the new value
+
+### Patch Changes
+
+- 92c7727: pushNew should include undefined in its return type, as it is undefined until set
+
 ## 1.14.0-next.2
 
 ### Minor Changes

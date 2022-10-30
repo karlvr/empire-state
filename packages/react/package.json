@@ -1,6 +1,6 @@
 {
   "name": "empire-state-react",
-  "version": "1.14.0-next.2",
+  "version": "1.14.0",
   "description": "React hooks for the Immutable state change controller",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
   "author": "Karl von Randow",
   "license": "MIT",
   "dependencies": {
-    "empire-state": "1.14.0-next.2"
+    "empire-state": "1.14.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.31",

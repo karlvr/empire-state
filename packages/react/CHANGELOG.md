@@ -1,5 +1,19 @@
 # empire-state-react
 
+## 1.14.0
+
+### Minor Changes
+
+- 848179c: Allow all change functions to receive the new value or a function that accepts the current value and returns the new value
+
+### Patch Changes
+
+- Updated dependencies [92c7727]
+- Updated dependencies [26356f2]
+- Updated dependencies
+- Updated dependencies [848179c]
+  - empire-state@1.14.0
+
 ## 1.14.0-next.2
 
 ### Patch Changes

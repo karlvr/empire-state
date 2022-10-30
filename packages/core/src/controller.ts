@@ -367,7 +367,7 @@ export class ControllerImpl<T> implements Controller<T> {
 		const start = startOrEnd as number | undefined
 		const end = endOr as number | undefined
 
-		let value: unknown[] = this.value as unknown as unknown[]
+		const value: unknown[] = this.value as unknown as unknown[]
 		if (!value) {
 			return []
 		}

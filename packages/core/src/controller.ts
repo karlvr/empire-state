@@ -352,6 +352,30 @@ export class ControllerImpl<T> implements Controller<T> {
 		return result as INDEXPROPERTY<T>[] | INDEXPROPERTY<PROPERTY<T, K>>[]
 	}
 
+	public slice(start?: number, end?: number): INDEXPROPERTY<T>[]
+	public slice(name: 'this', start?: number, end?: number): INDEXPROPERTY<T>[]
+	public slice<K extends KEY<T>>(name: K, start?: number, end?: number): INDEXPROPERTY<PROPERTY<T, K>>[]
+	public slice<K extends KEY<T>>(nameOrStart: K | 'this' | number | undefined, startOrEnd?: number, endOr?: number): INDEXPROPERTY<T>[] | INDEXPROPERTY<PROPERTY<T, K>>[] {
+		if (nameOrStart === undefined || typeof nameOrStart === 'number') {
+			return this.slice('this', nameOrStart, startOrEnd)
+		}
+
+		if (nameOrStart !== 'this') {
+			return this.get(nameOrStart).slice('this', startOrEnd, endOr)
+		}
+
+		const start = startOrEnd as number | undefined
+		const end = endOr as number | undefined
+
+		let value: unknown[] = this.value as unknown as unknown[]
+		if (!value) {
+			return []
+		}
+		
+		const result = value.slice(start, end)
+		return result as INDEXPROPERTY<PROPERTY<T, K>>[]
+	}
+
 	private internalSetValue(value: T, fromSubController = false): void {
 		const oldValue = this.source().value
 		this.source().change(value as T)

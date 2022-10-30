@@ -187,6 +187,10 @@ export interface Controller<T> {
 	splice(name: 'this', index: number, deleteCount?: number, ...items: INDEXPROPERTY<T>[]): INDEXPROPERTY<T>[]
 	splice<K extends KEY<T>>(name: K, index: number, deleteCount?: number, ...items: INDEXPROPERTY<PROPERTY<T, K>>[]): INDEXPROPERTY<PROPERTY<T, K>>[]
 
+	slice(start?: number, end?: number): INDEXPROPERTY<T>[]
+	slice(name: 'this', start?: number, end?: number): INDEXPROPERTY<T>[]
+	slice<K extends KEY<T>>(name: K, start?: number, end?: number): INDEXPROPERTY<PROPERTY<T, K>>[]
+
 	getter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 	setter<K extends KEY<T>>(name: K, func: (value: PROPERTY<T, K>) => PROPERTY<T, K>): void
 

@@ -126,7 +126,7 @@ export function Number<T>(props: NumberProps<T>) {
 		value={value}
 		change={changeValue}
 		convert={value => {
-			const result = parseInt(value, 10)
+			const result = parseFloat(value)
 			if (!isNaN(result)) {
 				return result
 			}
@@ -135,6 +135,31 @@ export function Number<T>(props: NumberProps<T>) {
 		display={value => {
 			if (value !== undefined && value !== null) {
 				return `${value}`
+			} else {
+				return ''
+			}
+		}}
+		{...rest}
+	/>
+}
+
+export function Integer<T>(props: NumberProps<T>) {
+	const { controller, prop, ...rest } = props
+	const [value, changeValue] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<NumberType>
+
+	return <BaseInput
+		value={value}
+		change={changeValue}
+		convert={value => {
+			const result = parseInt(value, 10)
+			if (!isNaN(result)) {
+				return result
+			}
+			return undefined
+		}} 
+		display={value => {
+			if (value !== undefined && value !== null) {
+				return `${Math.round(value)}`
 			} else {
 				return ''
 			}
@@ -423,6 +448,7 @@ export function wrapComponent<V, P extends Snapshot<V>>(component: React.FC<Snap
 export const Formalities = {
 	Text,
 	Number,
+	Integer,
 	Generic,
 	Checkable,
 	MultiCheckable,

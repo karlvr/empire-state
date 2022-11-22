@@ -1,5 +1,11 @@
 # empire-state-forms
 
+## 1.15.0
+
+### Minor Changes
+
+- b3dd692: Change Number component to support floating point and create Integer component to only support integers
+
 ## 1.14.0
 
 ### Patch Changes

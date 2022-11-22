@@ -1,5 +1,12 @@
 # examples
 
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [b2baa17]
+  - empire-state-forms@1.15.1
+
 ## 1.2.1
 
 ### Patch Changes

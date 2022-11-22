@@ -1,5 +1,11 @@
 # empire-state-forms
 
+## 1.15.1
+
+### Patch Changes
+
+- b2baa17: Re-release as previous release didn't actually build
+
 ## 1.15.0
 
 ### Minor Changes

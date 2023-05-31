@@ -30,20 +30,17 @@ export function useControllerWithInitialState<T>(initialState: T): Controller<T>
 
 export function useControllerWithInitialState<T>(initialState?: T): Controller<T | undefined> {
 	const value = useRef(initialState)
-	return createMemoisedController({
-		value: value.current,
-		change: (newValue) => {
-			if (typeof newValue === 'function') {
-				newValue = (newValue as SetValueFunc<T>)(value.current as T)
-			}
+	return createMemoisedController(
+		value.current,
+		(newValue) => {
 			value.current = newValue
 		},
-	})
+	)
 }
 
 /**
  * Create a controller with the given value. The controller state can be changed as normal.
- * The controller state will be reset to the given value if it changes.
+ * But the controller state will be reset to the given value if the value changes.
  * @param value 
  * @returns 
  */
@@ -52,15 +49,12 @@ export function useControllerWithValue<T>(value: T): Controller<T> {
 	const original = useRef(value)
 	const [, setRefresh] = useState(0)
 
-	const controller = createMemoisedController({
-		value: current.current,
-		change: (newValue) => {
-			if (typeof newValue === 'function') {
-				newValue = (newValue as SetValueFunc<T>)(current.current)
-			}
+	const controller = createMemoisedController(
+		current.current,
+		(newValue) => {
 			current.current = newValue
 		},
-	})
+	)
 
 	/* Check if the `value` changes from what we previously saw, and reset the controller value if it does */
 	if (value !== original.current) {
@@ -165,11 +159,8 @@ export function useControllerLength<T, K extends KEY<T>>(controller: Controller<
  * @param onChange a function that is called when the controller reports a change to the value 
  * @returns 
  */
-export function useStatelessController<T>(value: T, onChange: ChangeFunc<T>): Controller<T> {
-	return createMemoisedController({
-		value,
-		change: onChange,
-	})
+export function useStatelessController<T>(value: T, onChange: (newValue: T) => void): Controller<T> {
+	return createMemoisedController(value, onChange)
 }
 
 /**
@@ -178,14 +169,14 @@ export function useStatelessController<T>(value: T, onChange: ChangeFunc<T>): Co
  * @returns 
  */
 export function useSnapshotController<T>(snapshot: Snapshot<T>): Controller<T> {
-	return createMemoisedController(snapshot)
+	return createMemoisedController(snapshot.value, snapshot.change)
 }
 
-function createMemoisedController<T>(snapshot: Snapshot<T>): Controller<T> {
-	const currentSnapshotValue = useRef(snapshot.value)
-	const currentSnapshotSetValue = useRef(snapshot.change)
-	currentSnapshotValue.current = snapshot.value
-	currentSnapshotSetValue.current = snapshot.change
+function createMemoisedController<T>(value: T, onChange: (newValue: T) => void): Controller<T> {
+	const currentSnapshotValue = useRef(value)
+	const currentSnapshotSetValue = useRef(onChange)
+	currentSnapshotValue.current = value
+	currentSnapshotSetValue.current = onChange
 
 	/* We use useMemo so that the controller in the calling component doesn't change and doesn't trigger a re-render when we use it in deps in a component.
 	   We rely on the useControllerValue hook to trigger re-renders. Or, if a controller is based on component state, then the component state changing

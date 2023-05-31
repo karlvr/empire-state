@@ -1,9 +1,9 @@
 {
   "name": "form-examples",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
   "dependencies": {
-    "empire-state-forms": "1.15.1",
+    "empire-state-forms": "1.16.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

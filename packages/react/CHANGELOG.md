@@ -1,5 +1,11 @@
 # empire-state-react
 
+## 1.16.0
+
+### Minor Changes
+
+- 687eedc: useStatelessController takes simple onChange function
+
 ## 1.14.0
 
 ### Minor Changes

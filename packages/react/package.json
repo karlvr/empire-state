@@ -13,7 +13,7 @@
   "author": "Karl von Randow",
   "license": "MIT",
   "dependencies": {
-    "empire-state": "1.14.0"
+    "empire-state": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^17.0.31",

@@ -3,7 +3,7 @@
   "version": "1.2.3",
   "private": true,
   "dependencies": {
-    "empire-state-forms": "1.16.0",
+    "empire-state-forms": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

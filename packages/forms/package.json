@@ -22,8 +22,8 @@
 	"license": "MIT",
 	"dependencies": {
 		"fast-deep-equal": "^3.1.1",
-		"empire-state": "1.14.0",
-		"empire-state-react": "1.16.0"
+		"empire-state": "workspace:*",
+		"empire-state-react": "workspace:*"
 	},
 	"devDependencies": {
 		"rimraf": "^3.0.2"

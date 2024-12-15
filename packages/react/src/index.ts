@@ -269,7 +269,7 @@ export function useControllerValue<T, K extends KEY<T>>(controller: Controller<T
 interface ChangeableComponentWithProps<T> {
 	props: {
 		value: T
-		onChange: (newValue: T) => void
+		change: (newValue: T) => void
 	}
 }
 
@@ -306,7 +306,7 @@ export function forComponentProps<T, K extends KEY<T>, L extends FunctionKeys<T>
 			newValue => {
 				/* Ensure that we always return the current value as per the required semantics of ControllerSource */
 				currentValue = newValue
-				actualComponent.props.onChange(newValue)
+				actualComponent.props.change(newValue)
 			},
 		)
 	} else {

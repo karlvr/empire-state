@@ -430,10 +430,9 @@ export function Indexed<T, K extends COMPATIBLEKEYSORTHIS<T, any[] | undefined> 
  * Wrap a component function that takes a snapshot so that it instead accepts a controller and prop.
  * @param component A component function that takes a Snapshot
  */
-export function wrapComponent<V, P extends Snapshot<V>>(component: React.FC<Snapshot<V> & P>) {
+export function wrapComponent<V, P extends Snapshot<V>>(component: React.ComponentType<P>) {
 	return <T, K extends COMPATIBLEKEYSORTHIS<T, V>>(props: Subtract<P, Snapshot<V>> & ControllerProperty<T, K>) => {
 		const { controller, prop, ...rest } = props
-		// const snapshot = takeSnapshot(controller, prop) as Snapshot<V>
 		const [value, change] = useControllerValue(controller, prop as unknown as KEY<T>) as ControllerValueHookResult<V>
 
 		const componentProps = {
@@ -441,7 +440,8 @@ export function wrapComponent<V, P extends Snapshot<V>>(component: React.FC<Snap
 			change,
 			...rest,
 		}
-		return component(componentProps as unknown as P)
+		const Component = component as any
+		return <Component {...componentProps} />
 	}
 }
 

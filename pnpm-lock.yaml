@@ -82,11 +82,11 @@ importers:
   packages/forms:
     dependencies:
       empire-state:
-        specifier: 1.14.0
-        version: 1.14.0
+        specifier: workspace:*
+        version: link:../core
       empire-state-react:
-        specifier: 1.16.0
-        version: 1.16.0(react@18.3.1)
+        specifier: workspace:*
+        version: link:../react
       fast-deep-equal:
         specifier: ^3.1.1
         version: 3.1.3
@@ -104,8 +104,8 @@ importers:
   packages/forms-examples:
     dependencies:
       empire-state-forms:
-        specifier: 1.16.0
-        version: 1.16.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../forms
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -150,8 +150,8 @@ importers:
   packages/react:
     dependencies:
       empire-state:
-        specifier: 1.14.0
-        version: 1.14.0
+        specifier: workspace:*
+        version: link:../core
       react:
         specifier: '>=16.8'
         version: 18.3.1
@@ -166,8 +166,8 @@ importers:
   packages/react-example:
     dependencies:
       empire-state-react:
-        specifier: 1.16.0
-        version: 1.16.0(react@17.0.2)
+        specifier: workspace:*
+        version: link:../react
       react:
         specifier: ^17.0.2
         version: 17.0.2
@@ -1957,20 +1957,6 @@ packages:
   emojis-list@3.0.0:
     resolution: {integrity: sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==}
     engines: {node: '>= 4'}
-
-  empire-state-forms@1.16.0:
-    resolution: {integrity: sha512-RqK5jsefY83h55Qu+MZqNPp4FzdPd4vmIxnXR/NwAQ05rO7HvQHe3DOHxCafknbi5clbTWSw5teiYC88XQxJxg==}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-
-  empire-state-react@1.16.0:
-    resolution: {integrity: sha512-hivBbwtCj8gQ8TMsVLhonxxI4dQaN4nBufdPE/Sx5P0xYpYzcW7Nykp99waW9S1DlXG1BQGmhrX2aehQKWiAbg==}
-    peerDependencies:
-      react: '>=16.8'
-
-  empire-state@1.14.0:
-    resolution: {integrity: sha512-DMJQSbqQnq4tXeFU9jNAPn1VfuZ4eEeo7g+779E3NF3l9Fegg1+0Scj4Kje4Uk1IXi0Ueh2bjxZHSTqoiIqyDw==}
 
   encodeurl@1.0.2:
     resolution: {integrity: sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==}
@@ -6325,28 +6311,6 @@ snapshots:
   emoji-regex@9.2.2: {}
 
   emojis-list@3.0.0: {}
-
-  empire-state-forms@1.16.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      empire-state: 1.14.0
-      empire-state-react: 1.16.0(react@18.3.1)
-      fast-deep-equal: 3.1.3
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-
-  empire-state-react@1.16.0(react@17.0.2):
-    dependencies:
-      empire-state: 1.14.0
-      react: 17.0.2
-
-  empire-state-react@1.16.0(react@18.3.1):
-    dependencies:
-      empire-state: 1.14.0
-      react: 18.3.1
-
-  empire-state@1.14.0:
-    dependencies:
-      immer: 10.1.1
 
   encodeurl@1.0.2: {}
 

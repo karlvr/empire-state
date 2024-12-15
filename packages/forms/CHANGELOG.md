@@ -1,5 +1,16 @@
 # empire-state-forms
 
+## 1.17.0
+
+### Minor Changes
+
+- 76a00ab: `wrapComponent` to support both functional and class components
+
+### Patch Changes
+
+- Updated dependencies [463485e]
+  - empire-state-react@1.17.0
+
 ## 1.16.0
 
 ### Patch Changes

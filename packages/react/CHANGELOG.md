@@ -1,5 +1,11 @@
 # empire-state-react
 
+## 1.17.0
+
+### Minor Changes
+
+- 463485e: Fix ChangeableComponentWithProps to use `change` instead of `onChange`
+
 ## 1.16.0
 
 ### Minor Changes

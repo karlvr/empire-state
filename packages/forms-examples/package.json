@@ -1,6 +1,6 @@
 {
   "name": "form-examples",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "private": true,
   "dependencies": {
     "empire-state-forms": "workspace:*",
